@@ -1,0 +1,56 @@
+import QtQuick 2.0
+import QtQuick.Controls 1.4
+
+ApplicationWindow {
+    id: menuPRBgenerators
+    visible: true
+    width: parent.width
+    height: parent.height
+    title: qsTr("Menu PRBgenerators")
+
+    property int numberOfButton: 3
+
+    Loader {
+        id: prbGeneratorsLoader
+    }
+
+    Button {
+        id: buttonBuiltInCPP
+        anchors.top: menuPRBgenerators.top
+        width: menuPRBgenerators.width
+        height: menuPRBgenerators.height / numberOfButton
+        text: "Built-in CPP Generator"
+
+        onClicked: {
+            prbGeneratorsLoader.source = ""
+            prbGeneratorsLoader.source = "PRBgeneratorsBuiltInCPP.qml"
+            menuPRBgenerators.close()
+        }
+    }
+
+    Button {
+        id: buttonMenu
+        anchors.top: buttonBuiltInCPP.bottom
+        width: menuPRBgenerators.width
+        height: menuPRBgenerators.height / numberOfButton
+        text: "Menu"
+
+        onClicked: {
+            prbGeneratorsLoader.source = ""
+            prbGeneratorsLoader.source = "../main.qml"
+            menuPRBgenerators.close()
+        }
+    }
+
+    Button {
+        id: buttonExit
+        anchors.top: buttonMenu.bottom
+        width: menuPRBgenerators.width
+        height: menuPRBgenerators.height / numberOfButton
+        text: "Exit"
+
+        onClicked: {
+            menuPRBgenerators.close()
+        }
+    }
+}
