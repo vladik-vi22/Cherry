@@ -23,21 +23,33 @@ BigInt::BigInt()
 {
 }
 
-BigInt::BigInt(std::string bigNumStr)
+BigInt::BigInt(std::string bigNumberString)
 {
-    if(bigNumStr[0] == '-')
+    if(bigNumberString[0] == '-')
     {
         positive = false;
-        bigNumStr.erase(0, 1);
+        bigNumberString.erase(0, 1);
     }
     else
+    {
         positive = true;
-    while(bigNumStr.length() % sizeOfCell != 0)
-        bigNumStr.insert(0, 1, '0');
-    int sizeOfArr = bigNumStr.length() / sizeOfCell;
+    }
+    while(bigNumberString.length() % sizeOfCell != 0)
+    {
+        bigNumberString.insert(0, 1, '0');
+    }
+    int sizeOfArr = bigNumberString.length() / sizeOfCell;
     bigNumArr.reserve(sizeOfArr);
     for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
-        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumStr.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base));
+    {
+        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberString.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base));
+    }
+}
+
+BigInt::BigInt(std::vector<uint32_t> bigNumberVector, bool isPositive)
+{
+    bigNumArr = bigNumberVector;
+    positive = isPositive;
 }
 
 BigInt::~BigInt()
@@ -47,8 +59,9 @@ BigInt::~BigInt()
 BigInt& BigInt::operator = (const BigInt& equal)
 {
     if(this == &equal)
+    {
         return *this;
-    bigNumArr.clear();
+    }
     bigNumArr = equal.bigNumArr;
     positive = equal.positive;
     return *this;
@@ -58,19 +71,10 @@ BigInt BigInt::operator + (BigInt addend)
 {
     BigInt sum;
     BigInt augend = *this;
-    if((augend.positive && augend.positive) || (!addend.positive && !addend.positive))
+    if((augend.positive && addend.positive) || (!augend.positive && !addend.positive))
     {
         sum.positive = augend.positive && addend.positive;
-        if(augend.bigNumArr.size() > addend.bigNumArr.size())
-        {
-            addend.bigNumArr.reserve(augend.bigNumArr.size());
-            addend.bigNumArr.resize(augend.bigNumArr.size(), 0);
-        }
-        else if(addend.bigNumArr.size() > augend.bigNumArr.size())
-        {
-            augend.bigNumArr.reserve(addend.bigNumArr.size());
-            augend.bigNumArr.resize(addend.bigNumArr.size(), 0);
-        }
+        augend.alignTo(addend);
         sum.bigNumArr.reserve(augend.bigNumArr.size() + 1);
         uint32_t carry = 0;
         if(base == baseHexadecimal || base == baseBinary)
@@ -81,10 +85,6 @@ BigInt BigInt::operator + (BigInt addend)
                 sum.bigNumArr.push_back(sum_temp & maxNumCellBinHex);
                 carry = sum_temp >> powOfBasisBinHex;
             }
-            if(carry != 0)
-                sum.bigNumArr.push_back(carry);
-
-            return sum;
         }
         else // base == baseDecimal
         {
@@ -94,11 +94,13 @@ BigInt BigInt::operator + (BigInt addend)
                 sum.bigNumArr.push_back(sum_temp % basisCalcSysDec);
                 carry = sum_temp / basisCalcSysDec;
             }
-            if(carry != 0)
-                sum.bigNumArr.push_back(carry);
-
-            return sum;
         }
+        if(carry != 0)
+        {
+            sum.bigNumArr.push_back(carry);
+        }
+
+        return sum;
     }
     else if(augend.positive) //  && !addend.positive
     {
@@ -129,19 +131,10 @@ BigInt BigInt::operator - (BigInt subtrahend)
         if(minuend >= subtrahend)
         {
             difference.positive = true;
-            if(minuend.bigNumArr.size() > subtrahend.bigNumArr.size())
-            {
-                subtrahend.bigNumArr.reserve(minuend.bigNumArr.size());
-                subtrahend.bigNumArr.resize(minuend.bigNumArr.size(), 0);
-            }
-            else if(subtrahend.bigNumArr.size() > minuend.bigNumArr.size())
-            {
-                minuend.bigNumArr.reserve(subtrahend.bigNumArr.size());
-                minuend.bigNumArr.resize(subtrahend.bigNumArr.size(), 0);
-            }
+            minuend.alignTo(subtrahend);
             difference.bigNumArr.reserve(minuend.bigNumArr.size());
             uint32_t borrow = 0;
-            uint64_t basis = base == (baseBinary || baseHexadecimal) ? (int64_t)basisCalcSysBinHex : (int64_t)basisCalcSysDec;
+            uint64_t basis = base == (baseBinary || baseHexadecimal) ? (uint64_t)basisCalcSysBinHex : (uint64_t)basisCalcSysDec;
             for(std::vector<uint32_t>::iterator iteratorMinuend = minuend.bigNumArr.begin(), iteratorSubtrahend = subtrahend.bigNumArr.begin(); iteratorMinuend != minuend.bigNumArr.end(); ++iteratorMinuend, ++iteratorSubtrahend)
             {
                 int64_t difference_temp = (int64_t)*iteratorMinuend - (int64_t)*iteratorSubtrahend - (int64_t)borrow;
@@ -167,20 +160,20 @@ BigInt BigInt::operator - (BigInt subtrahend)
             return difference;
         }
     }
-    else if(!positive && subtrahend.positive)
+    else if(subtrahend.positive) // && !minuend.positive
     {
         minuend = minuend.abs();
         difference = minuend + subtrahend;
         difference.positive = false;
         return difference;
     }
-    else if(positive && !subtrahend.positive)
+    else if(minuend.positive) // && !subtrahend.positive
     {
         subtrahend = subtrahend.abs();
         difference = minuend + subtrahend;
         return difference;
     }
-    else // !positive && !subtrahend.positive
+    else // !minuend.positive && !subtrahend.positive
     {
         minuend = minuend.abs();
         subtrahend = subtrahend.abs();
@@ -210,10 +203,6 @@ BigInt BigInt::operator * (uint32_t multiplier)
             product.bigNumArr.push_back(product_temp & maxNumCellBinHex);
             carry = product_temp >> powOfBasisBinHex;
         }
-        if(carry != 0)
-            product.bigNumArr.push_back(carry);
-
-        return product;
     }
     else // base == baseDecimal
     {
@@ -223,11 +212,13 @@ BigInt BigInt::operator * (uint32_t multiplier)
             product.bigNumArr.push_back(product_temp % basisCalcSysDec);
             carry = product_temp / basisCalcSysDec;
         }
-        if(carry != 0)
-            product.bigNumArr.push_back(carry);
-
-        return product;
     }
+    if(carry != 0)
+    {
+        product.bigNumArr.push_back(carry);
+    }
+
+    return product;
 }
 
 BigInt& BigInt::operator *= (uint32_t multiplier)
@@ -241,16 +232,7 @@ BigInt BigInt::operator * (BigInt multiplier)
     BigInt product;
     BigInt multiplicand = *this;
     product.positive = multiplicand.positive == multiplier.positive;
-    if(multiplicand.bigNumArr.size() > multiplier.bigNumArr.size())
-    {
-        multiplier.bigNumArr.reserve(multiplicand.bigNumArr.size());
-        multiplier.bigNumArr.resize(multiplicand.bigNumArr.size(), 0);
-    }
-    else if(multiplier.bigNumArr.size() > multiplicand.bigNumArr.size())
-    {
-        multiplicand.bigNumArr.reserve(multiplier.bigNumArr.size());
-        multiplicand.bigNumArr.resize(multiplier.bigNumArr.size(), 0);
-    }
+    multiplicand.alignTo(multiplier);
     uint32_t shift = 0;
     for(std::vector<uint32_t>::iterator iteratorMultiplier = multiplier.bigNumArr.begin(); iteratorMultiplier != multiplier.bigNumArr.end(); ++iteratorMultiplier, ++shift)
     {
@@ -258,6 +240,7 @@ BigInt BigInt::operator * (BigInt multiplier)
         product_temp = product_temp.shiftDigitsToHigh(shift);
         product += product_temp;
     }
+
     return product;
 }
 
@@ -271,13 +254,17 @@ bool BigInt::operator == (BigInt rightComparable)
 {
     BigInt leftComparable = *this;
     if(leftComparable.bigNumArr.size() != rightComparable.bigNumArr.size() || leftComparable.positive != rightComparable.positive)
+    {
         return false;
+    }
     else // leftComparable.bigNumArr.size() == rightComparable.bigNumArr.size() && leftComparable.positive == rightComparable.positive)
     {
         for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
         {
             if(*iteratorLeftComparable != *iteratorRightComparable)
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -286,10 +273,14 @@ bool BigInt::operator == (BigInt rightComparable)
 bool BigInt::operator > (BigInt rightComparable)
 {
     BigInt leftComparable = *this;
-    if(leftComparable.positive && !rightComparable.positive )
+    if(leftComparable.positive && !rightComparable.positive)
+    {
         return true;
+    }
     else if(!leftComparable.positive && rightComparable.positive)
+    {
         return false;
+    }
     else if(!leftComparable.positive && !rightComparable.positive)
     {
         leftComparable = leftComparable.abs();
@@ -299,15 +290,21 @@ bool BigInt::operator > (BigInt rightComparable)
     else // leftComparable.positive && rightComparable.posistive
     {
         if(leftComparable.bigNumArr.size() > rightComparable.bigNumArr.size())
+        {
             return true;
+        }
         else if(leftComparable.bigNumArr.size() < rightComparable.bigNumArr.size())
+        {
             return false;
+        }
         else // leftComparable.bigNumArr.size == rightComparable.BigNumArr.size()
         {
             for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
             {
                 if(*iteratorLeftComparable > *iteratorRightComparable)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -316,16 +313,21 @@ bool BigInt::operator > (BigInt rightComparable)
 
 bool BigInt::operator >= (BigInt rightComparable)
 {
-    return (*this ==rightComparable || *this >rightComparable);
+    BigInt leftComparable = *this;
+    return (leftComparable == rightComparable || leftComparable > rightComparable);
 }
 
 bool BigInt::operator < (BigInt rightComparable)
 {
     BigInt leftComparable = *this;
-    if(leftComparable.positive && !rightComparable.positive )
+    if(leftComparable.positive && !rightComparable.positive)
+    {
         return false;
+    }
     else if(!leftComparable.positive && rightComparable.positive)
+    {
         return true;
+    }
     else if(!leftComparable.positive && !rightComparable.positive)
     {
         leftComparable = leftComparable.abs();
@@ -335,15 +337,21 @@ bool BigInt::operator < (BigInt rightComparable)
     else // leftComparable.positive && rightComparable.posistive
     {
         if(leftComparable.bigNumArr.size() > rightComparable.bigNumArr.size())
+        {
             return false;
+        }
         else if(leftComparable.bigNumArr.size() < rightComparable.bigNumArr.size())
+        {
             return true;
+        }
         else // leftComparable.bigNumArr.size() == rightComparable.BigNumArr.size()
         {
             for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
             {
                 if(*iteratorLeftComparable < *iteratorRightComparable)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -352,12 +360,14 @@ bool BigInt::operator < (BigInt rightComparable)
 
 bool BigInt::operator <= (BigInt rightComparable)
 {
-    return (*this == rightComparable || *this < rightComparable);
+    BigInt leftComparable = *this;
+    return (leftComparable == rightComparable || leftComparable < rightComparable);
 }
 
 bool BigInt::operator != (BigInt rightComparable)
 {
-    return !(*this == rightComparable);
+    BigInt leftComparable = *this;
+    return !(leftComparable == rightComparable);
 }
 
 BigInt BigInt::shiftBitsToHigh(uint32_t shift)
@@ -368,31 +378,40 @@ BigInt BigInt::shiftBitsToHigh(uint32_t shift)
     if(shift == 1)
     {
         shifted.bigNumArr.reserve(shifting.bigNumArr.size() + 1);
-        uint32_t carryBitsBinHex = 0;
-        uint32_t carryDec = 0;
-        for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.begin(); iteratorShifting != shifting.bigNumArr.end(); ++iteratorShifting)
+        uint32_t carry = 0;
+        if(base == baseBinary || base == baseHexadecimal)
         {
-            uint32_t shifted_temp = *iteratorShifting << shift;
-            if(base == baseBinary || base == baseHexadecimal)
+            for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.begin(); iteratorShifting != shifting.bigNumArr.end(); ++iteratorShifting)
             {
-                shifted_temp |= carryBitsBinHex;
-                carryBitsBinHex = *iteratorShifting >> (powOfBasisBinHex - shift);
+                uint32_t shifted_temp = *iteratorShifting << shift;
+                shifted_temp |= carry;
+                carry = *iteratorShifting >> (powOfBasisBinHex - shift);
+                shifted.bigNumArr.push_back(shifted_temp);
             }
-            if(base == baseDecimal)
-            {
-                shifted_temp += carryDec;
-                carryDec = shifted_temp / basisCalcSysDec;
-                shifted_temp = shifted_temp % basisCalcSysDec;
-            }
-            shifted.bigNumArr.push_back(shifted_temp);
         }
-        shifted.bigNumArr.push_back(carryBitsBinHex + carryDec);
+        else // base == baseDecimal
+        {
+            for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.begin(); iteratorShifting != shifting.bigNumArr.end(); ++iteratorShifting)
+            {
+                uint32_t shifted_temp = *iteratorShifting << shift;
+                shifted_temp += carry;
+                carry = shifted_temp / basisCalcSysDec;
+                shifted_temp = shifted_temp % basisCalcSysDec;
+                shifted.bigNumArr.push_back(shifted_temp);
+            }
+        }
+        if(carry != 0)
+        {
+            shifted.bigNumArr.push_back(carry);
+        }
     }
     else
     {
         shifted = shifting;
         for(uint32_t indexShift = 0; indexShift < shift; ++indexShift)
+        {
             shifted = shifted.shiftBitsToHigh(1);
+        }
     }
 
     return shifted;
@@ -406,29 +425,35 @@ BigInt BigInt::shiftBitsToLow(uint32_t shift)
     if(shift == 1)
     {
         shifted.bigNumArr.reserve(shifting.bigNumArr.size());
-        uint32_t carryBitsBinHex = 0;
-        uint32_t carryDec = 0;
-        for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.end() - 1; iteratorShifting >= shifting.bigNumArr.begin(); --iteratorShifting)
+        uint32_t carry = 0;
+        if(base == baseBinary || base == baseHexadecimal)
         {
-            uint32_t shifted_temp = *iteratorShifting >> shift;
-            if(base == baseBinary || base == baseHexadecimal)
+            for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.end() - 1; iteratorShifting >= shifting.bigNumArr.begin(); --iteratorShifting)
             {
-                shifted_temp |= carryBitsBinHex;
-                carryBitsBinHex = (*iteratorShifting & 1) << (powOfBasisBinHex - shift);
+                uint32_t shifted_temp = *iteratorShifting >> shift;
+                shifted_temp |= carry;
+                carry = (*iteratorShifting & 1) << (powOfBasisBinHex - shift);
+                shifted.bigNumArr.insert(shifted.bigNumArr.begin(), 1, shifted_temp);
             }
-            if(base == baseDecimal)
+        }
+        else // base == baseDecimal
+        {
+            for(std::vector<uint32_t>::iterator iteratorShifting = shifting.bigNumArr.end() - 1; iteratorShifting >= shifting.bigNumArr.begin(); --iteratorShifting)
             {
-                shifted_temp += carryDec >> shift;
-                carryDec = (*iteratorShifting % 2) * basisCalcSysDec;
+                uint32_t shifted_temp = *iteratorShifting >> shift;
+                shifted_temp += carry >> shift;
+                carry = (*iteratorShifting % 2) * basisCalcSysDec;
+                shifted.bigNumArr.insert(shifted.bigNumArr.begin(), 1, shifted_temp);
             }
-            shifted.bigNumArr.insert(shifted.bigNumArr.begin(), 1, shifted_temp);
         }
     }
     else
     {
         shifted = shifting;
         for(uint32_t indexShift = 0; indexShift < shift; ++indexShift)
+        {
             shifted = shifted.shiftBitsToLow(1);
+        }
     }
 
     return shifted;
@@ -439,6 +464,7 @@ BigInt BigInt::shiftDigitsToHigh(uint32_t shift)
     BigInt shifted = *this;
     shifted.bigNumArr.reserve(shifted.bigNumArr.size() + shift);
     shifted.bigNumArr.insert(shifted.bigNumArr.begin(), shift, 0);
+
     return shifted;
 }
 
@@ -446,13 +472,16 @@ BigInt BigInt::shiftDigitsToLow(uint32_t shift)
 {
     BigInt shifted = *this;
     if(shifted.bigNumArr.size() > shift)
+    {
         shifted.bigNumArr.erase(shifted.bigNumArr.begin(), shifted.bigNumArr.begin() + shift);
+    }
     else // shifted.bigNumArr.size() <= shift
     {
         shifted.bigNumArr.clear();
         shifted.bigNumArr.push_back(0);
         shifted.positive = true;
     }
+
     return shifted;
 }
 
@@ -474,11 +503,27 @@ BigInt abs(BigInt bigNum)
     return bigNum.abs();
 }
 
+void BigInt::alignTo(BigInt& aligned)
+{
+    if(bigNumArr.size() > aligned.bigNumArr.size())
+    {
+        aligned.bigNumArr.reserve(bigNumArr.size());
+        aligned.bigNumArr.resize(bigNumArr.size(), 0);
+    }
+    else if(aligned.bigNumArr.size() > bigNumArr.size())
+    {
+        bigNumArr.reserve(aligned.bigNumArr.size());
+        bigNumArr.resize(aligned.bigNumArr.size(), 0);
+    }
+}
+
 void BigInt::print()
 {
     qDebug() << positive;
     for(std::vector<uint32_t>::iterator iterator = bigNumArr.end() - 1; iterator >= bigNumArr.begin(); --iterator)
+    {
         qDebug() << *iterator;
+    }
 }
 
 void print(BigInt BigNum)
