@@ -36,6 +36,8 @@ public:
     BigInt();
     BigInt(std::string bigNumberString);
     BigInt(std::vector<uint32_t> bigNumberVector, bool isPositive);
+    BigInt(uint32_t numberUint32_t, bool isPositive);
+    BigInt(int numberInt);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal);

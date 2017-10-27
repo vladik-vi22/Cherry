@@ -15,7 +15,7 @@ const int BigInt::sizeOfCellBin = 32;
 const int BigInt::sizeOfCellDec = 9;
 const int BigInt::sizeOfCellHex = 8;
 
-int BigInt::base = baseDecimal;
+int BigInt::base = baseHexadecimal;
 std::string BigInt::usedSymbols = base == baseBinary ? usedSymbolsBinary : (base == baseDecimal ? usedSymbolsDecimal : usedSymbolsHexadecimal);
 int BigInt::sizeOfCell = base == baseBinary ? sizeOfCellBin : (base == baseDecimal ? sizeOfCellDec : sizeOfCellHex);
 
@@ -50,6 +50,20 @@ BigInt::BigInt(std::vector<uint32_t> bigNumberVector, bool isPositive)
 {
     bigNumArr = bigNumberVector;
     positive = isPositive;
+}
+
+BigInt::BigInt(uint32_t numberUint32_t, bool isPositive)
+{
+    bigNumArr.reserve(1);
+    bigNumArr.push_back(numberUint32_t);
+    positive = isPositive;
+}
+
+BigInt::BigInt(int numberInt)
+{
+    bigNumArr.reserve(1);
+    bigNumArr.push_back(std::abs(numberInt));
+    positive = (numberInt >= 0);
 }
 
 BigInt::~BigInt()
@@ -247,6 +261,48 @@ BigInt BigInt::operator * (BigInt multiplier)
 BigInt& BigInt::operator *= (BigInt multiplier)
 {
     *this = *this * multiplier;
+    return *this;
+}
+
+std::pair<BigInt, BigInt> BigInt::DivMod(BigInt divisor)
+{
+    uint32_t bitLenghtDivisor = divisor.bigNumArr.size() * sizeof(uint32_t) * 8; // byte contains 8 bits
+    BigInt fraction(0);
+    BigInt remainder = *this;
+    while (remainder >= divisor)
+    {
+        uint32_t bitLenghtRemainder = remainder.bigNumArr.size() * sizeof(uint32_t) * 8; // byte contains 8 bits
+        qDebug() << "bitLenghtRemainder - bitLenghtDivisor = " << bitLenghtRemainder - bitLenghtDivisor;
+        BigInt C = divisor.shiftBitsToHigh(bitLenghtRemainder - bitLenghtDivisor);
+        if(remainder < C)
+        {
+            C = divisor.shiftBitsToHigh(--bitLenghtRemainder - bitLenghtDivisor);
+        }
+        remainder -= C;
+        fraction += BigInt(1 << (bitLenghtRemainder - bitLenghtDivisor)); // 1 << n = 2 ^ n
+    }
+    return std::make_pair(fraction, remainder);
+}
+
+BigInt BigInt::operator / (BigInt divisor)
+{
+    return DivMod(divisor).first;
+}
+
+BigInt& BigInt::operator /= (BigInt divisor)
+{
+    *this = DivMod(divisor).first;
+    return *this;
+}
+
+BigInt BigInt::operator % (BigInt divisor)
+{
+    return DivMod(divisor).second;
+}
+
+BigInt& BigInt::operator %= (BigInt divisor)
+{
+    *this = DivMod(divisor).second;
     return *this;
 }
 
@@ -484,12 +540,6 @@ BigInt BigInt::shiftDigitsToLow(uint32_t shift)
 
     return shifted;
 }
-
-/*std::pair<BigInt, BigInt> BigInt::DivMod(BigInt divisor)
-{
-    BigInt fraction;
-    BigInt remainder;
-}*/
 
 BigInt BigInt::abs()
 {
