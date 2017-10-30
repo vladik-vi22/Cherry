@@ -46,8 +46,8 @@ public:
 
     BigInt operator * (uint32_t multiplier) const;
     BigInt& operator *= (uint32_t multiplier);
-    BigInt operator * (BigInt multiplier) const;
-    BigInt& operator *= (BigInt multiplier);
+    BigInt operator * (const BigInt& multiplier) const;
+    BigInt& operator *= (const BigInt& multiplier);
 
     BigInt operator / (BigInt divisor);
     BigInt& operator /= (BigInt divisor);

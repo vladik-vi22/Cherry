@@ -220,14 +220,13 @@ BigInt& BigInt::operator *= (uint32_t multiplier)
     return *this;
 }
 
-BigInt BigInt::operator * (BigInt multiplier) const
+BigInt BigInt::operator * (const BigInt& multiplier) const
 {
     BigInt product;
     BigInt multiplicand = *this;
     product.positive = multiplicand.positive == multiplier.positive;
-    multiplicand.alignTo(multiplier);
     uint32_t shift = 0;
-    for(std::vector<uint32_t>::iterator iteratorMultiplier = multiplier.bigNumArr.begin(); iteratorMultiplier != multiplier.bigNumArr.end(); ++iteratorMultiplier, ++shift)
+    for(std::vector<uint32_t>::const_iterator iteratorMultiplier = multiplier.bigNumArr.begin(); iteratorMultiplier != multiplier.bigNumArr.end(); ++iteratorMultiplier, ++shift)
     {
         BigInt product_temp = multiplicand * *iteratorMultiplier;
         product_temp = product_temp.shiftDigitsToHigh(shift);
@@ -237,7 +236,7 @@ BigInt BigInt::operator * (BigInt multiplier) const
     return product;
 }
 
-BigInt& BigInt::operator *= (BigInt multiplier)
+BigInt& BigInt::operator *= (const BigInt& multiplier)
 {
     *this = *this * multiplier;
     return *this;
