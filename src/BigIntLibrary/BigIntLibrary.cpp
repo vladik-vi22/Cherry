@@ -306,56 +306,39 @@ BigInt& BigInt::operator %= (BigInt divisor)
     return *this;
 }
 
-bool BigInt::operator == (BigInt rightComparable)
+bool BigInt::operator == (const BigInt& rightComparable) const
 {
-    BigInt leftComparable = *this;
-    if(leftComparable.bigNumArr.size() != rightComparable.bigNumArr.size() || leftComparable.positive != rightComparable.positive)
-    {
-        return false;
-    }
-    else // leftComparable.bigNumArr.size() == rightComparable.bigNumArr.size() && leftComparable.positive == rightComparable.positive)
-    {
-        for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
-        {
-            if(*iteratorLeftComparable != *iteratorRightComparable)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    return (bigNumArr == rightComparable.bigNumArr && positive == rightComparable.positive);
 }
 
-bool BigInt::operator > (BigInt rightComparable)
+bool BigInt::operator > (BigInt& rightComparable)
 {
-    BigInt leftComparable = *this;
-    if(leftComparable.positive && !rightComparable.positive)
+    if(positive && !rightComparable.positive)
     {
         return true;
     }
-    else if(!leftComparable.positive && rightComparable.positive)
+    else if(!positive && rightComparable.positive)
     {
         return false;
     }
-    else if(!leftComparable.positive && !rightComparable.positive)
+    else if(!positive && !rightComparable.positive)
     {
-        leftComparable = leftComparable.abs();
-        rightComparable = rightComparable.abs();
-        return leftComparable < rightComparable;
+        BigInt rightComparableAbs = rightComparable.abs();
+        return abs() < rightComparableAbs;
     }
-    else // leftComparable.positive && rightComparable.posistive
+    else // positive && rightComparable.posistive
     {
-        if(leftComparable.bigNumArr.size() > rightComparable.bigNumArr.size())
+        if(bigNumArr.size() > rightComparable.bigNumArr.size())
         {
             return true;
         }
-        else if(leftComparable.bigNumArr.size() < rightComparable.bigNumArr.size())
+        else if(bigNumArr.size() < rightComparable.bigNumArr.size())
         {
             return false;
         }
-        else // leftComparable.bigNumArr.size == rightComparable.BigNumArr.size()
+        else // bigNumArr.size == rightComparable.BigNumArr.size()
         {
-            for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
+            for(std::vector<uint32_t>::iterator iteratorLeftComparable = bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
             {
                 if(*iteratorLeftComparable > *iteratorRightComparable)
                 {
@@ -367,42 +350,39 @@ bool BigInt::operator > (BigInt rightComparable)
     }
 }
 
-bool BigInt::operator >= (BigInt rightComparable)
+bool BigInt::operator >= (BigInt& rightComparable)
 {
-    BigInt leftComparable = *this;
-    return (leftComparable == rightComparable || leftComparable > rightComparable);
+    return (*this == rightComparable || *this > rightComparable);
 }
 
-bool BigInt::operator < (BigInt rightComparable)
+bool BigInt::operator < (BigInt& rightComparable)
 {
-    BigInt leftComparable = *this;
-    if(leftComparable.positive && !rightComparable.positive)
+    if(positive && !rightComparable.positive)
     {
         return false;
     }
-    else if(!leftComparable.positive && rightComparable.positive)
+    else if(!positive && rightComparable.positive)
     {
         return true;
     }
-    else if(!leftComparable.positive && !rightComparable.positive)
+    else if(!positive && !rightComparable.positive)
     {
-        leftComparable = leftComparable.abs();
-        rightComparable = rightComparable.abs();
-        return leftComparable > rightComparable;
+        BigInt rightComparableAbs = rightComparable.abs();
+        return abs() > rightComparableAbs;
     }
-    else // leftComparable.positive && rightComparable.posistive
+    else // positive && rightComparable.posistive
     {
-        if(leftComparable.bigNumArr.size() > rightComparable.bigNumArr.size())
+        if(bigNumArr.size() > rightComparable.bigNumArr.size())
         {
             return false;
         }
-        else if(leftComparable.bigNumArr.size() < rightComparable.bigNumArr.size())
+        else if(bigNumArr.size() < rightComparable.bigNumArr.size())
         {
             return true;
         }
-        else // leftComparable.bigNumArr.size() == rightComparable.BigNumArr.size()
+        else // bigNumArr.size() == rightComparable.BigNumArr.size()
         {
-            for(std::vector<uint32_t>::iterator iteratorLeftComparable = leftComparable.bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= leftComparable.bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
+            for(std::vector<uint32_t>::iterator iteratorLeftComparable = bigNumArr.end() - 1, iteratorRightComparable = rightComparable.bigNumArr.end() - 1; iteratorLeftComparable >= bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
             {
                 if(*iteratorLeftComparable < *iteratorRightComparable)
                 {
@@ -414,16 +394,14 @@ bool BigInt::operator < (BigInt rightComparable)
     }
 }
 
-bool BigInt::operator <= (BigInt rightComparable)
+bool BigInt::operator <= (BigInt& rightComparable)
 {
-    BigInt leftComparable = *this;
-    return (leftComparable == rightComparable || leftComparable < rightComparable);
+    return (*this == rightComparable || *this < rightComparable);
 }
 
-bool BigInt::operator != (BigInt rightComparable)
+bool BigInt::operator != (const BigInt& rightComparable) const
 {
-    BigInt leftComparable = *this;
-    return !(leftComparable == rightComparable);
+    return (positive != rightComparable.positive || bigNumArr != rightComparable.bigNumArr);
 }
 
 BigInt BigInt::shiftBitsToHigh(uint32_t shift)
@@ -579,4 +557,37 @@ void BigInt::print()
 void print(BigInt BigNum)
 {
     BigNum.print();
+}
+
+std::string strDec2strBin(std::string strDec)
+{
+    const int sizeOfCell = 9;
+    const int basisCalcSysDec = 1000000000;
+    std::string strBin;
+    std::vector<uint32_t> bigNumArr;
+    while(strDec.length() % sizeOfCell != 0)
+    {
+        strDec.insert(0, 1, '0');
+    }
+    int sizeOfArr = strDec.length() / sizeOfCell;
+    bigNumArr.reserve(sizeOfArr);
+    for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
+    {
+        bigNumArr.push_back(std::stoul(strDec.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, 10));
+    }
+    std::vector<uint32_t> zeroArr;
+    zeroArr.resize(bigNumArr.size(), 0);
+    while(bigNumArr != zeroArr)
+    {
+        uint32_t carryNext = 0;
+        for(std::vector<uint32_t>::iterator iteratorShifting = bigNumArr.begin(); iteratorShifting != bigNumArr.end(); ++iteratorShifting)
+        {
+            uint32_t carryCurrent = carryNext;
+            carryNext = (*iteratorShifting & 1);
+            *iteratorShifting = (*iteratorShifting + carryCurrent * basisCalcSysDec) >> 1;
+        }
+        char charBin = carryNext == 0 ? '0' : '1';
+        strBin.insert(strBin.begin(), 1, charBin);
+    }
+    return strBin;
 }

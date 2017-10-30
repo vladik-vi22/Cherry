@@ -8,7 +8,6 @@
 
 class BigInt
 {
-
     static const int baseBinary; // 2
     static const int baseDecimal; // 10
     static const int baseHexadecimal; // 16
@@ -44,6 +43,7 @@ public:
 
     BigInt operator + (BigInt addend);
     BigInt& operator += (BigInt addend);
+
     BigInt operator - (BigInt subtrahend);
     BigInt& operator -= (BigInt subtrahend);
 
@@ -58,12 +58,12 @@ public:
     BigInt operator % (BigInt divisor);
     BigInt& operator %= (BigInt divisor);
 
-    bool operator == (BigInt rightComparable);
-    bool operator > (BigInt rightComparable);
-    bool operator >= (BigInt rightComparable);
-    bool operator < (BigInt rightComparable);
-    bool operator <= (BigInt rightComparable);
-    bool operator != (BigInt rightComparable);
+    bool operator == (const BigInt& rightComparable) const;
+    bool operator > (BigInt& rightComparable);
+    bool operator >= (BigInt& rightComparable);
+    bool operator < (BigInt& rightComparable);
+    bool operator <= (BigInt& rightComparable);
+    bool operator != (const BigInt& rightComparable) const;
 
     BigInt shiftBitsToHigh(uint32_t shift);
     BigInt shiftBitsToLow(uint32_t shift);
@@ -80,5 +80,6 @@ private:
 
 BigInt abs(BigInt bigNum);
 void print(BigInt BigNum);
+std::string strDec2strBin(std::string decStr);
 
 #endif // BigIntLibrary_H

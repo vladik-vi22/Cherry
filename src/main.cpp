@@ -25,8 +25,11 @@ int main(int argc, char *argv[])
     BigInt t2("6163E66885CEAC8F3D86CF07A4A");
     BigInt t3("1CBE991A83");
     BigInt resTest;
-    resTest = t1 / t2;
-    print(resTest);
+//    resTest = t1 / t2;
+//    print(resTest);
+    std::string strDec = "9223372036854775807";
+    std::string strBin = strDec2strBin(strDec);
+    qDebug() << "hi" <<QString::fromStdString(strBin);
     return app.exec();
 }
 
