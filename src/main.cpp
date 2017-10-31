@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 //    BigInt t2("6163E66885CEAC8F3D86CF07A4A");
 //    BigInt t3("1CBE991A83");
     BigInt resTest;
-    resTest = t3.shiftBitsToHigh(71);
+    resTest = t3 * t2;
     print(resTest);
     return app.exec();
 }

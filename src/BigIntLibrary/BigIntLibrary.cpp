@@ -193,14 +193,13 @@ BigInt& BigInt::operator -= (BigInt subtrahend)
     return *this;
 }
 
-BigInt BigInt::operator * (uint32_t multiplier) const
+BigInt BigInt::operator * (const uint32_t multiplier) const
 {
     BigInt product;
-    BigInt multiplicand = *this;
-    product.positive = multiplicand.positive;
-    product.bigNumArr.reserve(multiplicand.bigNumArr.size() + 1);
+    product.positive = positive;
+    product.bigNumArr.reserve(bigNumArr.size() + 1);
     uint32_t carry = 0;
-    for(std::vector<uint32_t>::iterator iteratorMultiplicand = multiplicand.bigNumArr.begin(); iteratorMultiplicand != multiplicand.bigNumArr.end(); ++iteratorMultiplicand)
+    for(std::vector<uint32_t>::const_iterator iteratorMultiplicand = bigNumArr.begin(); iteratorMultiplicand != bigNumArr.end(); ++iteratorMultiplicand)
     {
         uint64_t product_temp = (uint64_t)*iteratorMultiplicand * (uint64_t)multiplier + (uint64_t)carry;
         product.bigNumArr.push_back(product_temp & maxNumCell);
@@ -214,7 +213,7 @@ BigInt BigInt::operator * (uint32_t multiplier) const
     return product;
 }
 
-BigInt& BigInt::operator *= (uint32_t multiplier)
+BigInt& BigInt::operator *= (const uint32_t multiplier)
 {
     *this = *this * multiplier;
     return *this;
@@ -223,12 +222,11 @@ BigInt& BigInt::operator *= (uint32_t multiplier)
 BigInt BigInt::operator * (const BigInt& multiplier) const
 {
     BigInt product;
-    BigInt multiplicand = *this;
-    product.positive = multiplicand.positive == multiplier.positive;
+    product.positive = positive == multiplier.positive;
     uint32_t shift = 0;
     for(std::vector<uint32_t>::const_iterator iteratorMultiplier = multiplier.bigNumArr.begin(); iteratorMultiplier != multiplier.bigNumArr.end(); ++iteratorMultiplier, ++shift)
     {
-        BigInt product_temp = multiplicand * *iteratorMultiplier;
+        BigInt product_temp = *this * *iteratorMultiplier;
         product_temp = product_temp.shiftDigitsToHigh(shift);
         product += product_temp;
     }
@@ -381,7 +379,7 @@ bool BigInt::operator != (const BigInt& rightComparable) const
     return (positive != rightComparable.positive || bigNumArr != rightComparable.bigNumArr);
 }
 
-BigInt BigInt::shiftBitsToHigh(uint32_t shift) const
+BigInt BigInt::shiftBitsToHigh(const uint32_t shift) const
 {
     BigInt shifted;
     shifted.positive = positive;
@@ -414,7 +412,7 @@ BigInt BigInt::shiftBitsToHigh(uint32_t shift) const
     return shifted;
 }
 
-BigInt BigInt::shiftBitsToLow(uint32_t shift) const
+BigInt BigInt::shiftBitsToLow(const uint32_t shift) const
 {
     BigInt shifted;
     shifted.positive = positive;
@@ -443,7 +441,7 @@ BigInt BigInt::shiftBitsToLow(uint32_t shift) const
     return shifted;
 }
 
-BigInt BigInt::shiftDigitsToHigh(uint32_t shift) const
+BigInt BigInt::shiftDigitsToHigh(const uint32_t shift) const
 {
     BigInt shifted = *this;
     shifted.bigNumArr.reserve(shifted.bigNumArr.size() + shift);
@@ -452,7 +450,7 @@ BigInt BigInt::shiftDigitsToHigh(uint32_t shift) const
     return shifted;
 }
 
-BigInt BigInt::shiftDigitsToLow(uint32_t shift) const
+BigInt BigInt::shiftDigitsToLow(const uint32_t shift) const
 {
     BigInt shifted = *this;
     if(shifted.bigNumArr.size() > shift)
@@ -527,7 +525,7 @@ void print(const BigInt& BigNum)
 std::string strDec2strBin(std::string strDec)
 {
     const int sizeOfCell = 9;
-    const int basisCalc = 1000000000;
+    const uint32_t basisCalc = 1000000000;
     std::string strBin;
     std::vector<uint32_t> bigNumArr;
     while(strDec.length() % sizeOfCell != 0)

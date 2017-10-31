@@ -44,8 +44,8 @@ public:
     BigInt operator - (BigInt subtrahend) const;
     BigInt& operator -= (BigInt subtrahend);
 
-    BigInt operator * (uint32_t multiplier) const;
-    BigInt& operator *= (uint32_t multiplier);
+    BigInt operator * (const uint32_t multiplier) const;
+    BigInt& operator *= (const uint32_t multiplier);
     BigInt operator * (const BigInt& multiplier) const;
     BigInt& operator *= (const BigInt& multiplier);
 
@@ -62,10 +62,10 @@ public:
     bool operator <= (const BigInt& rightComparable) const;
     bool operator != (const BigInt& rightComparable) const;
 
-    BigInt shiftBitsToHigh(uint32_t shift) const;
-    BigInt shiftBitsToLow(uint32_t shift) const;
-    BigInt shiftDigitsToHigh(uint32_t shift) const;
-    BigInt shiftDigitsToLow(uint32_t shift) const;
+    BigInt shiftBitsToHigh(const uint32_t shift) const;
+    BigInt shiftBitsToLow(const uint32_t shift) const;
+    BigInt shiftDigitsToHigh(const uint32_t shift) const;
+    BigInt shiftDigitsToLow(const uint32_t shift) const;
 
     BigInt abs() const;
     void print() const;
