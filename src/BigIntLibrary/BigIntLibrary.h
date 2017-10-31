@@ -38,22 +38,22 @@ public:
 
     BigInt& operator = (const BigInt& equal);
 
-    BigInt operator + (BigInt addend) const;
-    BigInt& operator += (BigInt addend);
+    BigInt operator + (const BigInt& addend) const;
+    BigInt& operator += (const BigInt& addend);
 
-    BigInt operator - (BigInt subtrahend) const;
-    BigInt& operator -= (BigInt subtrahend);
+    BigInt operator - (const BigInt& subtrahend) const;
+    BigInt& operator -= (const BigInt& subtrahend);
 
     BigInt operator * (const uint32_t multiplier) const;
     BigInt& operator *= (const uint32_t multiplier);
     BigInt operator * (const BigInt& multiplier) const;
     BigInt& operator *= (const BigInt& multiplier);
 
-    BigInt operator / (BigInt divisor);
-    BigInt& operator /= (BigInt divisor);
+    BigInt operator / (const BigInt& divisor) const;
+    BigInt& operator /= (const BigInt& divisor);
 
-    BigInt operator % (BigInt divisor);
-    BigInt& operator %= (BigInt divisor);
+    BigInt operator % (const BigInt& divisor) const;
+    BigInt& operator %= (const BigInt& divisor);
 
     bool operator == (const BigInt& rightComparable) const;
     bool operator > (const BigInt& rightComparable) const;
