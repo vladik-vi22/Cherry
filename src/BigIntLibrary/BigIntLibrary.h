@@ -1,6 +1,7 @@
 #ifndef BigIntLibrary_H
 #define BigIntLibrary_H
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -22,8 +23,6 @@ class BigInt
 
     static int baseInput;
     static int baseOutput;
-    static std::string usedSymbols;
-    static int sizeOfCell;
 
 private:
     bool positive;
@@ -31,19 +30,28 @@ private:
 
 public:
     BigInt();
-    BigInt(std::string bigNumberString);
-    BigInt(std::vector<uint32_t> bigNumberVector, bool isPositive);
-    BigInt(uint32_t numberUint32_t, bool isPositive);
-    BigInt(int numberInt);
+    BigInt(const BigInt& bigNumber);
+    BigInt(const std::string& bigNumberString, const int base = baseInput);
+    BigInt(const std::vector<uint32_t>& bigNumberVector, const bool isPositive = true);
+    BigInt(const uint32_t numberUint32_t, const bool isPositive = true);
+    BigInt(const int numberInt);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal);
+    BigInt& operator = (const std::string& equal);
+    BigInt& operator = (const std::vector<uint32_t>& equal);
+    BigInt& operator = (const uint32_t equal);
+    BigInt& operator = (const int equal);
 
     BigInt operator + (const BigInt& addend) const;
     BigInt& operator += (const BigInt& addend);
+    BigInt& operator ++ ();
+    BigInt operator ++ (int);
 
     BigInt operator - (const BigInt& subtrahend) const;
     BigInt& operator -= (const BigInt& subtrahend);
+    BigInt& operator -- ();
+    BigInt operator -- (int);
 
     BigInt operator * (const uint32_t multiplier) const;
     BigInt& operator *= (const uint32_t multiplier);
@@ -56,8 +64,7 @@ public:
     BigInt operator % (const BigInt& divisor) const;
     BigInt& operator %= (const BigInt& divisor);
 
-    BigInt operator ^ (const BigInt& exponent) const;
-    BigInt operator ^= (const BigInt& exponent);
+    friend BigInt pow(const BigInt& base, const BigInt& exponent);
 
     bool operator == (const BigInt& rightComparable) const;
     bool operator > (const BigInt& rightComparable) const;
@@ -66,23 +73,23 @@ public:
     bool operator <= (const BigInt& rightComparable) const;
     bool operator != (const BigInt& rightComparable) const;
 
-    BigInt shiftBitsToHigh(const uint32_t shift) const;
-    BigInt shiftBitsToLow(const uint32_t shift) const;
-    BigInt shiftDigitsToHigh(const uint32_t shift) const;
-    BigInt shiftDigitsToLow(const uint32_t shift) const;
+    BigInt operator << (const uint32_t shift) const;
+    BigInt operator >> (const uint32_t shift) const;
 
-    BigInt abs() const;
-    void print() const;
-    uint32_t BitLenght() const;
+    friend BigInt abs(const BigInt& bigNum);
+    friend BigInt gcd(const BigInt& bigNum1, const BigInt& bigNum2);
+
+    friend void print(const BigInt& BigNum);
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
+    uint32_t BitLenght() const;
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
+    BigInt shiftDigitsToHigh(const uint32_t shift) const;
+    BigInt shiftDigitsToLow(const uint32_t shift) const;
 };
 
-BigInt abs(const BigInt& bigNum);
-void print(const BigInt& BigNum);
 std::string strDec2strBin(std::string strDec);
 
 #endif // BigIntLibrary_H
