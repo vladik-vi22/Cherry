@@ -20,7 +20,8 @@ class BigInt
     static const int sizeOfCellBin; // 32
     static const int sizeOfCellHex; // 8
 
-    static int base;
+    static int baseInput;
+    static int baseOutput;
     static std::string usedSymbols;
     static int sizeOfCell;
 
@@ -55,6 +56,9 @@ public:
     BigInt operator % (const BigInt& divisor) const;
     BigInt& operator %= (const BigInt& divisor);
 
+    BigInt operator ^ (const BigInt& exponent) const;
+    BigInt operator ^= (const BigInt& exponent);
+
     bool operator == (const BigInt& rightComparable) const;
     bool operator > (const BigInt& rightComparable) const;
     bool operator >= (const BigInt& rightComparable) const;
@@ -69,11 +73,12 @@ public:
 
     BigInt abs() const;
     void print() const;
+    uint32_t BitLenght() const;
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
     void alignTo(BigInt& aligned);
-    uint32_t BitLenght() const;
+    void deleteZeroHighOrderDigit();
 };
 
 BigInt abs(const BigInt& bigNum);

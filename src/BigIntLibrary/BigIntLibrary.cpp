@@ -12,9 +12,9 @@ const uint32_t BigInt::powOfBasis = 32;
 const int BigInt::sizeOfCellBin = 32;
 const int BigInt::sizeOfCellHex = 8;
 
-int BigInt::base = baseDecimal;
-std::string BigInt::usedSymbols = base == baseBinary ? usedSymbolsBinary : (base == baseDecimal ? usedSymbolsDecimal : usedSymbolsHexadecimal);
-int BigInt::sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
+int BigInt::baseInput = baseDecimal;
+std::string BigInt::usedSymbols = baseInput == baseBinary ? usedSymbolsBinary : (baseInput == baseDecimal ? usedSymbolsDecimal : usedSymbolsHexadecimal);
+int BigInt::sizeOfCell = baseInput == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
 
 BigInt::BigInt()
 {
@@ -31,7 +31,7 @@ BigInt::BigInt(std::string bigNumberString)
     {
         positive = true;
     }
-    if(base == baseDecimal)
+    if(baseInput == baseDecimal)
     {
         bigNumberString = strDec2strBin(bigNumberString);
     }
@@ -44,7 +44,7 @@ BigInt::BigInt(std::string bigNumberString)
     bigNumArr.reserve(sizeOfArr);
     for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
     {
-        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberString.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base == baseHexadecimal ? baseHexadecimal : baseBinary));
+        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberString.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, baseInput == baseHexadecimal ? baseHexadecimal : baseBinary));
     }
 }
 
@@ -183,6 +183,7 @@ BigInt BigInt::operator - (const BigInt& subtrahend) const
                 }
                 ++iteratorMinuend;
             }
+            difference.deleteZeroHighOrderDigit();
             return difference;
         }
         else // minuend < subtrahend
@@ -271,17 +272,11 @@ std::pair<BigInt, BigInt> BigInt::DivMod(const BigInt& divisor) const
     while(remainder >= divisor)
     {
         uint32_t bitLenghtRemainder = remainder.BitLenght();
-        qDebug() << bitLenghtRemainder;
         BigInt borrow = divisor.shiftBitsToHigh(bitLenghtRemainder - bitLenghtDivisor);
         if(remainder < borrow)
         {
             --bitLenghtRemainder;
             borrow = divisor.shiftBitsToHigh(bitLenghtRemainder - bitLenghtDivisor);
-        }
-        if(bitLenghtRemainder == 96)
-        {
-            remainder.print();
-            borrow.print();
         }
         remainder -= borrow;
         fraction += BigInt(1).shiftBitsToHigh(bitLenghtRemainder - bitLenghtDivisor); // 1 << n = 2 ^ n
@@ -310,6 +305,10 @@ BigInt& BigInt::operator %= (const BigInt& divisor)
     *this = DivMod(divisor).second;
     return *this;
 }
+
+/*BigInt BigInt::operator ^ (const BigInt& exponent)
+{
+}*/
 
 bool BigInt::operator == (const BigInt& rightComparable) const
 {
@@ -549,6 +548,17 @@ void BigInt::alignTo(BigInt& aligned)
     {
         bigNumArr.reserve(aligned.bigNumArr.size());
         bigNumArr.resize(aligned.bigNumArr.size(), 0);
+    }
+}
+
+void BigInt::deleteZeroHighOrderDigit()
+{
+    if(bigNumArr.size() > 1)
+    {
+        while(bigNumArr.back() == 0)
+        {
+            bigNumArr.pop_back();
+        }
     }
 }
 
