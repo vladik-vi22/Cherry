@@ -34,14 +34,18 @@ public:
     BigInt(const std::string& bigNumberString, const int base = baseInput);
     BigInt(const std::vector<uint32_t>& bigNumberVector, const bool isPositive = true);
     BigInt(const uint32_t numberUint32_t, const bool isPositive = true);
+    BigInt(const uint64_t numberUint64_t, const bool isPositive = true);
     BigInt(const int numberInt);
+    BigInt(const long long numberLongLong);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal);
     BigInt& operator = (const std::string& equal);
     BigInt& operator = (const std::vector<uint32_t>& equal);
     BigInt& operator = (const uint32_t equal);
+    BigInt& operator = (const uint64_t equal);
     BigInt& operator = (const int equal);
+    BigInt& operator = (const long long equal);
 
     BigInt operator + (const BigInt& addend) const;
     BigInt& operator += (const BigInt& addend);
@@ -66,6 +70,11 @@ public:
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent);
 
+    BigInt operator << (const uint32_t shift) const;
+    BigInt& operator <<= (const uint32_t shift);
+    BigInt operator >> (const uint32_t shift) const;
+    BigInt& operator >>= (const uint32_t shift);
+
     bool operator == (const BigInt& rightComparable) const;
     bool operator > (const BigInt& rightComparable) const;
     bool operator >= (const BigInt& rightComparable) const;
@@ -73,17 +82,21 @@ public:
     bool operator <= (const BigInt& rightComparable) const;
     bool operator != (const BigInt& rightComparable) const;
 
-    BigInt operator << (const uint32_t shift) const;
-    BigInt operator >> (const uint32_t shift) const;
-
     friend BigInt abs(const BigInt& bigNum);
-    friend BigInt gcd(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend BigInt gcd(BigInt bigNum1, BigInt bigNum2);
 
-    friend void print(const BigInt& BigNum);
+    friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
+
+    friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
+    friend QDebug operator << (QDebug out, const BigInt& bigNum);
+    friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
-    uint32_t BitLenght() const;
+    uint32_t bitLenght() const;
+    bool isEven() const;
+    bool isOdd() const;
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
     BigInt shiftDigitsToHigh(const uint32_t shift) const;
