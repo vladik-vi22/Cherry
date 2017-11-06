@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdint>
 #include <QDebug>
+#include <bitset>
+#include <sstream>
+#include <iomanip>
 
 class BigInt
 {
@@ -31,8 +33,9 @@ private:
 public:
     BigInt();
     BigInt(const BigInt& bigNumber);
-    BigInt(const std::string& bigNumberString, const int base = baseInput);
-    BigInt(const std::vector<uint32_t>& bigNumberVector, const bool isPositive = true);
+    BigInt(const std::string& bigNumberStdString, const int base = baseInput);
+    BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool isPositive = true);
+    BigInt(const std::vector<std::bitset<32> >& bigNumberStdVectorBitset32, const bool isPositive = true);
     BigInt(const uint32_t numberUint32_t, const bool isPositive = true);
     BigInt(const uint64_t numberUint64_t, const bool isPositive = true);
     BigInt(const int numberInt);
@@ -42,6 +45,7 @@ public:
     BigInt& operator = (const BigInt& equal);
     BigInt& operator = (const std::string& equal);
     BigInt& operator = (const std::vector<uint32_t>& equal);
+    BigInt& operator = (const std::vector<std::bitset<32> >& equal);
     BigInt& operator = (const uint32_t equal);
     BigInt& operator = (const uint64_t equal);
     BigInt& operator = (const int equal);
@@ -92,6 +96,8 @@ public:
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
+    std::string toStdString(const int base = baseOutput) const;
+
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
     uint32_t bitLenght() const;
@@ -101,6 +107,7 @@ private:
     void deleteZeroHighOrderDigit();
     BigInt shiftDigitsToHigh(const uint32_t shift) const;
     BigInt shiftDigitsToLow(const uint32_t shift) const;
+    BigInt toBigIntDec() const;
 };
 
 std::string strDec2strBin(std::string strDec);

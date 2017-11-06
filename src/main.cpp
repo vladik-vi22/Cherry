@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
     BigInt t4("AA974A9FC15a781496F1E50AB871A6EDB4F011EA15A4D24F820B9A0CBEA2195D0", 16);
     BigInt t5("6163E66885CEAC8F3D86CF07A4A", 16);
     BigInt t6("1CBE991A83", 16);
-    BigInt t7("263130836933693530167218012159999999 ", 10);
-    BigInt t8("-8683317618811886495518194401279999999 ", 10);
-    BigInt resTest;
-    //resTest = UINT64_MAX;
-    qDebug() << t8;
+    BigInt t7(-3);
+    BigInt t8(3);
+    BigInt t9("1000000", 10);
+    BigInt resTest = t7 + t8;
+    qDebug() << resTest;
     return app.exec();
 }
 

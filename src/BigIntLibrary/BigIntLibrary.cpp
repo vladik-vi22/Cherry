@@ -13,6 +13,7 @@ const int BigInt::sizeOfCellBin = 32;
 const int BigInt::sizeOfCellHex = 8;
 
 int BigInt::baseInput = baseDecimal;
+int BigInt::baseOutput = baseDecimal;
 
 BigInt::BigInt()
 {
@@ -24,15 +25,15 @@ BigInt::BigInt(const BigInt& bigNumber)
     positive = bigNumber.positive;
 }
 
-BigInt::BigInt(const std::string& bigNumberString, const int base)
+BigInt::BigInt(const std::string& bigNumberStdString, const int base)
 {
     const std::string usedSymbols = base == baseBinary ? usedSymbolsBinary : (baseInput == baseDecimal ? usedSymbolsDecimal : usedSymbolsHexadecimal);
     const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
-    std::string bigNumberStringInput = bigNumberString;
-    if(bigNumberStringInput[0] == '-')
+    std::string bigNumberStdStringInput = bigNumberStdString;
+    if(bigNumberStdStringInput[0] == '-')
     {
         positive = false;
-        bigNumberStringInput.erase(0, 1);
+        bigNumberStdStringInput.erase(0, 1);
     }
     else
     {
@@ -40,24 +41,34 @@ BigInt::BigInt(const std::string& bigNumberString, const int base)
     }
     if(base == baseDecimal)
     {
-        bigNumberStringInput = strDec2strBin(bigNumberStringInput);
+        bigNumberStdStringInput = strDec2strBin(bigNumberStdStringInput);
     }
-    while(bigNumberStringInput.length() % sizeOfCell != 0)
+    while(bigNumberStdStringInput.length() % sizeOfCell != 0)
     {
-        bigNumberStringInput.insert(0, 1, '0');
+        bigNumberStdStringInput.insert(0, 1, '0');
     }
-    int sizeOfArr = bigNumberStringInput.length() / sizeOfCell;
+    int sizeOfArr = bigNumberStdStringInput.length() / sizeOfCell;
     bigNumArr.clear();
     bigNumArr.reserve(sizeOfArr);
     for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
     {
-        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberStringInput.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base == baseHexadecimal ? baseHexadecimal : baseBinary));
+        bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberStdStringInput.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base == baseHexadecimal ? baseHexadecimal : baseBinary));
     }
 }
 
-BigInt::BigInt(const std::vector<uint32_t>& bigNumberVector, const bool isPositive)
+BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool isPositive)
 {
-    bigNumArr = bigNumberVector;
+    bigNumArr = bigNumberStdVectorUint32_t;
+    positive = isPositive;
+}
+
+BigInt::BigInt(const std::vector<std::bitset<32> > &bigNumberStdVectorBitset32, const bool isPositive)
+{
+    bigNumArr.reserve(bigNumberStdVectorBitset32.size());
+    for(std::vector<std::bitset<32> >::const_iterator iterator = bigNumberStdVectorBitset32.begin(); iterator != bigNumberStdVectorBitset32.end(); ++iterator)
+    {
+        bigNumArr.push_back(iterator->to_ulong());
+    }
     positive = isPositive;
 }
 
@@ -124,6 +135,12 @@ BigInt& BigInt::operator = (const std::vector<uint32_t>& equal)
     }
     bigNumArr = equal;
     positive = true;
+    return *this;
+}
+
+BigInt& BigInt::operator = (const std::vector<std::bitset<32> >& equal)
+{
+    *this = BigInt(equal, true);
     return *this;
 }
 
@@ -346,6 +363,10 @@ BigInt BigInt::operator -- (int)
 
 BigInt BigInt::operator * (const uint32_t multiplier) const
 {
+    if(*this == 0 || multiplier == 0)
+    {
+        return 0;
+    }
     BigInt product;
     product.positive = positive;
     product.bigNumArr.reserve(bigNumArr.size() + 1);
@@ -372,6 +393,10 @@ BigInt& BigInt::operator *= (const uint32_t multiplier)
 
 BigInt BigInt::operator * (const BigInt& multiplier) const
 {
+    if(*this == 0 || multiplier == 0)
+    {
+        return 0;
+    }
     BigInt product;
     product.positive = positive == multiplier.positive;
     uint32_t shift = 0;
@@ -395,18 +420,26 @@ std::pair<BigInt, BigInt> BigInt::DivMod(const BigInt& divisor) const
 {
     uint32_t bitLenghtDivisor = divisor.bitLenght();
     BigInt fraction(0);
-    BigInt remainder = *this;
-    while(remainder >= divisor)
+    BigInt remainder = abs(*this);
+    while(remainder >= abs(divisor))
     {
         uint32_t bitLenghtRemainder = remainder.bitLenght();
-        BigInt borrow = divisor << (bitLenghtRemainder - bitLenghtDivisor);
+        BigInt borrow = abs(divisor) << (bitLenghtRemainder - bitLenghtDivisor);
         if(remainder < borrow)
         {
             --bitLenghtRemainder;
-            borrow = divisor << (bitLenghtRemainder - bitLenghtDivisor);
+            borrow = abs(divisor) << (bitLenghtRemainder - bitLenghtDivisor);
         }
         remainder -= borrow;
         fraction += BigInt(1) << (bitLenghtRemainder - bitLenghtDivisor); // 1 << n = 2 ^ n
+    }
+    if(fraction != 0)
+    {
+        fraction.positive = positive == divisor.positive;
+    }
+    if(remainder != 0)
+    {
+        remainder.positive = positive;
     }
 
     return std::make_pair(fraction, remainder);
@@ -436,21 +469,36 @@ BigInt& BigInt::operator %= (const BigInt& divisor)
 
 BigInt pow(const BigInt& base, const BigInt& exponent)
 {
+    if(exponent == 0)
+    {
+        return 1;
+    }
+    else if(exponent == 1)
+    {
+        return base;
+    }
+    else if(!exponent.positive)
+    {
+        return 0;
+    }
     BigInt power(1);
     uint32_t bitLenghtExponent = exponent.bitLenght();
     for(uint32_t indexBitExponent = bitLenghtExponent - 1; indexBitExponent > 0; --indexBitExponent)
     {
-        if((exponent.bigNumArr[indexBitExponent / BigInt::powOfBasis] >> (indexBitExponent % BigInt::powOfBasis)) & 1)
+        if(exponent.bigNumArr[indexBitExponent / BigInt::powOfBasis] & (1 << (indexBitExponent % BigInt::powOfBasis)))
         {
             power *= base;
         }
         power *= power;
     }
-    if((exponent.bigNumArr[0] >> (BigInt::powOfBasis - 1)) & 1)
+    if(exponent.bigNumArr.front() & 1)
     {
         power *= base;
     }
-
+    if(!base.positive)
+    {
+        power.positive = exponent.isEven();
+    }
     return power;
 }
 
@@ -680,41 +728,15 @@ const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2)
 
 std::ostream& operator << (std::ostream& out, const BigInt& bigNum)
 {
-    if(bigNum.bigNumArr.size() == 0)
-    {
-        out << "0";
-    }
-    else
-    {
-        if(!bigNum.positive)
-        {
-            out << "-";
-        }
-        for(std::vector<uint32_t>::const_iterator iterator = std::prev(bigNum.bigNumArr.end()); iterator >= bigNum.bigNumArr.begin(); --iterator)
-        {
-            out << *iterator;
-        }
-    }
+    std::string bigNumberString = bigNum.toStdString(BigInt::baseOutput);
+    out << bigNumberString;
     return out;
 }
 
 QDebug operator << (QDebug out, const BigInt& bigNum)
 {
-    if(bigNum.bigNumArr.size() == 0)
-    {
-        out << "0";
-    }
-    else
-    {
-        if(!bigNum.positive)
-        {
-            out << "-";
-        }
-        for(std::vector<uint32_t>::const_iterator iterator = std::prev(bigNum.bigNumArr.end()); iterator >= bigNum.bigNumArr.begin(); --iterator)
-        {
-            out << *iterator;
-        }
-    }
+    std::string bigNumberString = bigNum.toStdString(BigInt::baseOutput);
+    out << QString::fromStdString(bigNumberString);
     return out;
 }
 
@@ -724,6 +746,45 @@ std::istream& operator >> (std::istream& in, BigInt& bigNum)
     in >> bigNumberString;
     bigNum = bigNumberString;
     return in;
+}
+
+std::string BigInt::toStdString(const int base) const
+{
+    std::stringstream bigNumberStringStream;
+    std::string bigNumberString;
+    if(bigNumArr.size() == 0 || *this == 0)
+    {
+        return "0";
+    }
+    if(!positive)
+    {
+        bigNumberStringStream << '-';
+    }
+    if(base == baseBinary)
+    {
+        for(std::vector<uint32_t>::const_iterator iterator = std::prev(bigNumArr.end()); iterator >= bigNumArr.begin(); --iterator)
+        {
+            bigNumberStringStream << std::bitset<sizeOfCellBin>(*iterator);
+        }
+    }
+    else if(base == baseHexadecimal)
+    {
+        for(std::vector<uint32_t>::const_iterator iterator = std::prev(bigNumArr.end()); iterator >= bigNumArr.begin(); --iterator)
+        {
+            bigNumberStringStream << std::hex << std::setw(8) << std::setfill('0') << *iterator;
+        }
+    }
+    else // base == baseDecimal
+    {
+        BigInt bigNumberDec = toBigIntDec();
+        for(std::vector<uint32_t>::const_iterator iterator = std::prev(bigNumberDec.bigNumArr.end()); iterator >= bigNumberDec.bigNumArr.begin(); --iterator)
+        {
+            bigNumberStringStream << std::dec << std::setw(9) << std::setfill('0') << *iterator;
+        }
+    }
+    bigNumberString = bigNumberStringStream.str();
+    bigNumberString.erase(0, bigNumberString.find_first_not_of('0'));
+    return bigNumberString;
 }
 
 uint32_t BigInt::bitLenght() const
@@ -805,6 +866,23 @@ BigInt BigInt::shiftDigitsToLow(const uint32_t shift) const
     }
 
     return shifted;
+}
+
+BigInt BigInt::toBigIntDec() const
+{
+    const uint32_t basisCalcSysDec = 1000000000;
+    BigInt bigNumber = *this;
+    BigInt bigNumberDec;
+    bigNumberDec.positive = positive;
+    bigNumberDec.bigNumArr.reserve(bigNumArr.size() + 1);
+    std::pair<BigInt, BigInt> BigNumberDivModBasisCalcSysDec;
+    while(bigNumber != 0)
+    {
+        BigNumberDivModBasisCalcSysDec = bigNumber.DivMod(basisCalcSysDec);
+        bigNumberDec.bigNumArr.push_back(BigNumberDivModBasisCalcSysDec.second.bigNumArr.front());
+        bigNumber = BigNumberDivModBasisCalcSysDec.first;
+    }
+    return bigNumberDec;
 }
 
 std::string strDec2strBin(std::string strDec)
