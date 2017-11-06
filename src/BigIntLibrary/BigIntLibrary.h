@@ -42,52 +42,66 @@ public:
     BigInt(const long long numberLongLong);
     ~BigInt();
 
-    BigInt& operator = (const BigInt& equal);
-    BigInt& operator = (const std::string& equal);
-    BigInt& operator = (const std::vector<uint32_t>& equal);
-    BigInt& operator = (const std::vector<std::bitset<32> >& equal);
-    BigInt& operator = (const uint32_t equal);
-    BigInt& operator = (const uint64_t equal);
-    BigInt& operator = (const int equal);
-    BigInt& operator = (const long long equal);
+    BigInt& operator = (const BigInt& equal); // simple assignment
+    BigInt& operator = (const std::string& equal); // simple assignment
+    BigInt& operator = (const std::vector<uint32_t>& equal); // simple assignment
+    BigInt& operator = (const std::vector<std::bitset<32> >& equal); // simple assignment
+    BigInt& operator = (const uint32_t equal); // simple assignment
+    BigInt& operator = (const uint64_t equal); // simple assignment
+    BigInt& operator = (const int equal); // simple assignment
+    BigInt& operator = (const long long equal); // simple assignment
 
-    BigInt operator + (const BigInt& addend) const;
-    BigInt& operator += (const BigInt& addend);
-    BigInt& operator ++ ();
-    BigInt operator ++ (int);
+    BigInt operator +() const; // unary plus
+    BigInt operator + (const BigInt& addend) const; // addition
+    BigInt& operator += (const BigInt& addend); // addition assignment
+    BigInt& operator ++(); // pre-increment
+    BigInt operator ++(int); // post-increment
 
-    BigInt operator - (const BigInt& subtrahend) const;
-    BigInt& operator -= (const BigInt& subtrahend);
-    BigInt& operator -- ();
-    BigInt operator -- (int);
+    BigInt operator -() const; // unary minus
+    BigInt operator - (const BigInt& subtrahend) const; // subtraction
+    BigInt& operator -= (const BigInt& subtrahend); // subtraction assignment
+    BigInt& operator --(); // pre-decrement
+    BigInt operator --(int); // post-decrement
 
-    BigInt operator * (const uint32_t multiplier) const;
-    BigInt& operator *= (const uint32_t multiplier);
-    BigInt operator * (const BigInt& multiplier) const;
-    BigInt& operator *= (const BigInt& multiplier);
+    BigInt operator * (const uint32_t multiplier) const; // multiplication
+    BigInt& operator *= (const uint32_t multiplier); // multiplication assignment
+    BigInt operator * (const BigInt& multiplier) const; // multiplication
+    BigInt& operator *= (const BigInt& multiplier); // multiplication assignment
 
-    BigInt operator / (const BigInt& divisor) const;
-    BigInt& operator /= (const BigInt& divisor);
+    BigInt operator / (const BigInt& divisor) const; // division
+    BigInt& operator /= (const BigInt& divisor); // division assignment
 
-    BigInt operator % (const BigInt& divisor) const;
-    BigInt& operator %= (const BigInt& divisor);
+    BigInt operator % (const BigInt& divisor) const; // modulo
+    BigInt& operator %= (const BigInt& divisor); // modulo assignment
 
-    friend BigInt pow(const BigInt& base, const BigInt& exponent);
+    friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
-    BigInt operator << (const uint32_t shift) const;
-    BigInt& operator <<= (const uint32_t shift);
-    BigInt operator >> (const uint32_t shift) const;
-    BigInt& operator >>= (const uint32_t shift);
+    BigInt operator ~() const; // bitwise NOT
+    BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND // TODO with negative
+    BigInt& operator &= (const BigInt& rightBitwiseAND); // bitwise AND assignment
+    BigInt operator | (const BigInt& rightBitwiseOR) const; // bitwise OR // TODO with negative
+    BigInt& operator |= (const BigInt& rightBitwiseOR); // bitwise OR assignment
+    BigInt operator ^ (const BigInt& rightBitwiseXOR) const; // bitwise XOR // TODO with negative
+    BigInt& operator ^= (const BigInt& rightBitwiseXOR); // bitwise XOR assignment
 
-    bool operator == (const BigInt& rightComparable) const;
-    bool operator > (const BigInt& rightComparable) const;
-    bool operator >= (const BigInt& rightComparable) const;
-    bool operator < (const BigInt& rightComparable) const;
-    bool operator <= (const BigInt& rightComparable) const;
-    bool operator != (const BigInt& rightComparable) const;
+    BigInt operator << (const uint32_t shift) const; // bitwise left shift
+    BigInt& operator <<= (const uint32_t shift); // bitwise left shift assignment
+    BigInt operator >> (const uint32_t shift) const; // bitwise right shift
+    BigInt& operator >>= (const uint32_t shift); // bitwise right shift assignment
 
-    friend BigInt abs(const BigInt& bigNum);
-    friend BigInt gcd(BigInt bigNum1, BigInt bigNum2);
+    bool operator !() const; // negation
+    bool operator && (const BigInt& rightAND) const; // AND
+    bool operator || (const BigInt& rightOR) const; // inclusive OR
+
+    bool operator == (const BigInt& rightComparable) const; // equal to
+    bool operator != (const BigInt& rightComparable) const; // not equal to
+    bool operator < (const BigInt& rightComparable) const; // less than
+    bool operator > (const BigInt& rightComparable) const; // greater than
+    bool operator <= (const BigInt& rightComparable) const; // less than or equal to
+    bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
+
+    friend BigInt abs(const BigInt& bigNum); // absolute value
+    friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
 
     friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
     friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
