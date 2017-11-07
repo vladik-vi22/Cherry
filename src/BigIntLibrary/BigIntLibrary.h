@@ -14,9 +14,9 @@ class BigInt
     static const int baseBinary; // 2
     static const int baseDecimal; // 10
     static const int baseHexadecimal; // 16
-    static const std::string usedSymbolsBinary; // "01"
-    static const std::string usedSymbolsDecimal; // "0123456789"
-    static const std::string usedSymbolsHexadecimal; // "0123456789abcdefABCDEF"
+    static const std::string usedCharsBinary; // "01"
+    static const std::string usedCharsDecimal; // "0123456789"
+    static const std::string usedCharsHexadecimal; // "0123456789abcdefABCDEF"
     static const uint64_t basisCalcSys; // UINT32_MAX + 1 // 2^32 // 4294967296
     static const uint32_t maxNumCell; // UINT32_MAX // 4294967295
     static const uint32_t powOfBasis; // 32
@@ -68,20 +68,20 @@ public:
     BigInt operator * (const BigInt& multiplier) const; // multiplication
     BigInt& operator *= (const BigInt& multiplier); // multiplication assignment
 
-    BigInt operator / (const BigInt& divisor) const; // division
+    inline BigInt operator / (const BigInt& divisor) const; // division
     BigInt& operator /= (const BigInt& divisor); // division assignment
 
-    BigInt operator % (const BigInt& divisor) const; // modulo
+    inline BigInt operator % (const BigInt& divisor) const; // modulo
     BigInt& operator %= (const BigInt& divisor); // modulo assignment
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
-    BigInt operator ~() const; // bitwise NOT
-    BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND // TODO with negative
+    inline BigInt operator ~() const; // bitwise NOT
+    BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND
     BigInt& operator &= (const BigInt& rightBitwiseAND); // bitwise AND assignment
-    BigInt operator | (const BigInt& rightBitwiseOR) const; // bitwise OR // TODO with negative
+    BigInt operator | (const BigInt& rightBitwiseOR) const; // bitwise OR
     BigInt& operator |= (const BigInt& rightBitwiseOR); // bitwise OR assignment
-    BigInt operator ^ (const BigInt& rightBitwiseXOR) const; // bitwise XOR // TODO with negative
+    BigInt operator ^ (const BigInt& rightBitwiseXOR) const; // bitwise XOR
     BigInt& operator ^= (const BigInt& rightBitwiseXOR); // bitwise XOR assignment
 
     BigInt operator << (const uint32_t shift) const; // bitwise left shift
@@ -93,34 +93,33 @@ public:
     bool operator && (const BigInt& rightAND) const; // AND
     bool operator || (const BigInt& rightOR) const; // inclusive OR
 
-    bool operator == (const BigInt& rightComparable) const; // equal to
-    bool operator != (const BigInt& rightComparable) const; // not equal to
+    inline bool operator == (const BigInt& rightComparable) const; // equal to
+    inline bool operator != (const BigInt& rightComparable) const; // not equal to
     bool operator < (const BigInt& rightComparable) const; // less than
     bool operator > (const BigInt& rightComparable) const; // greater than
-    bool operator <= (const BigInt& rightComparable) const; // less than or equal to
-    bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
+    inline bool operator <= (const BigInt& rightComparable) const; // less than or equal to
+    inline bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
 
     friend BigInt abs(const BigInt& bigNum); // absolute value
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
 
-    friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
-    friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend inline const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend inline const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
 
     friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
-    std::string toStdString(const int base = baseOutput) const;
-
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
     uint32_t bitLenght() const;
-    bool isEven() const;
-    bool isOdd() const;
+    inline bool isEven() const;
+    inline bool isOdd() const;
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
     BigInt shiftDigitsToHigh(const uint32_t shift) const;
     BigInt shiftDigitsToLow(const uint32_t shift) const;
+    std::string toStdString(const int base = baseOutput) const;
     BigInt toBigIntDec() const;
 };
 

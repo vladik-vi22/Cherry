@@ -3,9 +3,9 @@
 const int BigInt::baseBinary = 2;
 const int BigInt::baseDecimal = 10;
 const int BigInt::baseHexadecimal = 16;
-const std::string BigInt::usedSymbolsBinary = "01";
-const std::string BigInt::usedSymbolsDecimal = "0123456789";
-const std::string BigInt::usedSymbolsHexadecimal = "0123456789abcdefABCDEF";
+const std::string BigInt::usedCharsBinary = "01";
+const std::string BigInt::usedCharsDecimal = "0123456789";
+const std::string BigInt::usedCharsHexadecimal = "0123456789abcdefABCDEF";
 const uint64_t BigInt::basisCalcSys = (uint64_t)UINT32_MAX + (uint64_t)1; // 2^32 // 4294967296
 const uint32_t BigInt::maxNumCell = UINT32_MAX; // 2^32 - 1 // 4294967295
 const uint32_t BigInt::powOfBasis = 32;
@@ -27,17 +27,16 @@ BigInt::BigInt(const BigInt& bigNumber)
 
 BigInt::BigInt(const std::string& bigNumberStdString, const int base)
 {
-    const std::string usedSymbols = base == baseBinary ? usedSymbolsBinary : (baseInput == baseDecimal ? usedSymbolsDecimal : usedSymbolsHexadecimal);
-    const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
-    std::string bigNumberStdStringInput = bigNumberStdString;
-    qDebug() << bigNumberStdStringInput.find_first_not_of(usedSymbols);
-    qDebug() << bigNumberStdStringInput.length();
-    if(bigNumberStdStringInput.find_first_not_of(usedSymbols) >= bigNumberStdStringInput.length())
+    const std::string usedChars = base == baseBinary ? usedCharsBinary : (base == baseDecimal ? usedCharsDecimal : usedCharsHexadecimal);
+    if(bigNumberStdString.find_first_not_of(usedChars) < bigNumberStdString.length())
     {
         positive = true;
         bigNumArr.push_back(0);
+        qDebug() << QString::fromStdString(bigNumberStdString) << "incorrect";
         return;
     }
+    const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
+    std::string bigNumberStdStringInput = bigNumberStdString;
     if(bigNumberStdStringInput[0] == '-')
     {
         positive = false;
@@ -206,14 +205,14 @@ BigInt& BigInt::operator = (const long long equal)
 
 BigInt BigInt::operator +() const
 {
-    return abs(*this);
+    return *this;
 }
 
 BigInt BigInt::operator + (const BigInt& addend) const
 {
-    BigInt sum;
     if((positive && addend.positive) || (!positive && !addend.positive))
     {
+        BigInt sum;
         sum.positive = positive && addend.positive;
         bool augendGreater = (bigNumArr.size() >= addend.bigNumArr.size());
         sum.bigNumArr.reserve(augendGreater ? bigNumArr.size() + 1 : addend.bigNumArr.size() + 1);
@@ -244,17 +243,13 @@ BigInt BigInt::operator + (const BigInt& addend) const
 
         return sum;
     }
-    else if(positive) //  && !addend.positive
+    else if(positive && !addend.positive)
     {
-        sum = *this - abs(addend);
-
-        return sum;
+        return *this - abs(addend);
     }
-    else // !augend.positive && addend.positive
+    else // !positive && addend.positive
     {
-        sum = addend - abs(*this);
-
-        return sum;
+        return addend - abs(*this);
     }
 }
 
@@ -280,17 +275,17 @@ BigInt BigInt::operator ++(int)
 BigInt BigInt::operator -() const
 {
     BigInt negative = *this;
-    negative.positive = false;
+    negative.positive = !positive;
     return negative;
 }
 
 BigInt BigInt::operator - (const BigInt& subtrahend) const
 {
-    BigInt difference;
     if(positive && subtrahend.positive)
     {
         if(*this >= subtrahend)
         {
+            BigInt difference;
             difference.positive = true;
             difference.bigNumArr.reserve(bigNumArr.size());
             std::vector<uint32_t>::const_iterator iteratorMinuend = bigNumArr.begin();
@@ -335,30 +330,20 @@ BigInt BigInt::operator - (const BigInt& subtrahend) const
         }
         else // minuend < subtrahend
         {
-            difference = subtrahend - *this;
-            difference.positive = false;
-
-            return difference;
+            return -(subtrahend - *this);
         }
     }
     else if(!positive && subtrahend.positive)
     {
-        difference = abs(*this) + subtrahend;
-        difference.positive = false;
-
-        return difference;
+        return -(abs(*this) + subtrahend);
     }
     else if(positive && !subtrahend.positive)
     {
-        difference = *this + abs(subtrahend);
-
-        return difference;
+        return *this + abs(subtrahend);
     }
     else // !positive && !subtrahend.positive
     {
-        difference = abs(subtrahend) - abs(*this);
-
-        return difference;
+        return abs(subtrahend) - abs(*this);
     }
 }
 
@@ -493,10 +478,6 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
     {
         return 1;
     }
-    else if(exponent == 1)
-    {
-        return base;
-    }
     else if(!exponent.positive)
     {
         return 0;
@@ -524,25 +505,38 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
 
 BigInt BigInt::operator ~() const
 {
-    BigInt bitwiseNOT = *this + 1;
-    bitwiseNOT.positive = !positive;
-    return bitwiseNOT;
+    return -*this - 1;
 }
 
 BigInt BigInt::operator & (const BigInt& rightBitwiseAND) const
 {
-    BigInt bitwiseAND;
-    bitwiseAND.bigNumArr.reserve(std::min(bigNumArr.size(), rightBitwiseAND.bigNumArr.size()));
-    std::vector<uint32_t>::const_iterator iteratorLeftBitwiseAND = bigNumArr.begin();
-    std::vector<uint32_t>::const_iterator iteratorRightBitwiseAND = rightBitwiseAND.bigNumArr.begin();
-    while (iteratorLeftBitwiseAND != bigNumArr.end() && iteratorRightBitwiseAND != rightBitwiseAND.bigNumArr.end())
+    if(positive && rightBitwiseAND.positive)
     {
-        bitwiseAND.bigNumArr.push_back(*iteratorLeftBitwiseAND & *iteratorRightBitwiseAND);
-        ++iteratorLeftBitwiseAND;
-        ++iteratorRightBitwiseAND;
+        BigInt bitwiseAND;
+        bitwiseAND.bigNumArr.reserve(std::min(bigNumArr.size(), rightBitwiseAND.bigNumArr.size()));
+        std::vector<uint32_t>::const_iterator iteratorLeftBitwiseAND = bigNumArr.begin();
+        std::vector<uint32_t>::const_iterator iteratorRightBitwiseAND = rightBitwiseAND.bigNumArr.begin();
+        while (iteratorLeftBitwiseAND != bigNumArr.end() && iteratorRightBitwiseAND != rightBitwiseAND.bigNumArr.end())
+        {
+            bitwiseAND.bigNumArr.push_back(*iteratorLeftBitwiseAND & *iteratorRightBitwiseAND);
+            ++iteratorLeftBitwiseAND;
+            ++iteratorRightBitwiseAND;
+        }
+        bitwiseAND.positive = true;
+        return bitwiseAND;
     }
-    bitwiseAND.positive = true;
-    return bitwiseAND;
+    else if(!positive && !rightBitwiseAND.positive)
+    {
+        return -(~*this | ~rightBitwiseAND) - 1;
+    }
+    else if(positive && !rightBitwiseAND.positive)
+    {
+        return (*this | ~rightBitwiseAND) + rightBitwiseAND + 1;
+    }
+    else // !positive && rightBitwiseAnd.positive
+    {
+        return (~*this | rightBitwiseAND) + *this + 1;
+    }
 }
 
 BigInt& BigInt::operator &= (const BigInt& rightBitwiseAND)
@@ -553,26 +547,41 @@ BigInt& BigInt::operator &= (const BigInt& rightBitwiseAND)
 
 BigInt BigInt::operator | (const BigInt& rightBitwiseOR) const
 {
-    BigInt bitwiseOR;
-    const bool leftBitwiseORGreater = (bigNumArr.size() >= rightBitwiseOR.bigNumArr.size());
-    bitwiseOR.bigNumArr.reserve(leftBitwiseORGreater ? bigNumArr.size() + 1 : rightBitwiseOR.bigNumArr.size() + 1);
-    std::vector<uint32_t>::const_iterator iteratorLeftBitwiseOR = leftBitwiseORGreater ? bigNumArr.begin() : rightBitwiseOR.bigNumArr.begin();
-    std::vector<uint32_t>::const_iterator iteratorRightBitwiseOR = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.begin() : bigNumArr.begin();
-    std::vector<uint32_t>::const_iterator iteratorLeftBitwiseOREnd = leftBitwiseORGreater ? bigNumArr.end() : rightBitwiseOR.bigNumArr.end();
-    std::vector<uint32_t>::const_iterator iteratorRightBitwiseOREnd = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.end() : bigNumArr.end();
-    while (iteratorRightBitwiseOR != iteratorRightBitwiseOREnd)
+    if(positive && rightBitwiseOR.positive)
     {
-        bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR | *iteratorRightBitwiseOR);
-        ++iteratorLeftBitwiseOR;
-        ++iteratorRightBitwiseOR;
+        BigInt bitwiseOR;
+        const bool leftBitwiseORGreater = (bigNumArr.size() >= rightBitwiseOR.bigNumArr.size());
+        bitwiseOR.bigNumArr.reserve(leftBitwiseORGreater ? bigNumArr.size() + 1 : rightBitwiseOR.bigNumArr.size() + 1);
+        std::vector<uint32_t>::const_iterator iteratorLeftBitwiseOR = leftBitwiseORGreater ? bigNumArr.begin() : rightBitwiseOR.bigNumArr.begin();
+        std::vector<uint32_t>::const_iterator iteratorRightBitwiseOR = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.begin() : bigNumArr.begin();
+        std::vector<uint32_t>::const_iterator iteratorLeftBitwiseOREnd = leftBitwiseORGreater ? bigNumArr.end() : rightBitwiseOR.bigNumArr.end();
+        std::vector<uint32_t>::const_iterator iteratorRightBitwiseOREnd = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.end() : bigNumArr.end();
+        while (iteratorRightBitwiseOR != iteratorRightBitwiseOREnd)
+        {
+            bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR | *iteratorRightBitwiseOR);
+            ++iteratorLeftBitwiseOR;
+            ++iteratorRightBitwiseOR;
+        }
+        while (iteratorLeftBitwiseOR != iteratorLeftBitwiseOREnd)
+        {
+            bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR);
+            ++iteratorLeftBitwiseOR;
+        }
+        bitwiseOR.positive = true;
+        return bitwiseOR;
     }
-    while (iteratorLeftBitwiseOR != iteratorLeftBitwiseOREnd)
+    else if(!positive && !rightBitwiseOR.positive)
     {
-        bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR);
-        ++iteratorLeftBitwiseOR;
+        return -(~*this & ~rightBitwiseOR) - 1;
     }
-    bitwiseOR.positive = true;
-    return bitwiseOR;
+    else if(positive && !rightBitwiseOR.positive)
+    {
+        return (*this & ~rightBitwiseOR) + rightBitwiseOR;
+    }
+    else // !positive && rightBitwiseOR.positive
+    {
+        return (~*this & rightBitwiseOR) + *this;
+    }
 }
 
 BigInt& BigInt::operator |= (const BigInt& rightBitwiseOR)
@@ -583,26 +592,33 @@ BigInt& BigInt::operator |= (const BigInt& rightBitwiseOR)
 
 BigInt BigInt::operator ^ (const BigInt& rightBitwiseXOR) const
 {
-    BigInt bitwiseXOR;
-    const bool leftBitwiseXORGreater = (bigNumArr.size() >= rightBitwiseXOR.bigNumArr.size());
-    bitwiseXOR.bigNumArr.reserve(leftBitwiseXORGreater ? bigNumArr.size() + 1 : rightBitwiseXOR.bigNumArr.size() + 1);
-    std::vector<uint32_t>::const_iterator iteratorLeftBitwiseXOR = leftBitwiseXORGreater ? bigNumArr.begin() : rightBitwiseXOR.bigNumArr.begin();
-    std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOR = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.begin() : bigNumArr.begin();
-    std::vector<uint32_t>::const_iterator iteratorLeftBitwiseXOREnd = leftBitwiseXORGreater ? bigNumArr.end() : rightBitwiseXOR.bigNumArr.end();
-    std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOREnd = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.end() : bigNumArr.end();
-    while (iteratorRightBitwiseXOR != iteratorRightBitwiseXOREnd)
+    if(positive && rightBitwiseXOR.positive)
     {
-        bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR ^ *iteratorRightBitwiseXOR);
-        ++iteratorLeftBitwiseXOR;
-        ++iteratorRightBitwiseXOR;
+        BigInt bitwiseXOR;
+        const bool leftBitwiseXORGreater = (bigNumArr.size() >= rightBitwiseXOR.bigNumArr.size());
+        bitwiseXOR.bigNumArr.reserve(leftBitwiseXORGreater ? bigNumArr.size() + 1 : rightBitwiseXOR.bigNumArr.size() + 1);
+        std::vector<uint32_t>::const_iterator iteratorLeftBitwiseXOR = leftBitwiseXORGreater ? bigNumArr.begin() : rightBitwiseXOR.bigNumArr.begin();
+        std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOR = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.begin() : bigNumArr.begin();
+        std::vector<uint32_t>::const_iterator iteratorLeftBitwiseXOREnd = leftBitwiseXORGreater ? bigNumArr.end() : rightBitwiseXOR.bigNumArr.end();
+        std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOREnd = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.end() : bigNumArr.end();
+        while (iteratorRightBitwiseXOR != iteratorRightBitwiseXOREnd)
+        {
+            bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR ^ *iteratorRightBitwiseXOR);
+            ++iteratorLeftBitwiseXOR;
+            ++iteratorRightBitwiseXOR;
+        }
+        while (iteratorLeftBitwiseXOR != iteratorLeftBitwiseXOREnd)
+        {
+            bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR);
+            ++iteratorLeftBitwiseXOR;
+        }
+        bitwiseXOR.positive = true;
+        return bitwiseXOR;
     }
-    while (iteratorLeftBitwiseXOR != iteratorLeftBitwiseXOREnd)
+    else // !positive || !rightBitwiseXOR.positive
     {
-        bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR);
-        ++iteratorLeftBitwiseXOR;
+        return (*this | rightBitwiseXOR) & (~*this | ~rightBitwiseXOR);
     }
-    bitwiseXOR.positive = true;
-    return bitwiseXOR;
 }
 
 BigInt& BigInt::operator ^= (const BigInt& rightBitwiseXOR)
@@ -634,18 +650,20 @@ BigInt BigInt::operator << (const uint32_t shift) const
         {
             shifted.bigNumArr.push_back(carry);
         }
+
+        return shifted;
     }
     else // shift >= powOfBasis
     {
         shifted = *this;
         for(uint32_t indexShift = 0; indexShift < shift / (powOfBasis - 1); ++indexShift)
         {
-            shifted = shifted << (powOfBasis - 1);
+            shifted <<= (powOfBasis - 1);
         }
-        shifted = shifted << (shift % (powOfBasis - 1));
-    }
+        shifted <<= (shift % (powOfBasis - 1));
 
-    return shifted;
+        return shifted;
+    }
 }
 
 BigInt& BigInt::operator <<= (const uint32_t shift)
@@ -679,9 +697,9 @@ BigInt BigInt::operator >> (const uint32_t shift) const
         shifted = *this;
         for(uint32_t indexShift = 0; indexShift < shift / (powOfBasis - 1); ++indexShift)
         {
-            shifted = shifted >> (powOfBasis - 1);
+            shifted >>= (powOfBasis - 1);
         }
-        shifted = shifted >> (shift % (powOfBasis - 1));
+        shifted >>= (shift % (powOfBasis - 1));
     }
     shifted.deleteZeroHighOrderDigit();
 
@@ -735,47 +753,9 @@ bool BigInt::operator == (const BigInt& rightComparable) const
     return (bigNumArr == rightComparable.bigNumArr && positive == rightComparable.positive);
 }
 
-bool BigInt::operator > (const BigInt& rightComparable) const
+bool BigInt::operator != (const BigInt& rightComparable) const
 {
-    if(positive && !rightComparable.positive)
-    {
-        return true;
-    }
-    else if(!positive && rightComparable.positive)
-    {
-        return false;
-    }
-    else if(!positive && !rightComparable.positive)
-    {
-        return abs(*this) < abs(rightComparable);
-    }
-    else // positive && rightComparable.posistive
-    {
-        if(bigNumArr.size() > rightComparable.bigNumArr.size())
-        {
-            return true;
-        }
-        else if(bigNumArr.size() < rightComparable.bigNumArr.size())
-        {
-            return false;
-        }
-        else // bigNumArr.size == rightComparable.BigNumArr.size()
-        {
-            for(std::vector<uint32_t>::const_iterator iteratorLeftComparable = std::prev(bigNumArr.end()), iteratorRightComparable = std::prev(rightComparable.bigNumArr.end()); iteratorLeftComparable >= bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
-            {
-                if(*iteratorLeftComparable != *iteratorRightComparable)
-                {
-                    return *iteratorLeftComparable > *iteratorRightComparable;
-                }
-            }
-            return false;
-        }
-    }
-}
-
-bool BigInt::operator >= (const BigInt& rightComparable) const
-{
-    return (*this == rightComparable || *this > rightComparable);
+    return (positive != rightComparable.positive || bigNumArr != rightComparable.bigNumArr);
 }
 
 bool BigInt::operator < (const BigInt& rightComparable) const
@@ -816,14 +796,52 @@ bool BigInt::operator < (const BigInt& rightComparable) const
     }
 }
 
+bool BigInt::operator > (const BigInt& rightComparable) const
+{
+    if(positive && !rightComparable.positive)
+    {
+        return true;
+    }
+    else if(!positive && rightComparable.positive)
+    {
+        return false;
+    }
+    else if(!positive && !rightComparable.positive)
+    {
+        return abs(*this) < abs(rightComparable);
+    }
+    else // positive && rightComparable.posistive
+    {
+        if(bigNumArr.size() > rightComparable.bigNumArr.size())
+        {
+            return true;
+        }
+        else if(bigNumArr.size() < rightComparable.bigNumArr.size())
+        {
+            return false;
+        }
+        else // bigNumArr.size == rightComparable.BigNumArr.size()
+        {
+            for(std::vector<uint32_t>::const_iterator iteratorLeftComparable = std::prev(bigNumArr.end()), iteratorRightComparable = std::prev(rightComparable.bigNumArr.end()); iteratorLeftComparable >= bigNumArr.begin(); --iteratorLeftComparable, --iteratorRightComparable)
+            {
+                if(*iteratorLeftComparable != *iteratorRightComparable)
+                {
+                    return *iteratorLeftComparable > *iteratorRightComparable;
+                }
+            }
+            return false;
+        }
+    }
+}
+
 bool BigInt::operator <= (const BigInt& rightComparable) const
 {
     return (*this == rightComparable || *this < rightComparable);
 }
 
-bool BigInt::operator != (const BigInt& rightComparable) const
+bool BigInt::operator >= (const BigInt& rightComparable) const
 {
-    return (positive != rightComparable.positive || bigNumArr != rightComparable.bigNumArr);
+    return (*this == rightComparable || *this > rightComparable);
 }
 
 BigInt abs(const BigInt& bigNum)

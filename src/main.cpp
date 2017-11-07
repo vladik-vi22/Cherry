@@ -18,17 +18,18 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     //engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
 
+    BigInt t0("0111010101010001011111010100101010", 2);
     BigInt t1("1234567891234567899876543213456783457618340576314957863457863764534538425963984", 10);
     BigInt t2("123456789222222222222342342343242", 10);
     BigInt t3("123456789123", 10);
-    BigInt t4("AA974A9FC15a781496F1E50AB871A6EDB4F011EA15A4D24F820B9A0CBEA2195D0", 10);
+    BigInt t4("AA974A9FC15a781496F1E50AB871A6EDB4F011EA15A4D24F820B9A0CBEA2195D0", 16);
     BigInt t5("6163E66885CEAC8F3D86CF07A4A", 16);
     BigInt t6("1CBE991A83", 16);
-    BigInt t7(-1234567);
-    BigInt t8(1);
-    BigInt t9("1000000", 10);
-    BigInt resTest = t7 + t8;
-    qDebug() << t4;
+    BigInt t7(-15);
+    BigInt t8(131);
+    BigInt t9("122", 10);
+    BigInt resTest = -t3 ^ -t2;
+    qDebug() << resTest;
     return app.exec();
 }
 
