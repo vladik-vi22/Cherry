@@ -10,7 +10,8 @@ SOURCES += src/main.cpp\
     src/EDHcryptor/EDHcryptorVizhener.cpp \
     src/PRBgenerators/PRBgeneratorsBuiltInCPP.cpp \
     src/PRBgenerators/PRBgenerators.cpp \
-    src/BigIntLibrary/BigIntLibrary.cpp
+    src/BigIntLibrary/BigIntLibrary.cpp \
+    src/BigIntLibrary/BigIntCalculator.cpp
 
 RESOURCES += qml.qrc
 
@@ -25,5 +26,6 @@ HEADERS += \
     src/EDHcryptor/EDHcryptorVizhener.h \
     src/PRBgenerators/PRBgeneratorsBuiltInCPP.h \
     src/PRBgenerators/PRBgenerators.h \
-    src/BigIntLibrary/BigIntLibrary.h
+    src/BigIntLibrary/BigIntLibrary.h \
+    src/BigIntLibrary/BigIntCalculator.h
 

@@ -102,6 +102,7 @@ public:
 
     friend BigInt abs(const BigInt& bigNum); // absolute value
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
+    friend inline BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
 
     friend inline const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
     friend inline const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
@@ -109,6 +110,9 @@ public:
     friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
+
+    std::string toStdString(const int base = baseOutput) const;
+    uint32_t toUint32_t() const; // if bigNumArr.size == 1
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
@@ -119,7 +123,6 @@ private:
     void deleteZeroHighOrderDigit();
     BigInt shiftDigitsToHigh(const uint32_t shift) const;
     BigInt shiftDigitsToLow(const uint32_t shift) const;
-    std::string toStdString(const int base = baseOutput) const;
     BigInt toBigIntDec() const;
 };
 

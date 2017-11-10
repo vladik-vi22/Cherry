@@ -27,12 +27,12 @@ BigInt::BigInt(const BigInt& bigNumber)
 
 BigInt::BigInt(const std::string& bigNumberStdString, const int base)
 {
+    bigNumArr.clear();
     const std::string usedChars = base == baseBinary ? usedCharsBinary : (base == baseDecimal ? usedCharsDecimal : usedCharsHexadecimal);
-    if(bigNumberStdString.find_first_not_of(usedChars) < bigNumberStdString.length())
+    if(bigNumberStdString.find_first_not_of(usedChars) != std::string::npos)
     {
         positive = true;
         bigNumArr.push_back(0);
-        qDebug() << QString::fromStdString(bigNumberStdString) << "incorrect";
         return;
     }
     const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
@@ -879,6 +879,11 @@ BigInt gcd(BigInt bigNum1, BigInt bigNum2)
     return greatestCommonDivisor;
 }
 
+BigInt lcm(BigInt bigNum1, BigInt bigNum2)
+{
+    return (bigNum1 * bigNum2) / gcd(bigNum1, bigNum2);
+}
+
 const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2)
 {
     return bigNum1 > bigNum2 ? bigNum1 : bigNum2;
@@ -948,6 +953,18 @@ std::string BigInt::toStdString(const int base) const
     bigNumberString = bigNumberStringStream.str();
     bigNumberString.erase(positive ? 0 : 1, bigNumberString.find_first_not_of("-0") - (positive ? 0 : 1));
     return bigNumberString;
+}
+
+uint32_t BigInt::toUint32_t() const
+{
+    if(bigNumArr.size() == 1)
+    {
+        return bigNumArr.front();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 uint32_t BigInt::bitLenght() const
