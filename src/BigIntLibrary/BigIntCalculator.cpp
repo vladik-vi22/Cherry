@@ -1,6 +1,6 @@
 #include "BigIntCalculator.h"
 
-BigIntCalculator::BigIntCalculator(QObject* parent): QObject(parent), BigInt()
+BigIntCalculator::BigIntCalculator(QObject* parent): QObject(parent)
 {
     m_baseInput = 10;
     m_baseOutput = 10;

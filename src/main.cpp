@@ -5,7 +5,6 @@
 #include "src/BigIntLibrary/BigIntCalculator.h"
 #include "src/EDHcryptor/EDHcryptorVizhener.h"
 #include "src/EDHcryptor/EDHcryptorAffine.h"
-#include "src/PRBgenerators/PRBgeneratorsBuiltInCPP.h"
 
 int main(int argc, char *argv[])
 {

@@ -5,7 +5,7 @@
 #include <QQuickItem>
 #include "BigIntLibrary.h"
 
-class BigIntCalculator : public QObject, public BigInt
+class BigIntCalculator : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString bigNumber1 READ getBigNumber1 WRITE setBigNumber1 NOTIFY bigNumber1Changed)

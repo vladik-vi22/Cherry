@@ -15,22 +15,22 @@ ApplicationWindow {
     }
 
     Button {
-        id: buttonBuiltInCPP
+        id: buttonGeneratorsTests
         anchors.top: menuPRBgenerators.top
         width: menuPRBgenerators.width
         height: menuPRBgenerators.height / numberOfButton
-        text: "Built-in CPP Generator"
+        text: "PRB Generators && Tests"
 
         onClicked: {
             prbGeneratorsLoader.source = ""
-            prbGeneratorsLoader.source = "PRBgeneratorsBuiltInCPP.qml"
+            prbGeneratorsLoader.source = "PRBGeneratorsNTests.qml"
             menuPRBgenerators.close()
         }
     }
 
     Button {
         id: buttonMenu
-        anchors.top: buttonBuiltInCPP.bottom
+        anchors.top: buttonGeneratorsTests.bottom
         width: menuPRBgenerators.width
         height: menuPRBgenerators.height / numberOfButton
         text: "Menu"
