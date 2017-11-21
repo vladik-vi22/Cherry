@@ -23,12 +23,12 @@ int BigIntCalculator::getBaseOutput() const
 
 QString BigIntCalculator::getBigNumber1() const
 {
-    return QString::fromStdString(m_bigNumber1.toStdString(m_baseOutput));
+    return QString::fromStdString(m_bigNumber1.toStdString(m_baseInput));
 }
 
 QString BigIntCalculator::getBigNumber2() const
 {
-    return QString::fromStdString(m_bigNumber2.toStdString(m_baseOutput));
+    return QString::fromStdString(m_bigNumber2.toStdString(m_baseInput));
 }
 
 QString BigIntCalculator::getCalculationsResult() const
@@ -56,7 +56,7 @@ void BigIntCalculator::setBaseOutput(const int &new_baseOutput)
 
 void BigIntCalculator::setBigNumber1(const QString &new_bigNumber1)
 {
-    if(m_bigNumber1.toStdString(m_baseOutput) != new_bigNumber1.toStdString())
+    if(m_bigNumber1.toStdString(m_baseInput) != new_bigNumber1.toStdString())
     {
         m_bigNumber1 = BigInt(new_bigNumber1.toStdString(), m_baseInput);
         emit bigNumber1Changed();
@@ -65,7 +65,7 @@ void BigIntCalculator::setBigNumber1(const QString &new_bigNumber1)
 
 void BigIntCalculator::setBigNumber2(const QString &new_bigNumber2)
 {
-    if(m_bigNumber2.toStdString(m_baseOutput) != new_bigNumber2.toStdString())
+    if(m_bigNumber2.toStdString(m_baseInput) != new_bigNumber2.toStdString())
     {
         m_bigNumber2 = BigInt(new_bigNumber2.toStdString(), m_baseInput);
         emit bigNumber2Changed();
@@ -76,7 +76,7 @@ void BigIntCalculator::setCalculationsResult(const QString &new_calculationResul
 {
     if(m_calculationsResult.toStdString(m_baseOutput) != new_calculationResult.toStdString())
     {
-        m_calculationsResult = BigInt(new_calculationResult.toStdString(), m_baseInput);
+        m_calculationsResult = BigInt(new_calculationResult.toStdString(), m_baseOutput);
         emit calculationsResultChanged();
     }
 }
@@ -111,7 +111,7 @@ void BigIntCalculator::calculate(const QString& operation)
     {
         setCalculationsResult(QString::fromStdString((~m_bigNumber1).toStdString(m_baseOutput)));
     }
-    else if(operation == "&")
+    else if(operation == "&&")
     {
         setCalculationsResult(QString::fromStdString((m_bigNumber1 & m_bigNumber2).toStdString(m_baseOutput)));
     }

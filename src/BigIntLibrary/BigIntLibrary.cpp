@@ -28,14 +28,6 @@ BigInt::BigInt(const BigInt& bigNumber)
 BigInt::BigInt(const std::string& bigNumberStdString, const int base)
 {
     bigNumArr.clear();
-    const std::string usedChars = base == baseBinary ? usedCharsBinary : (base == baseDecimal ? usedCharsDecimal : usedCharsHexadecimal);
-    if(bigNumberStdString.find_first_not_of(usedChars) != std::string::npos)
-    {
-        positive = true;
-        bigNumArr.push_back(0);
-        return;
-    }
-    const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
     std::string bigNumberStdStringInput = bigNumberStdString;
     if(bigNumberStdStringInput[0] == '-')
     {
@@ -46,6 +38,14 @@ BigInt::BigInt(const std::string& bigNumberStdString, const int base)
     {
         positive = true;
     }
+    const std::string usedChars = base == baseBinary ? usedCharsBinary : (base == baseDecimal ? usedCharsDecimal : usedCharsHexadecimal);
+    if(bigNumberStdStringInput.find_first_not_of(usedChars) != std::string::npos)
+    {
+        positive = true;
+        bigNumArr.push_back(0);
+        return;
+    }
+    const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
     if(base == baseDecimal)
     {
         bigNumberStdStringInput = strDec2strBin(bigNumberStdStringInput);
@@ -71,6 +71,7 @@ BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bo
 
 BigInt::BigInt(const std::vector<std::bitset<32> > &bigNumberStdVectorBitset32, const bool isPositive)
 {
+    bigNumArr.clear();
     bigNumArr.reserve(bigNumberStdVectorBitset32.size());
     for(std::vector<std::bitset<32> >::const_iterator iterator = bigNumberStdVectorBitset32.begin(); iterator != bigNumberStdVectorBitset32.end(); ++iterator)
     {
