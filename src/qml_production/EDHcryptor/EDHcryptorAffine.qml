@@ -3,18 +3,21 @@ import QtQuick.Controls 1.2
 
 import AffineTextKeys 1.0
 
-ApplicationWindow {
+ApplicationWindow
+{
     id: edhCryptorAffine
     visible: true
     width: parent.width
     height: parent.height
     title: qsTr("EDHcryptor Affine")
 
-    ATextKeys {
+    ATextKeys
+    {
         id: aTextKeys
     }
 
-    TextArea {
+    TextArea
+    {
         id: inputText
         width: edhCryptorAffine.width / 2
         height: edhCryptorAffine.height / 10 * 9
@@ -26,7 +29,8 @@ ApplicationWindow {
         }
     }
 
-    TextArea {
+    TextArea
+    {
         id: outputText
         readOnly: true
         width: edhCryptorAffine.width / 2
@@ -40,7 +44,8 @@ ApplicationWindow {
         }
     }
 
-    TextField {
+    TextField
+    {
         id: key1
         placeholderText: qsTr("Enter first key")
         echoMode: TextInput.Password
@@ -54,7 +59,8 @@ ApplicationWindow {
         }
     }
 
-    TextField {
+    TextField
+    {
         id: key2
         placeholderText: qsTr("Enter second key")
         echoMode: TextInput.Password
@@ -69,7 +75,8 @@ ApplicationWindow {
         }
     }
 
-    TextField {
+    TextField
+    {
         id: foundKey1
         enabled: false
         placeholderText: qsTr("Found first key")
@@ -85,7 +92,8 @@ ApplicationWindow {
         }
     }
 
-    TextField {
+    TextField
+    {
         id: foundKey2
         enabled: false
         placeholderText: qsTr("Found second key")
@@ -101,7 +109,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonEncrypt
         enabled: key1.length != 0 && key2.length != 0 && inputText.length != 0
         width: edhCryptorAffine.width / 6
@@ -121,7 +130,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonDecrypt
         enabled: key1.length != 0 && key2.length != 0 && inputText.length != 0
         width: edhCryptorAffine.width / 6
@@ -142,7 +152,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonHack
         enabled: inputText.length != 0
         width: edhCryptorAffine.width / 6
@@ -160,7 +171,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: languageEnglish
         enabled: aTextKeys.language != "english"
         width: edhCryptorAffine.width / 8
@@ -174,7 +186,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: languageRussian
         enabled: aTextKeys.language != "russian"
         width: edhCryptorAffine.width / 8
@@ -188,7 +201,8 @@ ApplicationWindow {
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonClean
         width: edhCryptorAffine.width / 8
         height: edhCryptorAffine.height / 20
@@ -209,11 +223,13 @@ ApplicationWindow {
         }
     }
 
-    Loader {
+    Loader
+    {
         id: menuLoader
     }
 
-    Button {
+    Button
+    {
         id: buttonMenu
         width: edhCryptorAffine.width / 8
         height: edhCryptorAffine.height / 20

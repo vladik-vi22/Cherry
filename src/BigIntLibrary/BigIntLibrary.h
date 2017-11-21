@@ -68,15 +68,15 @@ public:
     BigInt operator * (const BigInt& multiplier) const; // multiplication
     BigInt& operator *= (const BigInt& multiplier); // multiplication assignment
 
-    inline BigInt operator / (const BigInt& divisor) const; // division
+    BigInt operator / (const BigInt& divisor) const; // division
     BigInt& operator /= (const BigInt& divisor); // division assignment
 
-    inline BigInt operator % (const BigInt& divisor) const; // modulo
+    BigInt operator % (const BigInt& divisor) const; // modulo
     BigInt& operator %= (const BigInt& divisor); // modulo assignment
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
-    inline BigInt operator ~() const; // bitwise NOT
+    BigInt operator ~() const; // bitwise NOT
     BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND
     BigInt& operator &= (const BigInt& rightBitwiseAND); // bitwise AND assignment
     BigInt operator | (const BigInt& rightBitwiseOR) const; // bitwise OR
@@ -102,7 +102,7 @@ public:
 
     friend BigInt abs(const BigInt& bigNum); // absolute value
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
-    friend inline BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
+    friend BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
 
     friend inline const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
     friend inline const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
