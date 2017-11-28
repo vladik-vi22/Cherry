@@ -12,6 +12,11 @@ class PRBgenerators: public QObject
 public:
     explicit PRBgenerators(QObject *parent = 0);
     ~PRBgenerators();
+
+    Q_INVOKABLE void generateBuiltInCPP(const uint32_t& numberOfBit);
+
+private:
+    BigInt m_generatedByBuiltInCPP;
 };
 
 #endif // PRBgenerators_H

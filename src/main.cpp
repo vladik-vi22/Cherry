@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include "src/BigIntLibrary/BigIntCalculator.h"
+#include "src/PRBgenerators/PRBgenerators.h"
 #include "src/EDHcryptor/EDHcryptorVizhener.h"
 #include "src/EDHcryptor/EDHcryptorAffine.h"
 
@@ -15,8 +16,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
 
-    return app.exec();
+    //return app.exec();
+    PRBgenerators a;
+    a.generateBuiltInCPP(49);
+    return 0;
 }
 

@@ -1,7 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 
-ApplicationWindow {
+ApplicationWindow
+{
     id: menuPRBgenerators
     visible: true
     width: parent.width
@@ -10,46 +11,53 @@ ApplicationWindow {
 
     property int numberOfButton: 3
 
-    Loader {
+    Loader
+    {
         id: prbGeneratorsLoader
     }
 
-    Button {
+    Button
+    {
         id: buttonGeneratorsTests
         anchors.top: menuPRBgenerators.top
         width: menuPRBgenerators.width
         height: menuPRBgenerators.height / numberOfButton
         text: "PRB Generators && Tests"
 
-        onClicked: {
+        onClicked:
+        {
             prbGeneratorsLoader.source = ""
             prbGeneratorsLoader.source = "PRBGeneratorsNTests.qml"
             menuPRBgenerators.close()
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonMenu
         anchors.top: buttonGeneratorsTests.bottom
         width: menuPRBgenerators.width
         height: menuPRBgenerators.height / numberOfButton
         text: "Menu"
 
-        onClicked: {
+        onClicked:
+        {
             prbGeneratorsLoader.source = ""
             prbGeneratorsLoader.source = "../main.qml"
             menuPRBgenerators.close()
         }
     }
 
-    Button {
+    Button
+    {
         id: buttonExit
         anchors.top: buttonMenu.bottom
         width: menuPRBgenerators.width
         height: menuPRBgenerators.height / numberOfButton
         text: "Exit"
 
-        onClicked: {
+        onClicked:
+        {
             menuPRBgenerators.close()
         }
     }

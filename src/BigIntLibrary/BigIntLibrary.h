@@ -33,23 +33,25 @@ private:
 public:
     BigInt();
     BigInt(const BigInt& bigNumber);
-    BigInt(const std::string& bigNumberStdString, const int base = baseInput);
-    BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool isPositive = true);
-    BigInt(const std::vector<std::bitset<32> >& bigNumberStdVectorBitset32, const bool isPositive = true);
-    BigInt(const uint32_t numberUint32_t, const bool isPositive = true);
-    BigInt(const uint64_t numberUint64_t, const bool isPositive = true);
-    BigInt(const int numberInt);
-    BigInt(const long long numberLongLong);
+    BigInt(const std::string& bigNumberStdString, const int& base = baseInput);
+    BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool& isPositive = true);
+    BigInt(const std::vector<uint16_t> &bigNumberStdVectorUint16_t, const bool &isPositive = true);
+    BigInt(const std::vector<std::bitset<32> >& bigNumberStdVectorBitset32, const bool& isPositive = true);
+    BigInt(const uint32_t& numberUint32_t, const bool& isPositive = true);
+    BigInt(const uint64_t& numberUint64_t, const bool& isPositive = true);
+    BigInt(const int& numberInt);
+    BigInt(const long long& numberLongLong);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal); // simple assignment
     BigInt& operator = (const std::string& equal); // simple assignment
     BigInt& operator = (const std::vector<uint32_t>& equal); // simple assignment
+    BigInt& operator = (const std::vector<uint16_t>& equal); // simple assignment
     BigInt& operator = (const std::vector<std::bitset<32> >& equal); // simple assignment
-    BigInt& operator = (const uint32_t equal); // simple assignment
-    BigInt& operator = (const uint64_t equal); // simple assignment
-    BigInt& operator = (const int equal); // simple assignment
-    BigInt& operator = (const long long equal); // simple assignment
+    BigInt& operator = (const uint32_t& equal); // simple assignment
+    BigInt& operator = (const uint64_t& equal); // simple assignment
+    BigInt& operator = (const int& equal); // simple assignment
+    BigInt& operator = (const long long& equal); // simple assignment
 
     BigInt operator +() const; // unary plus
     BigInt operator + (const BigInt& addend) const; // addition
@@ -63,8 +65,8 @@ public:
     BigInt& operator --(); // pre-decrement
     BigInt operator --(int); // post-decrement
 
-    BigInt operator * (const uint32_t multiplier) const; // multiplication
-    BigInt& operator *= (const uint32_t multiplier); // multiplication assignment
+    BigInt operator * (const uint32_t& multiplier) const; // multiplication
+    BigInt& operator *= (const uint32_t& multiplier); // multiplication assignment
     BigInt operator * (const BigInt& multiplier) const; // multiplication
     BigInt& operator *= (const BigInt& multiplier); // multiplication assignment
 
@@ -84,10 +86,10 @@ public:
     BigInt operator ^ (const BigInt& rightBitwiseXOR) const; // bitwise XOR
     BigInt& operator ^= (const BigInt& rightBitwiseXOR); // bitwise XOR assignment
 
-    BigInt operator << (const uint32_t shift) const; // bitwise left shift
-    BigInt& operator <<= (const uint32_t shift); // bitwise left shift assignment
-    BigInt operator >> (const uint32_t shift) const; // bitwise right shift
-    BigInt& operator >>= (const uint32_t shift); // bitwise right shift assignment
+    BigInt operator << (const uint32_t& shift) const; // bitwise left shift
+    BigInt& operator <<= (const uint32_t& shift); // bitwise left shift assignment
+    BigInt operator >> (const uint32_t& shift) const; // bitwise right shift
+    BigInt& operator >>= (const uint32_t& shift); // bitwise right shift assignment
 
     bool operator !() const; // negation
     bool operator && (const BigInt& rightAND) const; // AND
@@ -111,18 +113,18 @@ public:
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
-    std::string toStdString(const int base = baseOutput) const;
+    std::string toStdString(const int& base = baseOutput) const;
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
+    uint32_t bitLenght() const;
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
-    uint32_t bitLenght() const;
     inline bool isEven() const;
     inline bool isOdd() const;
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
-    BigInt shiftDigitsToHigh(const uint32_t shift) const;
-    BigInt shiftDigitsToLow(const uint32_t shift) const;
+    BigInt shiftDigitsToHigh(const uint32_t& shift) const;
+    BigInt shiftDigitsToLow(const uint32_t& shift) const;
     BigInt toBigIntDec() const;
 };
 
