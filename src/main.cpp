@@ -19,8 +19,15 @@ int main(int argc, char *argv[])
     //engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
 
     //return app.exec();
-    PRBgenerators a;
-    a.generateBuiltInCPP(49);
+    PRBgenerators test;
+    test.generateBuiltInCPP(100);
+    test.generateLehmerLow(100);
+    test.generateLehmerHigh(100);
+    test.generateL20(100);
+    test.generateL89(100);
+    test.generateGeffe(100);
+    test.generateWolfram(100);
+    test.generateBlumMikali(100);
     return 0;
 }
 

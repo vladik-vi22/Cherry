@@ -35,8 +35,9 @@ public:
     BigInt(const BigInt& bigNumber);
     BigInt(const std::string& bigNumberStdString, const int& base = baseInput);
     BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool& isPositive = true);
-    BigInt(const std::vector<uint16_t> &bigNumberStdVectorUint16_t, const bool &isPositive = true);
-    BigInt(const std::vector<std::bitset<32> >& bigNumberStdVectorBitset32, const bool& isPositive = true);
+    BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool& isPositive = true);
+    BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool& isPositive = true);
+    BigInt(const std::vector<bool>& bigNumberStdVectorBool, const bool& isPositive = true);
     BigInt(const uint32_t& numberUint32_t, const bool& isPositive = true);
     BigInt(const uint64_t& numberUint64_t, const bool& isPositive = true);
     BigInt(const int& numberInt);
@@ -47,7 +48,8 @@ public:
     BigInt& operator = (const std::string& equal); // simple assignment
     BigInt& operator = (const std::vector<uint32_t>& equal); // simple assignment
     BigInt& operator = (const std::vector<uint16_t>& equal); // simple assignment
-    BigInt& operator = (const std::vector<std::bitset<32> >& equal); // simple assignment
+    BigInt& operator = (const std::vector<uint8_t>& equal); // simple assignment
+    BigInt& operator = (const std::vector<bool>& equal); // simple assignment
     BigInt& operator = (const uint32_t& equal); // simple assignment
     BigInt& operator = (const uint64_t& equal); // simple assignment
     BigInt& operator = (const int& equal); // simple assignment
@@ -112,6 +114,9 @@ public:
     friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
+
+    friend BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu); // dividend mod divisor
+    //friend BigInt ModPowerBarrett(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // TODO
 
     std::string toStdString(const int& base = baseOutput) const;
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
