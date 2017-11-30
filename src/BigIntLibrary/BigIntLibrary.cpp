@@ -1,19 +1,19 @@
 #include "BigIntLibrary.h"
 
-const int BigInt::baseBinary = 2;
-const int BigInt::baseDecimal = 10;
-const int BigInt::baseHexadecimal = 16;
+const uint8_t BigInt::baseBinary = 2;
+const uint8_t BigInt::baseDecimal = 10;
+const uint8_t BigInt::baseHexadecimal = 16;
 const std::string BigInt::usedCharsBinary = "01";
 const std::string BigInt::usedCharsDecimal = "0123456789";
 const std::string BigInt::usedCharsHexadecimal = "0123456789abcdefABCDEF";
 const uint64_t BigInt::basisCalcSys = (uint64_t)UINT32_MAX + (uint64_t)1; // 2^32 // 4294967296
 const uint32_t BigInt::maxNumCell = UINT32_MAX; // 2^32 - 1 // 4294967295
 const uint32_t BigInt::powOfBasis = 32;
-const int BigInt::sizeOfCellBin = 32;
-const int BigInt::sizeOfCellHex = 8;
+const uint8_t BigInt::sizeOfCellBin = 32;
+const uint8_t BigInt::sizeOfCellHex = 8;
 
-int BigInt::baseInput = baseDecimal;
-int BigInt::baseOutput = baseDecimal;
+uint8_t BigInt::baseInput = baseDecimal;
+uint8_t BigInt::baseOutput = baseDecimal;
 
 BigInt::BigInt()
 {
@@ -45,7 +45,7 @@ BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
         bigNumArr.push_back(0);
         return;
     }
-    const int sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
+    const uint8_t sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
     if(base == baseDecimal)
     {
         bigNumberStdStringInput = strDec2strBin(bigNumberStdStringInput);
@@ -54,10 +54,10 @@ BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
     {
         bigNumberStdStringInput.insert(0, 1, '0');
     }
-    int sizeOfArr = bigNumberStdStringInput.length() / sizeOfCell;
+    uint32_t sizeOfArr = bigNumberStdStringInput.length() / sizeOfCell;
     bigNumArr.clear();
     bigNumArr.reserve(sizeOfArr);
-    for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
+    for(uint32_t indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
     {
         bigNumArr.insert(bigNumArr.begin(), 1, std::stoul(bigNumberStdStringInput.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, base == baseHexadecimal ? baseHexadecimal : baseBinary));
     }
@@ -68,6 +68,7 @@ BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bo
     bigNumArr.clear();
     bigNumArr.reserve(bigNumberStdVectorUint32_t.size());
     bigNumArr = bigNumberStdVectorUint32_t;
+    std::reverse(bigNumArr.begin(), bigNumArr.end());
     positive = isPositive;
 }
 
@@ -75,11 +76,11 @@ BigInt::BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bo
 {
     bigNumArr.clear();
     bigNumArr.reserve(bigNumberStdVectorUint16_t.size() % 2 == 0 ? bigNumberStdVectorUint16_t.size() / 2 : bigNumberStdVectorUint16_t.size() / 2 + 1);
-    std::vector<uint16_t>::const_iterator iteratorBigNumberStdVectorUint16_t = bigNumberStdVectorUint16_t.begin();
+    std::vector<uint16_t>::const_iterator iteratorBigNumberStdVectorUint16_t = std::prev(bigNumberStdVectorUint16_t.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < bigNumberStdVectorUint16_t.size() / 2; ++indexBigNumArr)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint16_t << 16 | *(++iteratorBigNumberStdVectorUint16_t));
-        ++iteratorBigNumberStdVectorUint16_t;
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint16_t | *(--iteratorBigNumberStdVectorUint16_t) << 16);
+        --iteratorBigNumberStdVectorUint16_t;
     }
     if(bigNumberStdVectorUint16_t.size() % 2 == 1)
     {
@@ -92,19 +93,19 @@ BigInt::BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool
 {
     bigNumArr.clear();
     bigNumArr.reserve(bigNumberStdVectorUint8_t.size() % 4 == 0 ? bigNumberStdVectorUint8_t.size() / 4 : bigNumberStdVectorUint8_t.size() / 4 + 1);
-    std::vector<uint8_t>::const_iterator iteratorBigNumberStdVectorUint8_t = bigNumberStdVectorUint8_t.begin();
+    std::vector<uint8_t>::const_iterator iteratorBigNumberStdVectorUint8_t = std::prev(bigNumberStdVectorUint8_t.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < bigNumberStdVectorUint8_t.size() / 4; ++indexBigNumArr)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 24 | *(++iteratorBigNumberStdVectorUint8_t) << 16 | *(++iteratorBigNumberStdVectorUint8_t) << 8 | *(++iteratorBigNumberStdVectorUint8_t));
-        ++iteratorBigNumberStdVectorUint8_t;
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8 | *(--iteratorBigNumberStdVectorUint8_t) << 16 | *(--iteratorBigNumberStdVectorUint8_t) << 24);
+        --iteratorBigNumberStdVectorUint8_t;
     }
     if(bigNumberStdVectorUint8_t.size() % 4 == 3)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 16 | *(++iteratorBigNumberStdVectorUint8_t) << 8 | *(++iteratorBigNumberStdVectorUint8_t));
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8 | *(--iteratorBigNumberStdVectorUint8_t) << 16);
     }
     else if(bigNumberStdVectorUint8_t.size() % 4 == 2)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 8 | *(++iteratorBigNumberStdVectorUint8_t));
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8);
     }
     else if(bigNumberStdVectorUint8_t.size() % 4 == 1)
     {
@@ -117,31 +118,27 @@ BigInt::BigInt(const std::vector<bool> &bigNumberStdVectorBool, const bool &isPo
 {
     bigNumArr.clear();
     bigNumArr.reserve(bigNumberStdVectorBool.size() % 32 == 0 ? bigNumberStdVectorBool.size() / 32 : bigNumberStdVectorBool.size() / 32 + 1);
-    std::cout << bigNumberStdVectorBool.size() << std::endl;
-    std::cout << bigNumArr.capacity() << std::endl;
     uint32_t bigNumArr_temp;
-    std::vector<bool>::const_iterator iteratorBigNumberStdVectorBool = bigNumberStdVectorBool.begin();
+    std::vector<bool>::const_iterator iteratorBigNumberStdVectorBool = std::prev(bigNumberStdVectorBool.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < bigNumberStdVectorBool.size() / 32; ++indexBigNumArr)
     {
         bigNumArr_temp = 0;
-        for(int indexBit = 31; indexBit >= 0; --indexBit)
+        for(uint8_t indexBit = 0; indexBit < 32; ++indexBit)
         {
             bigNumArr_temp |= *iteratorBigNumberStdVectorBool << indexBit;
-            ++iteratorBigNumberStdVectorBool;
+            --iteratorBigNumberStdVectorBool;
         }
         bigNumArr.push_back(bigNumArr_temp);
-        std::cout << "push" << bigNumArr_temp << std::endl;
     }
     if(bigNumberStdVectorBool.size() % 32 != 0)
     {
         bigNumArr_temp = 0;
-        for(int indexBit = bigNumberStdVectorBool.size() % 32 - 1; indexBit >= 0; --indexBit)
+        for(uint8_t indexBit = 0; indexBit < bigNumberStdVectorBool.size() % 32 - 1; ++indexBit)
         {
             bigNumArr_temp |= *iteratorBigNumberStdVectorBool << indexBit;
-            ++iteratorBigNumberStdVectorBool;
+            --iteratorBigNumberStdVectorBool;
         }
         bigNumArr.push_back(bigNumArr_temp);
-        std::cout << "push" << bigNumArr_temp << std::endl;
     }
     positive = isPositive;
 }
@@ -204,6 +201,7 @@ BigInt& BigInt::operator = (const std::vector<uint32_t>& equal)
     bigNumArr.clear();
     bigNumArr.reserve(equal.size());
     bigNumArr = equal;
+    std::reverse(bigNumArr.begin(), bigNumArr.end());
     positive = true;
     return *this;
 }
@@ -212,11 +210,11 @@ BigInt& BigInt::operator = (const std::vector<uint16_t>& equal)
 {
     bigNumArr.clear();
     bigNumArr.reserve(equal.size() % 2 == 0 ? equal.size() / 2 : equal.size() / 2 + 1);
-    std::vector<uint16_t>::const_iterator iteratorBigNumberStdVectorUint16_t = equal.begin();
+    std::vector<uint16_t>::const_iterator iteratorBigNumberStdVectorUint16_t = std::prev(equal.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < equal.size() / 2; ++indexBigNumArr)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint16_t << 16 | *(++iteratorBigNumberStdVectorUint16_t));
-        ++iteratorBigNumberStdVectorUint16_t;
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint16_t | *(--iteratorBigNumberStdVectorUint16_t) << 16);
+        --iteratorBigNumberStdVectorUint16_t;
     }
     if(equal.size() % 2 == 1)
     {
@@ -230,19 +228,19 @@ BigInt& BigInt::operator = (const std::vector<uint8_t>& equal)
 {
     bigNumArr.clear();
     bigNumArr.reserve(equal.size() % 4 == 0 ? equal.size() / 4 : equal.size() / 4 + 1);
-    std::vector<uint8_t>::const_iterator iteratorBigNumberStdVectorUint8_t = equal.begin();
+    std::vector<uint8_t>::const_iterator iteratorBigNumberStdVectorUint8_t = std::prev(equal.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < equal.size() / 4; ++indexBigNumArr)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 24 | *(++iteratorBigNumberStdVectorUint8_t) << 16 | *(++iteratorBigNumberStdVectorUint8_t) << 8 | *(++iteratorBigNumberStdVectorUint8_t));
-        ++iteratorBigNumberStdVectorUint8_t;
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8 | *(--iteratorBigNumberStdVectorUint8_t) << 16 | *(--iteratorBigNumberStdVectorUint8_t) << 24);
+        --iteratorBigNumberStdVectorUint8_t;
     }
     if(equal.size() % 4 == 3)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 16 | *(++iteratorBigNumberStdVectorUint8_t) << 8 | *(++iteratorBigNumberStdVectorUint8_t));
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8 | *(--iteratorBigNumberStdVectorUint8_t) << 16);
     }
     else if(equal.size() % 4 == 2)
     {
-        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t << 8 | *(++iteratorBigNumberStdVectorUint8_t));
+        bigNumArr.push_back((uint32_t)*iteratorBigNumberStdVectorUint8_t | *(--iteratorBigNumberStdVectorUint8_t) << 8);
     }
     else if(equal.size() % 4 == 1)
     {
@@ -254,28 +252,27 @@ BigInt& BigInt::operator = (const std::vector<uint8_t>& equal)
 
 BigInt& BigInt::operator = (const std::vector<bool>& equal)
 {
-
     bigNumArr.clear();
     bigNumArr.reserve(equal.size() % 32 == 0 ? equal.size() / 32 : equal.size() / 32 + 1);
     uint32_t bigNumArr_temp;
-    std::vector<bool>::const_iterator iteratorBigNumberStdVectorBool = equal.begin();
+    std::vector<bool>::const_iterator iteratorBigNumberStdVectorBool = std::prev(equal.end());
     for(uint32_t indexBigNumArr = 0; indexBigNumArr < equal.size() / 32; ++indexBigNumArr)
     {
         bigNumArr_temp = 0;
-        for(int indexBit = 31; indexBit >= 0; --indexBit)
+        for(uint8_t indexBit = 0; indexBit < 32; ++indexBit)
         {
             bigNumArr_temp |= *iteratorBigNumberStdVectorBool << indexBit;
-            ++iteratorBigNumberStdVectorBool;
+            --iteratorBigNumberStdVectorBool;
         }
         bigNumArr.push_back(bigNumArr_temp);
     }
     if(equal.size() % 32 != 0)
     {
         bigNumArr_temp = 0;
-        for(int indexBit = equal.size() % 32 - 1; indexBit >= 0; --indexBit)
+        for(uint8_t indexBit = 0; indexBit < equal.size() % 32 - 1; ++indexBit)
         {
             bigNumArr_temp |= *iteratorBigNumberStdVectorBool << indexBit;
-            ++iteratorBigNumberStdVectorBool;
+            --iteratorBigNumberStdVectorBool;
         }
         bigNumArr.push_back(bigNumArr_temp);
     }
@@ -329,7 +326,6 @@ BigInt BigInt::operator + (const BigInt& addend) const
     if((positive && addend.positive) || (!positive && !addend.positive))
     {
         BigInt sum;
-        sum.positive = positive && addend.positive;
         bool augendGreater = (bigNumArr.size() >= addend.bigNumArr.size());
         sum.bigNumArr.reserve(augendGreater ? bigNumArr.size() + 1 : addend.bigNumArr.size() + 1);
         std::vector<uint32_t>::const_iterator iteratorAugend = augendGreater ? bigNumArr.begin() : addend.bigNumArr.begin();
@@ -356,6 +352,7 @@ BigInt BigInt::operator + (const BigInt& addend) const
         {
             sum.bigNumArr.push_back(carry);
         }
+        sum.positive = positive && addend.positive;
 
         return sum;
     }
@@ -402,7 +399,6 @@ BigInt BigInt::operator - (const BigInt& subtrahend) const
         if(*this >= subtrahend)
         {
             BigInt difference;
-            difference.positive = true;
             difference.bigNumArr.reserve(bigNumArr.size());
             std::vector<uint32_t>::const_iterator iteratorMinuend = bigNumArr.begin();
             std::vector<uint32_t>::const_iterator iteratorSubtrahend = subtrahend.bigNumArr.begin();
@@ -441,6 +437,7 @@ BigInt BigInt::operator - (const BigInt& subtrahend) const
                 ++iteratorMinuend;
             }
             difference.deleteZeroHighOrderDigit();
+            difference.positive = true;
 
             return difference;
         }
@@ -484,12 +481,7 @@ BigInt BigInt::operator -- (int)
 
 BigInt BigInt::operator * (const uint32_t& multiplier) const
 {
-    if(*this == 0 || multiplier == 0)
-    {
-        return 0;
-    }
     BigInt product;
-    product.positive = positive;
     product.bigNumArr.reserve(bigNumArr.size() + 1);
     uint32_t carry = 0;
     for(std::vector<uint32_t>::const_iterator iteratorMultiplicand = bigNumArr.begin(); iteratorMultiplicand != bigNumArr.end(); ++iteratorMultiplicand)
@@ -502,6 +494,7 @@ BigInt BigInt::operator * (const uint32_t& multiplier) const
     {
         product.bigNumArr.push_back(carry);
     }
+    product.positive = positive;
 
     return product;
 }
@@ -514,12 +507,7 @@ BigInt& BigInt::operator *= (const uint32_t& multiplier)
 
 BigInt BigInt::operator * (const BigInt& multiplier) const
 {
-    if(*this == 0 || multiplier == 0)
-    {
-        return 0;
-    }
-    BigInt product;
-    product.positive = positive == multiplier.positive;
+    BigInt product = 0;
     uint32_t shift = 0;
     for(std::vector<uint32_t>::const_iterator iteratorMultiplier = multiplier.bigNumArr.begin(); iteratorMultiplier != multiplier.bigNumArr.end(); ++iteratorMultiplier, ++shift)
     {
@@ -527,6 +515,7 @@ BigInt BigInt::operator * (const BigInt& multiplier) const
         product_temp = product_temp.shiftDigitsToHigh(shift);
         product += product_temp;
     }
+    product.positive = positive == multiplier.positive;
 
     return product;
 }
@@ -598,9 +587,8 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
     {
         return 0;
     }
-    BigInt power(1);
-    uint32_t bitLenghtExponent = exponent.bitLenght();
-    for(uint32_t indexBitExponent = bitLenghtExponent - 1; indexBitExponent > 0; --indexBitExponent)
+    BigInt power = 1;
+    for(uint32_t indexBitExponent = exponent.bitLenght() - 1; indexBitExponent > 0; --indexBitExponent)
     {
         if(exponent.bigNumArr[indexBitExponent / BigInt::powOfBasis] & (1 << (indexBitExponent % BigInt::powOfBasis)))
         {
@@ -619,6 +607,21 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
     return power;
 }
 
+BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
+{
+    BigInt power = 1;
+    const BigInt mu = power.shiftDigitsToHigh(divisor.bigNumArr.size() * 2) / divisor;
+    for(uint32_t indexBitExponent = 0; indexBitExponent < exponent.bitLenght(); ++indexBitExponent)
+    {
+        if(exponent.bigNumArr[indexBitExponent / BigInt::powOfBasis] & (1 << (indexBitExponent % BigInt::powOfBasis)))
+        {
+            power = BarrettReduction(power * base, divisor, mu);
+        }
+        base = BarrettReduction(base * base, divisor, mu);
+    }
+    return power;
+}
+
 BigInt BigInt::operator ~() const
 {
     return -*this - 1;
@@ -632,7 +635,7 @@ BigInt BigInt::operator & (const BigInt& rightBitwiseAND) const
         bitwiseAND.bigNumArr.reserve(std::min(bigNumArr.size(), rightBitwiseAND.bigNumArr.size()));
         std::vector<uint32_t>::const_iterator iteratorLeftBitwiseAND = bigNumArr.begin();
         std::vector<uint32_t>::const_iterator iteratorRightBitwiseAND = rightBitwiseAND.bigNumArr.begin();
-        while (iteratorLeftBitwiseAND != bigNumArr.end() && iteratorRightBitwiseAND != rightBitwiseAND.bigNumArr.end())
+        while(iteratorLeftBitwiseAND != bigNumArr.end() && iteratorRightBitwiseAND != rightBitwiseAND.bigNumArr.end())
         {
             bitwiseAND.bigNumArr.push_back(*iteratorLeftBitwiseAND & *iteratorRightBitwiseAND);
             ++iteratorLeftBitwiseAND;
@@ -672,13 +675,13 @@ BigInt BigInt::operator | (const BigInt& rightBitwiseOR) const
         std::vector<uint32_t>::const_iterator iteratorRightBitwiseOR = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.begin() : bigNumArr.begin();
         std::vector<uint32_t>::const_iterator iteratorLeftBitwiseOREnd = leftBitwiseORGreater ? bigNumArr.end() : rightBitwiseOR.bigNumArr.end();
         std::vector<uint32_t>::const_iterator iteratorRightBitwiseOREnd = leftBitwiseORGreater ? rightBitwiseOR.bigNumArr.end() : bigNumArr.end();
-        while (iteratorRightBitwiseOR != iteratorRightBitwiseOREnd)
+        while(iteratorRightBitwiseOR != iteratorRightBitwiseOREnd)
         {
             bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR | *iteratorRightBitwiseOR);
             ++iteratorLeftBitwiseOR;
             ++iteratorRightBitwiseOR;
         }
-        while (iteratorLeftBitwiseOR != iteratorLeftBitwiseOREnd)
+        while(iteratorLeftBitwiseOR != iteratorLeftBitwiseOREnd)
         {
             bitwiseOR.bigNumArr.push_back(*iteratorLeftBitwiseOR);
             ++iteratorLeftBitwiseOR;
@@ -717,13 +720,13 @@ BigInt BigInt::operator ^ (const BigInt& rightBitwiseXOR) const
         std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOR = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.begin() : bigNumArr.begin();
         std::vector<uint32_t>::const_iterator iteratorLeftBitwiseXOREnd = leftBitwiseXORGreater ? bigNumArr.end() : rightBitwiseXOR.bigNumArr.end();
         std::vector<uint32_t>::const_iterator iteratorRightBitwiseXOREnd = leftBitwiseXORGreater ? rightBitwiseXOR.bigNumArr.end() : bigNumArr.end();
-        while (iteratorRightBitwiseXOR != iteratorRightBitwiseXOREnd)
+        while(iteratorRightBitwiseXOR != iteratorRightBitwiseXOREnd)
         {
             bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR ^ *iteratorRightBitwiseXOR);
             ++iteratorLeftBitwiseXOR;
             ++iteratorRightBitwiseXOR;
         }
-        while (iteratorLeftBitwiseXOR != iteratorLeftBitwiseXOREnd)
+        while(iteratorLeftBitwiseXOR != iteratorLeftBitwiseXOREnd)
         {
             bitwiseXOR.bigNumArr.push_back(*iteratorLeftBitwiseXOR);
             ++iteratorLeftBitwiseXOR;
@@ -1040,18 +1043,12 @@ BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const Big
     fraction *= mu;
     fraction = fraction.shiftDigitsToLow(divisor.bigNumArr.size() + 1);
     remainder = dividend - fraction * divisor;
-    while (remainder >= divisor)
+    while(remainder >= divisor)
     {
         remainder -= divisor;
     }
     return remainder;
 }
-
-/*BigInt ModPowerBarrett(const BigInt& base, const BigInt& exponent, const BigInt& divisor)
-{
-    BigInt power = 1;
-    return power;
-}*/
 
 std::string BigInt::toStdString(const int& base) const
 {
@@ -1204,7 +1201,7 @@ BigInt BigInt::toBigIntDec() const
 
 std::string strDec2strBin(std::string strDec)
 {
-    const int sizeOfCell = 9;
+    const uint8_t sizeOfCell = 9;
     const uint32_t basisCalc = 1000000000;
     std::string strBin;
     std::vector<uint32_t> bigNumArr;
@@ -1212,9 +1209,9 @@ std::string strDec2strBin(std::string strDec)
     {
         strDec.insert(0, 1, '0');
     }
-    int sizeOfArr = strDec.length() / sizeOfCell;
+    uint32_t sizeOfArr = strDec.length() / sizeOfCell;
     bigNumArr.reserve(sizeOfArr);
-    for(int indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
+    for(uint32_t indexBigNumArr = 0; indexBigNumArr < sizeOfArr; ++indexBigNumArr)
     {
         bigNumArr.push_back(std::stoul(strDec.substr(indexBigNumArr * sizeOfCell, sizeOfCell), nullptr, 10));
     }

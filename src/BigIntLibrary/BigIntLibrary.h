@@ -11,20 +11,20 @@
 
 class BigInt
 {
-    static const int baseBinary; // 2
-    static const int baseDecimal; // 10
-    static const int baseHexadecimal; // 16
+    static const uint8_t baseBinary; // 2
+    static const uint8_t baseDecimal; // 10
+    static const uint8_t baseHexadecimal; // 16
     static const std::string usedCharsBinary; // "01"
     static const std::string usedCharsDecimal; // "0123456789"
     static const std::string usedCharsHexadecimal; // "0123456789abcdefABCDEF"
     static const uint64_t basisCalcSys; // UINT32_MAX + 1 // 2^32 // 4294967296
     static const uint32_t maxNumCell; // UINT32_MAX // 4294967295
     static const uint32_t powOfBasis; // 32
-    static const int sizeOfCellBin; // 32
-    static const int sizeOfCellHex; // 8
+    static const uint8_t sizeOfCellBin; // 32
+    static const uint8_t sizeOfCellHex; // 8
 
-    static int baseInput;
-    static int baseOutput;
+    static uint8_t baseInput;
+    static uint8_t baseOutput;
 
 private:
     bool positive;
@@ -79,6 +79,7 @@ public:
     BigInt& operator %= (const BigInt& divisor); // modulo assignment
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
+    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
 
     BigInt operator ~() const; // bitwise NOT
     BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND
@@ -115,17 +116,15 @@ public:
     friend QDebug operator << (QDebug out, const BigInt& bigNum);
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
-    friend BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu); // dividend mod divisor
-    //friend BigInt ModPowerBarrett(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // TODO
-
     std::string toStdString(const int& base = baseOutput) const;
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
     uint32_t bitLenght() const;
+    bool isEven() const;
+    bool isOdd() const;
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
-    inline bool isEven() const;
-    inline bool isOdd() const;
+    friend BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu);
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
     BigInt shiftDigitsToHigh(const uint32_t& shift) const;

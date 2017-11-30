@@ -25,30 +25,6 @@ int Affine::lenghtMostFrequentBigrams;
 Affine::Affine(QObject* parent): QObject(parent)
 {
     setLanguage(englishLanguage);
-
-    // Finding prohibited bigrams
-
-    /*QString line;
-    QFile file(QDir::currentPath() +  "/src/in.txt");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(&file);
-    line = in.readAll();
-    file.close();
-    qDebug() << line.length();
-    setText(line);
-    changeText();
-    QString bigram = "";
-    for(int indexAlphabet1 = 0; indexAlphabet1 < lenghtAlphabet; ++indexAlphabet1)
-        for(int indexAlphabet2 = 0; indexAlphabet2 < lenghtAlphabet; ++indexAlphabet2)
-            for(int indexAlphabet3 = 0; indexAlphabet3< lenghtAlphabet; ++indexAlphabet3)
-            {
-                bigram.append(alphabet[indexAlphabet1]);
-                bigram.append(alphabet[indexAlphabet2]);
-                bigram.append(alphabet[indexAlphabet3]);
-                if(m_text.count(bigram) == 0)
-                    qDebug() << bigram;
-                bigram.clear();
-            }*/
 }
 
 Affine::~Affine()

@@ -20,14 +20,17 @@ int main(int argc, char *argv[])
 
     //return app.exec();
     PRBgenerators test;
-    test.generateBuiltInCPP(100);
-    test.generateLehmerLow(100);
-    test.generateLehmerHigh(100);
-    test.generateL20(100);
-    test.generateL89(100);
-    test.generateGeffe(100);
-    test.generateWolfram(100);
-    test.generateBlumMikali(100);
+    test.generateBuiltInCPP(128);
+    test.generateLehmerLow(128);
+    test.generateLehmerHigh(128);
+    test.generateL20(128);
+    test.generateL89(128);
+    test.generateGeffe(128);
+    test.generateWolfram(128);
+    test.generateBlumMikaliBit(128);
+    test.generateBlumMikaliByte(128);
+    test.generateBlumBlumShubBit(128);
+    test.generateBlumBlumShubByte(128);
     return 0;
 }
 
