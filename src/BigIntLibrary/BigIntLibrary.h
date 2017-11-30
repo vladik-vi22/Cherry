@@ -121,6 +121,7 @@ public:
     uint32_t bitLenght() const;
     bool isEven() const;
     bool isOdd() const;
+    bool isZero() const;
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;

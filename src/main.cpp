@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     //engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
-
     //return app.exec();
+
     PRBgenerators test;
     test.generateBuiltInCPP(128);
     test.generateLehmerLow(128);
