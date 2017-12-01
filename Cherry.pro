@@ -27,3 +27,6 @@ HEADERS += \
     src/BigIntLibrary/BigIntLibrary.h \
     src/BigIntLibrary/BigIntCalculator.h
 
+DISTFILES += \
+    src/PRBgenerators/generateLibrarian.txt
+

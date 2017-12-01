@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQuickItem>
 #include <time.h>
+#include <QDir>
 #include "../BigIntLibrary/BigIntLibrary.h"
 
 class PRBgenerators: public QObject
@@ -21,6 +22,7 @@ public:
     Q_INVOKABLE void generateL89(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateGeffe(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateWolfram(const uint32_t& numberOfBit);
+    Q_INVOKABLE void generateLibrarian(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumMikaliBit(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumMikaliByte(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumBlumShubBit(const uint32_t& numberOfBit);
@@ -34,6 +36,7 @@ private:
     BigInt m_generatedL89;
     BigInt m_generatedGeffe;
     BigInt m_generatedWolfram;
+    BigInt m_generatedLibrarian;
     BigInt m_generatedBlumMikaliBit;
     BigInt m_generatedBlumMikaliByte;
     BigInt m_generatedBlumBlumShubBit;

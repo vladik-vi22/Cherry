@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
     QQmlApplicationEngine engine;
-    //engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
-    //return app.exec();
+//    engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
+//    return app.exec();
 
     PRBgenerators test;
     test.generateBuiltInCPP(128);
@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     test.generateL89(128);
     test.generateGeffe(128);
     test.generateWolfram(128);
+    test.generateLibrarian(128);
     test.generateBlumMikaliBit(128);
     test.generateBlumMikaliByte(128);
     test.generateBlumBlumShubBit(128);

@@ -33,15 +33,15 @@ private:
 public:
     BigInt();
     BigInt(const BigInt& bigNumber);
-    BigInt(const std::string& bigNumberStdString, const int& base = baseInput);
-    BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool& isPositive = true);
-    BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool& isPositive = true);
-    BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool& isPositive = true);
-    BigInt(const std::vector<bool>& bigNumberStdVectorBool, const bool& isPositive = true);
-    BigInt(const uint32_t& numberUint32_t, const bool& isPositive = true);
-    BigInt(const uint64_t& numberUint64_t, const bool& isPositive = true);
-    BigInt(const int& numberInt);
-    BigInt(const long long& numberLongLong);
+    explicit BigInt(const std::string& bigNumberStdString, const int& base = baseInput);
+    explicit BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool& isPositive = true);
+    explicit BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool& isPositive = true);
+    explicit BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool& isPositive = true);
+    explicit BigInt(const std::vector<bool>& bigNumberStdVectorBool, const bool& isPositive = true);
+    explicit BigInt(const uint32_t& numberUint32_t, const bool& isPositive = true);
+    explicit BigInt(const uint64_t& numberUint64_t, const bool& isPositive = true);
+    explicit BigInt(const int& numberInt);
+    explicit BigInt(const long long& numberLongLong);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal); // simple assignment
@@ -98,19 +98,19 @@ public:
     bool operator && (const BigInt& rightAND) const; // AND
     bool operator || (const BigInt& rightOR) const; // inclusive OR
 
-    inline bool operator == (const BigInt& rightComparable) const; // equal to
-    inline bool operator != (const BigInt& rightComparable) const; // not equal to
+    bool operator == (const BigInt& rightComparable) const; // equal to
+    bool operator != (const BigInt& rightComparable) const; // not equal to
     bool operator < (const BigInt& rightComparable) const; // less than
     bool operator > (const BigInt& rightComparable) const; // greater than
-    inline bool operator <= (const BigInt& rightComparable) const; // less than or equal to
-    inline bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
+    bool operator <= (const BigInt& rightComparable) const; // less than or equal to
+    bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
 
     friend BigInt abs(const BigInt& bigNum); // absolute value
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
     friend BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
 
-    friend inline const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
-    friend inline const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
 
     friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
     friend QDebug operator << (QDebug out, const BigInt& bigNum);

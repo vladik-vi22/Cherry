@@ -84,7 +84,7 @@ void PRBgenerators::generateL20(const uint32_t& numberOfBit)
     std::clock_t begin_time = std::clock();
     std::vector<bool> bigNumberStdVectorBool;
     bigNumberStdVectorBool.reserve(numberOfBit);
-    bigNumberStdVectorBool.resize(numberOfBit, 0);
+    bigNumberStdVectorBool.resize(numberOfBit);
     srand(time(NULL));
     std::vector<bool>::iterator iteratorBigNumberStdVectorBool = bigNumberStdVectorBool.begin();
     for(uint8_t indexFirstBits = 0; indexFirstBits < 20; ++indexFirstBits)
@@ -107,7 +107,7 @@ void PRBgenerators::generateL89(const uint32_t& numberOfBit)
     std::clock_t begin_time = std::clock();
     std::vector<bool> bigNumberStdVectorBool;
     bigNumberStdVectorBool.reserve(numberOfBit);
-    bigNumberStdVectorBool.resize(numberOfBit, 0);
+    bigNumberStdVectorBool.resize(numberOfBit);
     srand(time(NULL));
     std::vector<bool>::iterator iteratorBigNumberStdVectorBool = bigNumberStdVectorBool.begin();
     for(uint8_t indexFirstBits = 0; indexFirstBits < 89; ++indexFirstBits)
@@ -133,13 +133,13 @@ void PRBgenerators::generateGeffe(const uint32_t& numberOfBit)
     std::vector<bool> bigNumberStdVectorBoolL10;
     std::vector<bool> bigNumberStdVectorBoolL11;
     bigNumberStdVectorBool.reserve(numberOfBit);
-    bigNumberStdVectorBool.resize(numberOfBit, 0);
+    bigNumberStdVectorBool.resize(numberOfBit);
     bigNumberStdVectorBoolL9.reserve(numberOfBit);
-    bigNumberStdVectorBoolL9.resize(numberOfBit, 0);
+    bigNumberStdVectorBoolL9.resize(numberOfBit);
     bigNumberStdVectorBoolL10.reserve(numberOfBit);
-    bigNumberStdVectorBoolL10.resize(numberOfBit, 0);
+    bigNumberStdVectorBoolL10.resize(numberOfBit);
     bigNumberStdVectorBoolL11.reserve(numberOfBit);
-    bigNumberStdVectorBoolL11.resize(numberOfBit, 0);
+    bigNumberStdVectorBoolL11.resize(numberOfBit);
     srand(time(NULL));
     std::vector<bool>::iterator iteratorBigNumberStdVectorBool = bigNumberStdVectorBool.begin();
     std::vector<bool>::iterator iteratorBigNumberStdVectorBoolL9 = bigNumberStdVectorBoolL9.begin();
@@ -208,6 +208,28 @@ void PRBgenerators::generateWolfram(const uint32_t& numberOfBit)
     std::cout << m_generatedWolfram.toStdString(2) << std::endl;
 }
 
+void PRBgenerators::generateLibrarian(const uint32_t& numberOfBit)
+{
+    std::clock_t begin_time = std::clock();
+    std::vector<uint8_t> bigNumberStdVectorUint8_t;
+    bigNumberStdVectorUint8_t.reserve(numberOfBit % 8 ? numberOfBit / 8 + 1 : numberOfBit / 8);
+    std::string randomStdString;
+    QFile fileRandomString("../Cherry/src/PRBgenerators/generateLibrarian.txt");
+    if(fileRandomString.open(QFile::ReadOnly))
+    {
+        QString randomQString = fileRandomString.readLine();
+        randomStdString = randomQString.toStdString();
+        fileRandomString.close();
+    }
+    for(uint32_t indexByte = 0; indexByte < (numberOfBit % 8? numberOfBit / 8 + 1 : numberOfBit / 8); ++indexByte)
+    {
+        bigNumberStdVectorUint8_t.push_back(randomStdString[indexByte]);
+    }
+    m_generatedLibrarian = bigNumberStdVectorUint8_t;
+    std::cout << "time to generate Librarian on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << m_generatedLibrarian.toStdString(2) << std::endl;
+}
+
 void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
 {
     std::clock_t begin_time = std::clock();
@@ -217,7 +239,7 @@ void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
     const BigInt p("CEA42B987C44FA642D80AD9F51F10457690DEF10C83D0BC1BCEE12FC3B6093E3", 16); // p = 2 * q + 1
     const BigInt q("675215CC3E227D3216C056CFA8F8822BB486F788641E85E0DE77097E1DB049F1", 16); // q = (p - 1) / 2
     srand(time(NULL));
-    BigInt T = rand();
+    BigInt T(rand());
     for(uint32_t indexBit = 0; indexBit < numberOfBit; ++indexBit)
     {
         bigNumberStdVectorBool.push_back(T < q);
@@ -237,7 +259,7 @@ void PRBgenerators::generateBlumMikaliByte(const uint32_t& numberOfBit)
     const BigInt p("CEA42B987C44FA642D80AD9F51F10457690DEF10C83D0BC1BCEE12FC3B6093E3", 16); // p = 2 * q + 1
     const BigInt q("675215CC3E227D3216C056CFA8F8822BB486F788641E85E0DE77097E1DB049F1", 16); // q = (p - 1) / 2
     srand(time(NULL));
-    BigInt T = rand();
+    BigInt T(rand());
     for(uint32_t indexByte = 0; indexByte < (numberOfBit % 8 == 0 ? numberOfBit / 8 : numberOfBit / 8 + 1); ++indexByte)
     {
         bigNumberStdVectorUint8_t.push_back((--((T << 7) / q)).toUint32_t()); // T << 7 = T * 128
@@ -257,11 +279,11 @@ void PRBgenerators::generateBlumBlumShubBit(const uint32_t& numberOfBit)
     //const BigInt q("425D2B9BFDB25B9CF6C416CC6E37B59C1F", 16);
     const BigInt n("37682f6947aaab110517c20b76df64781da78b3e87eb58379085d3395793bdb9d9", 16); // p * q
     srand(time(NULL));
-    BigInt r = rand() + 2;
+    BigInt r(rand() + 2);
     for(uint32_t indexBit = 0; indexBit < numberOfBit; ++indexBit)
     {
         bigNumberStdVectorBool.push_back(r.isOdd());
-        r = powmod(r, 2, n);
+        r = powmod(r, BigInt(2), n);
     }
     m_generatedBlumBlumShubBit = bigNumberStdVectorBool;
     std::cout << "time to generate BlumBlumShubBit on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
@@ -277,11 +299,11 @@ void PRBgenerators::generateBlumBlumShubByte(const uint32_t& numberOfBit)
     //const BigInt q("425D2B9BFDB25B9CF6C416CC6E37B59C1F", 16);
     const BigInt n("37682f6947aaab110517c20b76df64781da78b3e87eb58379085d3395793bdb9d9", 16); // p * q
     srand(time(NULL));
-    BigInt r = rand() + 2;
+    BigInt r(rand() + 2);
     for(uint32_t indexByte = 0; indexByte < (numberOfBit % 8 == 0 ? numberOfBit / 8 : numberOfBit / 8 + 1); ++indexByte)
     {
-        bigNumberStdVectorUint8_t.push_back((r % 256).toUint32_t()); // r & 511 = r % 256
-        r = powmod(r, 2, n);
+        bigNumberStdVectorUint8_t.push_back((r & BigInt(255)).toUint32_t()); // r & 255 = r % 256
+        r = powmod(r, BigInt(2), n);
     }
     m_generatedBlumBlumShubByte = bigNumberStdVectorUint8_t;
     std::cout << "time to generate BlumBlumShubByte on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
