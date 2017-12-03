@@ -27,7 +27,7 @@ ApplicationWindow
         onClicked:
         {
             prbGeneratorsLoader.source = ""
-            prbGeneratorsLoader.source = "PRBGeneratorsNTests.qml"
+            prbGeneratorsLoader.source = "PRBgeneratorsNtests.qml"
             menuPRBgenerators.close()
         }
     }

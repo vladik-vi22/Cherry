@@ -6,6 +6,6 @@
         <file>src/qml_production/PRBgenerators/PRBgeneratorsMenu.qml</file>
         <file>src/qml_production/main.qml</file>
         <file>src/qml_production/BigIntLibrary/BigIntCalculator.qml</file>
-        <file>src/qml_production/PRBgenerators/PRBGeneratorsNTests.qml</file>
+        <file>src/qml_production/PRBgenerators/PRBgeneratorsNtests.qml</file>
     </qresource>
 </RCC>

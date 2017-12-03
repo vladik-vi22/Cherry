@@ -28,19 +28,26 @@ public:
     Q_INVOKABLE void generateBlumBlumShubBit(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumBlumShubByte(const uint32_t& numberOfBit);
 
+    Q_INVOKABLE bool testEquiprobabilityByte(const std::vector<uint8_t>& stdVectorUint8_t);
+    Q_INVOKABLE bool testIndependenceByte(const std::vector<uint8_t>& stdVectorUint8_t);
+    Q_INVOKABLE bool testHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t);
+
 private:
-    BigInt m_generatedBuiltInCPP;
-    BigInt m_generatedLehmerLow;
-    BigInt m_generatedLehmerHigh;
-    BigInt m_generatedL20;
-    BigInt m_generatedL89;
-    BigInt m_generatedGeffe;
-    BigInt m_generatedWolfram;
-    BigInt m_generatedLibrarian;
-    BigInt m_generatedBlumMikaliBit;
-    BigInt m_generatedBlumMikaliByte;
-    BigInt m_generatedBlumBlumShubBit;
-    BigInt m_generatedBlumBlumShubByte;
+    std::vector<uint8_t> m_generatedBuiltInCPP;
+    std::vector<uint8_t> m_generatedLehmerLow;
+    std::vector<uint8_t> m_generatedLehmerHigh;
+    std::vector<uint8_t> m_generatedL20;
+    std::vector<uint8_t> m_generatedL89;
+    std::vector<uint8_t> m_generatedGeffe;
+    std::vector<uint8_t> m_generatedWolfram;
+    std::vector<uint8_t> m_generatedLibrarian;
+    std::vector<uint8_t> m_generatedBlumMikaliBit;
+    std::vector<uint8_t> m_generatedBlumMikaliByte;
+    std::vector<uint8_t> m_generatedBlumBlumShubBit;
+    std::vector<uint8_t> m_generatedBlumBlumShubByte;
 };
+
+std::vector<uint8_t> StdVectorBoolToStdVectorUint8_t(const std::vector<bool>& stdVectorBool);
+std::vector<uint16_t> StdVectorUint8_tToStdVectorUint16_t(const std::vector<uint8_t>& stdVectorUint8_t);
 
 #endif // PRBgenerators_H
