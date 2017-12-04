@@ -20,9 +20,9 @@ void PRBgenerators::generateBuiltInCPP(const uint32_t& numberOfBit)
         m_generatedBuiltInCPP.push_back(rand() & UINT8_MAX);
     }
     std::cout << "time to generate BuiltInCPP on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedBuiltInCPP) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedBuiltInCPP) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedBuiltInCPP) << std::endl;
+    std::cout << "testOfGoodnessOfFit            " << testOfGoodnessOfFit(m_generatedBuiltInCPP) << std::endl;
+    std::cout << "testOfIndependence             " << testOfIndependence(m_generatedBuiltInCPP) << std::endl;
+    std::cout << "testOfHomogeneity              " << testOfHomogeneity(m_generatedBuiltInCPP) << std::endl;
 }
 
 void PRBgenerators::generateLehmerLow(const uint32_t& numberOfBit)
@@ -41,9 +41,9 @@ void PRBgenerators::generateLehmerLow(const uint32_t& numberOfBit)
         lehmerUint32_t = a * lehmerUint32_t + c;
     }
     std::cout << "time to generate LehmerLow on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedLehmerLow) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedLehmerLow) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedLehmerLow) << std::endl;
+    std::cout << "testOfGoodnessOfFit           " << testOfGoodnessOfFit(m_generatedLehmerLow) << std::endl;
+    std::cout << "testOfIndependence            " << testOfIndependence(m_generatedLehmerLow) << std::endl;
+    std::cout << "testOfHomogeneity             " << testOfHomogeneity(m_generatedLehmerLow) << std::endl;
 }
 
 void PRBgenerators::generateLehmerHigh(const uint32_t& numberOfBit)
@@ -62,9 +62,9 @@ void PRBgenerators::generateLehmerHigh(const uint32_t& numberOfBit)
         lehmerUint32_t = a * lehmerUint32_t + c;
     }
     std::cout << "time to generate LehmerHigh on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedLehmerHigh) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedLehmerHigh) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedLehmerHigh) << std::endl;
+    std::cout << "testOfGoodnessOfFit            " << testOfGoodnessOfFit(m_generatedLehmerHigh) << std::endl;
+    std::cout << "testOfIndependence             " << testOfIndependence(m_generatedLehmerHigh) << std::endl;
+    std::cout << "testOfHomogeneity              " << testOfHomogeneity(m_generatedLehmerHigh) << std::endl;
 }
 
 void PRBgenerators::generateL20(const uint32_t& numberOfBit)
@@ -87,9 +87,9 @@ void PRBgenerators::generateL20(const uint32_t& numberOfBit)
     }
     m_generatedL20 = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate L20 on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedL20) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedL20) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedL20) << std::endl;
+    std::cout << "testOfGoodnessOfFit     " << testOfGoodnessOfFit(m_generatedL20) << std::endl;
+    std::cout << "testOfIndependence      " << testOfIndependence(m_generatedL20) << std::endl;
+    std::cout << "testOfHomogeneity       " << testOfHomogeneity(m_generatedL20) << std::endl;
 }
 
 void PRBgenerators::generateL89(const uint32_t& numberOfBit)
@@ -112,9 +112,9 @@ void PRBgenerators::generateL89(const uint32_t& numberOfBit)
     }
     m_generatedL89 = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate L89 on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedL89) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedL89) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedL89) << std::endl;
+    std::cout << "testOfGoodnessOfFit     " << testOfGoodnessOfFit(m_generatedL89) << std::endl;
+    std::cout << "testOfIndependence      " << testOfIndependence(m_generatedL89) << std::endl;
+    std::cout << "testOfHomogeneity       " << testOfHomogeneity(m_generatedL89) << std::endl;
 }
 
 void PRBgenerators::generateGeffe(const uint32_t& numberOfBit)
@@ -172,7 +172,7 @@ void PRBgenerators::generateGeffe(const uint32_t& numberOfBit)
         *iteratorStdVectorBoolL9 = *(iteratorStdVectorBoolL9 - 9) ^ *(iteratorStdVectorBoolL9 - 8) ^ *(iteratorStdVectorBoolL9 - 6) ^ *(iteratorStdVectorBoolL9 - 5);
         *iteratorStdVectorBoolL10 = *(iteratorStdVectorBoolL10 - 10) ^ *(iteratorStdVectorBoolL10 - 7);
         *iteratorStdVectorBoolL11 = *(iteratorStdVectorBoolL11 - 11) ^ *(iteratorStdVectorBoolL11 - 9);
-        *iteratorStdVectorBool = (*iteratorStdVectorBoolL10 * *iteratorStdVectorBoolL11) ^ ((1 ^ *iteratorStdVectorBoolL10) * *iteratorStdVectorBoolL9);
+        *iteratorStdVectorBool = (*iteratorStdVectorBoolL10 & *iteratorStdVectorBoolL11) ^ ((1 ^ *iteratorStdVectorBoolL10) & *iteratorStdVectorBoolL9);
         ++iteratorStdVectorBool;
         ++iteratorStdVectorBoolL9;
         ++iteratorStdVectorBoolL10;
@@ -180,9 +180,9 @@ void PRBgenerators::generateGeffe(const uint32_t& numberOfBit)
     }
     m_generatedGeffe = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate Geffe on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedGeffe) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedGeffe) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedGeffe) << std::endl;
+    std::cout << "testOfGoodnessOfFit       " << testOfGoodnessOfFit(m_generatedGeffe) << std::endl;
+    std::cout << "testOfIndependence        " << testOfIndependence(m_generatedGeffe) << std::endl;
+    std::cout << "testOfHomogeneity         " << testOfHomogeneity(m_generatedGeffe) << std::endl;
 }
 
 void PRBgenerators::generateWolfram(const uint32_t& numberOfBit)
@@ -195,13 +195,13 @@ void PRBgenerators::generateWolfram(const uint32_t& numberOfBit)
     for(uint32_t indexBit = 0; indexBit < numberOfBit; ++indexBit)
     {
         stdVectorBool.push_back(r & 1);
-        r = (r << 1) ^ (r | (r >> 1));
+        r = (r << 1 | r >> 31) ^ (r | (r >> 1 | r << 31));
     }
     m_generatedWolfram = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate Wolfram on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedWolfram) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedWolfram) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedWolfram) << std::endl;
+    std::cout << "testOfGoodnessOfFit         " << testOfGoodnessOfFit(m_generatedWolfram) << std::endl;
+    std::cout << "testOfIndependence          " << testOfIndependence(m_generatedWolfram) << std::endl;
+    std::cout << "testOfHomogeneity           " << testOfHomogeneity(m_generatedWolfram) << std::endl;
 }
 
 void PRBgenerators::generateLibrarian(const uint32_t& numberOfBit)
@@ -223,9 +223,9 @@ void PRBgenerators::generateLibrarian(const uint32_t& numberOfBit)
         m_generatedLibrarian.push_back(randomStdString[indexByte]);
     }
     std::cout << "time to generate Librarian on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedLibrarian) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedLibrarian) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedLibrarian) << std::endl;
+    std::cout << "testOfGoodnessOfFit           " << testOfGoodnessOfFit(m_generatedLibrarian) << std::endl;
+    std::cout << "testOfIndependence            " << testOfIndependence(m_generatedLibrarian) << std::endl;
+    std::cout << "testOfHomogeneity             " << testOfHomogeneity(m_generatedLibrarian) << std::endl;
 }
 
 void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
@@ -245,9 +245,9 @@ void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
     }
     m_generatedBlumMikaliBit = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate BlumMikaliBit on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedBlumMikaliBit) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedBlumMikaliBit) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedBlumMikaliBit) << std::endl;
+    std::cout << "testOfGoodnessOfFit               " << testOfGoodnessOfFit(m_generatedBlumMikaliBit) << std::endl;
+    std::cout << "testOfIndependence                " << testOfIndependence(m_generatedBlumMikaliBit) << std::endl;
+    std::cout << "testOfHomogeneity                 " << testOfHomogeneity(m_generatedBlumMikaliBit) << std::endl;
 }
 
 void PRBgenerators::generateBlumMikaliByte(const uint32_t& numberOfBit)
@@ -267,9 +267,9 @@ void PRBgenerators::generateBlumMikaliByte(const uint32_t& numberOfBit)
         T = powmod(a, T, p);
     }
     std::cout << "time to generate BlumMikaliByte on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedBlumMikaliByte) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedBlumMikaliByte) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedBlumMikaliByte) << std::endl;
+    std::cout << "testOfGoodnessOfFit                " << testOfGoodnessOfFit(m_generatedBlumMikaliByte) << std::endl;
+    std::cout << "testOfIndependence                 " << testOfIndependence(m_generatedBlumMikaliByte) << std::endl;
+    std::cout << "testOfHomogeneity                  " << testOfHomogeneity(m_generatedBlumMikaliByte) << std::endl;
 }
 
 void PRBgenerators::generateBlumBlumShubBit(const uint32_t& numberOfBit)
@@ -289,9 +289,9 @@ void PRBgenerators::generateBlumBlumShubBit(const uint32_t& numberOfBit)
     }
     m_generatedBlumBlumShubBit = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate BlumBlumShubBit on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedBlumBlumShubBit) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedBlumBlumShubBit) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedBlumBlumShubBit) << std::endl;
+    std::cout << "testOfGoodnessOfFit                 " << testOfGoodnessOfFit(m_generatedBlumBlumShubBit) << std::endl;
+    std::cout << "testOfIndependence                  " << testOfIndependence(m_generatedBlumBlumShubBit) << std::endl;
+    std::cout << "testOfHomogeneity                   " << testOfHomogeneity(m_generatedBlumBlumShubBit) << std::endl;
 }
 
 void PRBgenerators::generateBlumBlumShubByte(const uint32_t& numberOfBit)
@@ -311,72 +311,93 @@ void PRBgenerators::generateBlumBlumShubByte(const uint32_t& numberOfBit)
         r = powmod(r, BigInt(2), n);
     }
     std::cout << "time to generate BlumBlumShubByte on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testEquiprobabilityByte " << testEquiprobabilityByte(m_generatedBlumBlumShubByte) << std::endl;
-    std::cout << "testIndependenceByte    " << testIndependenceByte(m_generatedBlumBlumShubByte) << std::endl;
-    std::cout << "testHomogeneity         " << testHomogeneity(m_generatedBlumBlumShubByte) << std::endl;
+    std::cout << "testOfGoodnessOfFit                  " << testOfGoodnessOfFit(m_generatedBlumBlumShubByte) << std::endl;
+    std::cout << "testOfIndependence                   " << testOfIndependence(m_generatedBlumBlumShubByte) << std::endl;
+    std::cout << "testOfHomogeneity                    " << testOfHomogeneity(m_generatedBlumBlumShubByte) << std::endl;
 }
 
-bool PRBgenerators::testEquiprobabilityByte(const std::vector<uint8_t>& stdVectorUint8_t)
+bool PRBgenerators::testOfGoodnessOfFit(const std::vector<uint8_t>& stdVectorUint8_t)
 {
-    const uint32_t n = stdVectorUint8_t.size() >> 8;
+    const float n = stdVectorUint8_t.size() / 256;
     const float Z_1minusAlpha = 0.3389; // alpha = 0.01;
     //const float Z_1minusAlpha = 0.3289; // alpha = 0.05;
     //const float Z_1minusAlpha = 0.3159; // alpha = 0.1;
-    float ChiSquare = 0;
+    std::vector<uint32_t> byteFrequency;
+    byteFrequency.resize(UINT8_MAX + 1, 0);
+    for(std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = stdVectorUint8_t.begin(); iteratorStdVectorUint8_t != stdVectorUint8_t.end(); ++iteratorStdVectorUint8_t)
+    {
+        ++byteFrequency[*iteratorStdVectorUint8_t];
+    }
+    float ChiSquare = 0.0;
     uint8_t byte = 0;
     do
     {
-        ChiSquare += std::pow(std::count(stdVectorUint8_t.begin(), stdVectorUint8_t.end(), byte) - n, 2) / n;
+        ChiSquare += std::pow(byteFrequency[byte] - n, 2) / n;
     }
     while(++byte);
     float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX) * Z_1minusAlpha + UINT8_MAX;
     return ChiSquare <= ChiSquare_1minusAlpha;
 }
 
-bool PRBgenerators::testIndependenceByte(const std::vector<uint8_t>& stdVectorUint8_t)
+bool PRBgenerators::testOfHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t)
 {
-    const std::vector<uint16_t> stdVectorUint16_t = StdVectorUint8_tToStdVectorUint16_t(stdVectorUint8_t);
-    const uint32_t numberOfBytePair = stdVectorUint16_t.size();
-    const float Z_1minusAlpha = 0.3389; // alpha = 0.01;
-    //const float Z_1minusAlpha = 0.3289; // alpha = 0.05;
-    //const float Z_1minusAlpha = 0.3159; // alpha = 0.1;
-    float ChiSquare = 0;
-    uint16_t bytePair = 0;
-    do
-    {
-        ChiSquare += std::pow(std::count(stdVectorUint16_t.begin(), stdVectorUint16_t.end(), bytePair), 2)
-                / (std::count_if(stdVectorUint16_t.begin(), stdVectorUint16_t.end(), [&bytePair](uint16_t byteFirst){return (byteFirst >> 8) == (bytePair >> 8);})
-                * std::count_if(stdVectorUint16_t.begin(), stdVectorUint16_t.end(), [&bytePair](uint16_t byteSecond){return (byteSecond & UINT8_MAX) == (bytePair & UINT8_MAX);}));
-    }
-    while(++bytePair);
-    --ChiSquare *= numberOfBytePair;
-    float ChiSquare_1minusAlpha = std::sqrt(2) * UINT8_MAX * Z_1minusAlpha + std::pow(UINT8_MAX, 2);
-    return ChiSquare <= ChiSquare_1minusAlpha;
-}
-
-bool PRBgenerators::testHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t)
-{
-    const uint32_t numberOfSegment = 8;
+    const uint32_t numberOfSegment = 16;
     const uint32_t lenghtOfSegment = stdVectorUint8_t.size() / numberOfSegment;
     const uint32_t numberOfByte = numberOfSegment * lenghtOfSegment;
     const float Z_1minusAlpha = 0.3389; // alpha = 0.01;
     //const float Z_1minusAlpha = 0.3289; // alpha = 0.05;
     //const float Z_1minusAlpha = 0.3159; // alpha = 0.1;
-    float ChiSquare = 0;
+    std::vector<uint32_t> byteFrequency;
+    byteFrequency.resize(UINT8_MAX + 1, 0);
+    for(std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = stdVectorUint8_t.begin(); iteratorStdVectorUint8_t != stdVectorUint8_t.end(); ++iteratorStdVectorUint8_t)
+    {
+        ++byteFrequency[*iteratorStdVectorUint8_t];
+    }
+    float ChiSquare = 0.0;
     uint8_t byte = 0;
     do
     {
         std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = stdVectorUint8_t.begin();
         for(uint32_t indexSegment = 0; indexSegment < numberOfSegment; ++indexSegment)
         {
-            ChiSquare += std::pow(std::count(iteratorStdVectorUint8_t, iteratorStdVectorUint8_t + lenghtOfSegment - 1, byte), 2)
-                    / (std::count(stdVectorUint8_t.begin(), stdVectorUint8_t.end(), byte) * lenghtOfSegment);
+            ChiSquare += (std::pow(std::count(iteratorStdVectorUint8_t, iteratorStdVectorUint8_t + lenghtOfSegment - 1, byte), 2) * numberOfByte) / (byteFrequency[byte] * lenghtOfSegment);
             iteratorStdVectorUint8_t += lenghtOfSegment;
         }
     }
     while(++byte);
-    --ChiSquare *= numberOfByte;
+    ChiSquare -= numberOfByte;
     float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX * (numberOfSegment - 1)) * Z_1minusAlpha + UINT8_MAX * (numberOfSegment - 1);
+    return ChiSquare <= ChiSquare_1minusAlpha;
+}
+
+bool PRBgenerators::testOfIndependence(const std::vector<uint8_t>& stdVectorUint8_t)
+{
+    const uint32_t numberOfBytePair = stdVectorUint8_t.size() >> 1;
+    const float Z_1minusAlpha = 0.3389; // alpha = 0.01;
+    //const float Z_1minusAlpha = 0.3289; // alpha = 0.05;
+    //const float Z_1minusAlpha = 0.3159; // alpha = 0.1;
+    std::vector<uint32_t> bytePairFrequency;
+    std::vector<uint32_t> byteFirstFrequency;
+    std::vector<uint32_t> byteSecondFrequency;
+    bytePairFrequency.resize(UINT16_MAX + 1, 0);
+    byteFirstFrequency.resize(UINT8_MAX + 1, 0);
+    byteSecondFrequency.resize(UINT8_MAX + 1, 0);
+    for(std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = stdVectorUint8_t.begin(); iteratorStdVectorUint8_t != (stdVectorUint8_t.size() & 1 ? std::prev(stdVectorUint8_t.end()): stdVectorUint8_t.end()); ++iteratorStdVectorUint8_t)
+    {
+        ++byteFirstFrequency[*iteratorStdVectorUint8_t];
+        ++byteSecondFrequency[*(iteratorStdVectorUint8_t + 1)];
+        ++bytePairFrequency[(uint16_t)(*iteratorStdVectorUint8_t << 8) | *(iteratorStdVectorUint8_t + 1)];
+        ++iteratorStdVectorUint8_t;
+    }
+    float ChiSquare = 0;
+    uint16_t bytePair = 0;
+    do
+    {
+        ChiSquare += (std::pow(bytePairFrequency[bytePair], 2) * numberOfBytePair) / (byteFirstFrequency[bytePair >> 8] * byteSecondFrequency[bytePair & UINT8_MAX]);
+    }
+    while(++bytePair);
+    ChiSquare -= numberOfBytePair;
+    float ChiSquare_1minusAlpha = std::sqrt(2) * UINT8_MAX * Z_1minusAlpha + std::pow(UINT8_MAX, 2);
     return ChiSquare <= ChiSquare_1minusAlpha;
 }
 

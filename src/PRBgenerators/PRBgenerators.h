@@ -28,9 +28,9 @@ public:
     Q_INVOKABLE void generateBlumBlumShubBit(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumBlumShubByte(const uint32_t& numberOfBit);
 
-    Q_INVOKABLE bool testEquiprobabilityByte(const std::vector<uint8_t>& stdVectorUint8_t);
-    Q_INVOKABLE bool testIndependenceByte(const std::vector<uint8_t>& stdVectorUint8_t);
-    Q_INVOKABLE bool testHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t);
+    Q_INVOKABLE bool testOfGoodnessOfFit(const std::vector<uint8_t>& stdVectorUint8_t);
+    Q_INVOKABLE bool testOfHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t);
+    Q_INVOKABLE bool testOfIndependence(const std::vector<uint8_t>& stdVectorUint8_t);
 
 private:
     std::vector<uint8_t> m_generatedBuiltInCPP;

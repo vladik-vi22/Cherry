@@ -53,7 +53,7 @@ ApplicationWindow
     Text
     {
         id: textEquiprobability
-        text: qsTr("Equiprobability")
+        text: qsTr("GoodnessOfFit")
         width: prbGenerators.width / 5
         height: prbGenerators.height / 15
         anchors.top: prbGenerators.top
@@ -65,7 +65,7 @@ ApplicationWindow
     Text
     {
         id: textIndependence
-        text: qsTr("Independence")
+        text: qsTr("Homogeneity")
         width: prbGenerators.width / 5
         height: prbGenerators.height / 15
         anchors.top: prbGenerators.top
@@ -77,7 +77,7 @@ ApplicationWindow
     Text
     {
         id: textHomogeneity
-        text: qsTr("Homogeneity")
+        text: qsTr("Independence")
         width: prbGenerators.width / 5
         height: prbGenerators.height / 15
         anchors.top: prbGenerators.top
