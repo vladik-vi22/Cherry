@@ -35,24 +35,8 @@ ApplicationWindow
 
     Button
     {
-        id: edhCryptorMenu
-        anchors.top: bigIntCalculator.bottom
-        width: menu.width
-        height: menu.height / numberOfButton
-        text: "EDHcryptor"
-
-        onClicked:
-        {
-            menuLoader.source = ""
-            menuLoader.source = "EDHcryptor/EDHcryptorMenu.qml"
-            menu.close()
-        }
-    }
-
-    Button
-    {
         id: prbGeneratorsMenu
-        anchors.top: edhCryptorMenu.bottom
+        anchors.top: bigIntCalculator.bottom
         width: menu.width
         height: menu.height / numberOfButton
         text: "PRBgenerators"
@@ -67,8 +51,24 @@ ApplicationWindow
 
     Button
     {
-        id: buttonExit
+        id: edhCryptorMenu
         anchors.top: prbGeneratorsMenu.bottom
+        width: menu.width
+        height: menu.height / numberOfButton
+        text: "EDHcryptor"
+
+        onClicked:
+        {
+            menuLoader.source = ""
+            menuLoader.source = "EDHcryptor/EDHcryptorMenu.qml"
+            menu.close()
+        }
+    }
+
+    Button
+    {
+        id: buttonExit
+        anchors.top: edhCryptorMenu.bottom
         width: menu.width
         height: menu.height / numberOfButton
         text: "Exit"
