@@ -23,8 +23,8 @@ public:
     Q_INVOKABLE void generateGeffe(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateWolfram(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateLibrarian(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumMikaliBit(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumMikaliByte(const uint32_t& numberOfBit);
+    Q_INVOKABLE void generateBlumMicaliBit(const uint32_t& numberOfBit);
+    Q_INVOKABLE void generateBlumMicaliByte(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumBlumShubBit(const uint32_t& numberOfBit);
     Q_INVOKABLE void generateBlumBlumShubByte(const uint32_t& numberOfBit);
 
@@ -41,8 +41,8 @@ private:
     std::vector<uint8_t> m_generatedGeffe;
     std::vector<uint8_t> m_generatedWolfram;
     std::vector<uint8_t> m_generatedLibrarian;
-    std::vector<uint8_t> m_generatedBlumMikaliBit;
-    std::vector<uint8_t> m_generatedBlumMikaliByte;
+    std::vector<uint8_t> m_generatedBlumMicaliBit;
+    std::vector<uint8_t> m_generatedBlumMicaliByte;
     std::vector<uint8_t> m_generatedBlumBlumShubBit;
     std::vector<uint8_t> m_generatedBlumBlumShubByte;
 };

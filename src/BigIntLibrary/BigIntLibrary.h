@@ -18,8 +18,6 @@ class BigInt
     static const std::string usedCharsDecimal; // "0123456789"
     static const std::string usedCharsHexadecimal; // "0123456789abcdefABCDEF"
     static const uint64_t basisCalcSys; // UINT32_MAX + 1 // 2^32 // 4294967296
-    static const uint32_t maxNumCell; // UINT32_MAX // 4294967295
-    static const uint32_t powOfBasis; // 32
     static const uint8_t sizeOfCellBin; // 32
     static const uint8_t sizeOfCellHex; // 8
 

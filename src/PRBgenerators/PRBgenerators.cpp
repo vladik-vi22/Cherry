@@ -228,7 +228,7 @@ void PRBgenerators::generateLibrarian(const uint32_t& numberOfBit)
     std::cout << "testOfHomogeneity             " << testOfHomogeneity(m_generatedLibrarian) << std::endl;
 }
 
-void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
+void PRBgenerators::generateBlumMicaliBit(const uint32_t& numberOfBit)
 {
     std::clock_t begin_time = std::clock();
     const BigInt a("5B88C41246790891C095E2878880342E88C79974303BD0400B090FE38A688356", 16);
@@ -243,33 +243,33 @@ void PRBgenerators::generateBlumMikaliBit(const uint32_t& numberOfBit)
         stdVectorBool.push_back(T < q);
         T = powmod(a, T, p);
     }
-    m_generatedBlumMikaliBit = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
-    std::cout << "time to generate BlumMikaliBit on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testOfGoodnessOfFit               " << testOfGoodnessOfFit(m_generatedBlumMikaliBit) << std::endl;
-    std::cout << "testOfIndependence                " << testOfIndependence(m_generatedBlumMikaliBit) << std::endl;
-    std::cout << "testOfHomogeneity                 " << testOfHomogeneity(m_generatedBlumMikaliBit) << std::endl;
+    m_generatedBlumMicaliBit = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
+    std::cout << "time to generate BlumMicaliBit on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "testOfGoodnessOfFit               " << testOfGoodnessOfFit(m_generatedBlumMicaliBit) << std::endl;
+    std::cout << "testOfIndependence                " << testOfIndependence(m_generatedBlumMicaliBit) << std::endl;
+    std::cout << "testOfHomogeneity                 " << testOfHomogeneity(m_generatedBlumMicaliBit) << std::endl;
 }
 
-void PRBgenerators::generateBlumMikaliByte(const uint32_t& numberOfBit)
+void PRBgenerators::generateBlumMicaliByte(const uint32_t& numberOfBit)
 {
-    m_generatedBlumMikaliByte.clear();
+    m_generatedBlumMicaliByte.clear();
     std::clock_t begin_time = std::clock();
     const BigInt a("5B88C41246790891C095E2878880342E88C79974303BD0400B090FE38A688356", 16);
     const BigInt p("CEA42B987C44FA642D80AD9F51F10457690DEF10C83D0BC1BCEE12FC3B6093E3", 16); // p = 2 * q + 1
     const BigInt q("675215CC3E227D3216C056CFA8F8822BB486F788641E85E0DE77097E1DB049F1", 16); // q = (p - 1) / 2
     uint32_t numberOfByte = numberOfBit & 7 ? (numberOfBit >> 3) + 1 : numberOfBit >> 3;
-    m_generatedBlumMikaliByte.reserve(numberOfByte);
+    m_generatedBlumMicaliByte.reserve(numberOfByte);
     srand(time(NULL));
     BigInt T(rand());
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
-        m_generatedBlumMikaliByte.push_back((((T << 7) / q) - BigInt(1)).toUint32_t()); // T << 7 = T * 128
+        m_generatedBlumMicaliByte.push_back((((T << 7) / q) - BigInt(1)).toUint32_t()); // T << 7 = T * 128
         T = powmod(a, T, p);
     }
-    std::cout << "time to generate BlumMikaliByte on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
-    std::cout << "testOfGoodnessOfFit                " << testOfGoodnessOfFit(m_generatedBlumMikaliByte) << std::endl;
-    std::cout << "testOfIndependence                 " << testOfIndependence(m_generatedBlumMikaliByte) << std::endl;
-    std::cout << "testOfHomogeneity                  " << testOfHomogeneity(m_generatedBlumMikaliByte) << std::endl;
+    std::cout << "time to generate BlumMicaliByte on " << numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "testOfGoodnessOfFit                " << testOfGoodnessOfFit(m_generatedBlumMicaliByte) << std::endl;
+    std::cout << "testOfIndependence                 " << testOfIndependence(m_generatedBlumMicaliByte) << std::endl;
+    std::cout << "testOfHomogeneity                  " << testOfHomogeneity(m_generatedBlumMicaliByte) << std::endl;
 }
 
 void PRBgenerators::generateBlumBlumShubBit(const uint32_t& numberOfBit)

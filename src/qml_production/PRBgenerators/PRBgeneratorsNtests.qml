@@ -18,10 +18,9 @@ ApplicationWindow
     ComboBox
     {
         anchors.top: prbGenerators.title
-        width: prbGenerators.width / 2
-        currentIndex: 1
-        model: ["1" , "2" , "3"]
-
+        width: prbGenerators.width / 4
+        height: prbGenerators.height / 20
+        model: ["Built-in CPP", "Lehmer Low", "Lehmer High", "L20", "L89", "Geffe", "Wolfram", "Librarian", "Blum-Micali (bit)", "Blum-Micali (byte)", "Blum Blum Shub (bit)", "Blum Blum Shub (byte)"]
     }
 
 }
