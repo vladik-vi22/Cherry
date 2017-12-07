@@ -11,12 +11,12 @@ BigIntCalculator::~BigIntCalculator()
 
 }
 
-int BigIntCalculator::getBaseInput() const
+uint8_t BigIntCalculator::getBaseInput() const
 {
     return m_baseInput;
 }
 
-int BigIntCalculator::getBaseOutput() const
+uint8_t BigIntCalculator::getBaseOutput() const
 {
     return m_baseOutput;
 }
@@ -36,7 +36,7 @@ QString BigIntCalculator::getCalculationsResult() const
     return QString::fromStdString(m_calculationsResult.toStdString(m_baseOutput));
 }
 
-void BigIntCalculator::setBaseInput(const int &new_baseInput)
+void BigIntCalculator::setBaseInput(const uint8_t &new_baseInput)
 {
     if(m_baseInput != new_baseInput)
     {
@@ -45,7 +45,7 @@ void BigIntCalculator::setBaseInput(const int &new_baseInput)
     }
 }
 
-void BigIntCalculator::setBaseOutput(const int &new_baseOutput)
+void BigIntCalculator::setBaseOutput(const uint8_t &new_baseOutput)
 {
     if(m_baseOutput != new_baseOutput)
     {

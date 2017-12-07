@@ -3,7 +3,6 @@
         <file>src/qml_production/EDHcryptor/EDHcryptorAffine.qml</file>
         <file>src/qml_production/EDHcryptor/EDHcryptorMenu.qml</file>
         <file>src/qml_production/EDHcryptor/EDHcryptorVizhener.qml</file>
-        <file>src/qml_production/PRBgenerators/PRBgeneratorsMenu.qml</file>
         <file>src/qml_production/main.qml</file>
         <file>src/qml_production/BigIntLibrary/BigIntCalculator.qml</file>
         <file>src/qml_production/PRBgenerators/PRBgeneratorsNtests.qml</file>

@@ -10,29 +10,50 @@
 class PRBgenerators: public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString numberOfBit READ getNumberOfBit WRITE setNumberOfBit NOTIFY numberOfBitChanged)
+    Q_PROPERTY(QString alpha READ getAlpha WRITE setAlpha NOTIFY alphaChanged)
+
+    static float Z_1minusAlpha;
 
 public:
     explicit PRBgenerators(QObject *parent = 0);
     ~PRBgenerators();
 
-    Q_INVOKABLE void generateBuiltInCPP(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateLehmerLow(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateLehmerHigh(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateL20(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateL89(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateGeffe(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateWolfram(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateLibrarian(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumMicaliBit(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumMicaliByte(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumBlumShubBit(const uint32_t& numberOfBit);
-    Q_INVOKABLE void generateBlumBlumShubByte(const uint32_t& numberOfBit);
+    QString getNumberOfBit() const;
+    QString getAlpha() const;
+    void setNumberOfBit(const QString& new_numberOfBit);
+    void setAlpha(const QString& new_alpha);
 
-    Q_INVOKABLE bool testOfGoodnessOfFit(const std::vector<uint8_t>& stdVectorUint8_t);
-    Q_INVOKABLE bool testOfHomogeneity(const std::vector<uint8_t>& stdVectorUint8_t);
-    Q_INVOKABLE bool testOfIndependence(const std::vector<uint8_t>& stdVectorUint8_t);
+signals:
+    void numberOfBitChanged();
+    void alphaChanged();
+    void generatedPRBSChanged();
+
+public:
+    Q_INVOKABLE void generateBuiltInCPP();
+    Q_INVOKABLE void generateLehmerLow();
+    Q_INVOKABLE void generateLehmerHigh();
+    Q_INVOKABLE void generateL20();
+    Q_INVOKABLE void generateL89();
+    Q_INVOKABLE void generateGeffe();
+    Q_INVOKABLE void generateWolfram();
+    Q_INVOKABLE void generateLibrarian();
+    Q_INVOKABLE void generateBlumMicaliBit();
+    Q_INVOKABLE void generateBlumMicaliByte();
+    Q_INVOKABLE void generateBlumBlumShubBit();
+    Q_INVOKABLE void generateBlumBlumShubByte();
+
+    Q_INVOKABLE bool testOfGoodnessOfFit() const;
+    Q_INVOKABLE bool testOfHomogeneity() const;
+    Q_INVOKABLE bool testOfIndependence() const;
+
+    Q_INVOKABLE QString getQStringGeneratedPRBS();
 
 private:
+    std::vector<uint8_t> m_generatedPRBS;
+    uint32_t m_numberOfBit;
+    float m_alpha;
+
     std::vector<uint8_t> m_generatedBuiltInCPP;
     std::vector<uint8_t> m_generatedLehmerLow;
     std::vector<uint8_t> m_generatedLehmerHigh;
@@ -48,6 +69,6 @@ private:
 };
 
 std::vector<uint8_t> StdVectorBoolToStdVectorUint8_t(const std::vector<bool>& stdVectorBool);
-std::vector<uint16_t> StdVectorUint8_tToStdVectorUint16_t(const std::vector<uint8_t>& stdVectorUint8_t);
+QString StdVectorUint8_tToQString(const std::vector<uint8_t>& stdVectorUint8_t);
 
 #endif // PRBgenerators_H

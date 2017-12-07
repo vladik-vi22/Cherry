@@ -563,6 +563,7 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
         return BigInt(0);
     }
     BigInt power(1);
+    power.bigNumArr.reserve(base.bigNumArr.size() * exponent.toUint32_t());
     for(uint32_t indexBitExponent = exponent.bitLenght() - 1; indexBitExponent > 0; --indexBitExponent)
     {
         if(exponent.bigNumArr[indexBitExponent >> 5] & (1 << (indexBitExponent & 31)))
@@ -585,6 +586,7 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
 BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
 {
     BigInt power(1);
+    power.bigNumArr.reserve(divisor.bigNumArr.size());
     const BigInt mu = power.shiftDigitsToHigh(divisor.bigNumArr.size() * 2) / divisor;
     const uint32_t bitLenghtExponent = exponent.bitLenght();
     for(uint32_t indexBitExponent = 0; indexBitExponent < bitLenghtExponent; ++indexBitExponent)

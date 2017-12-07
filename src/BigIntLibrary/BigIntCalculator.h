@@ -21,13 +21,13 @@ public:
     QString getBigNumber1() const;
     QString getBigNumber2() const;
     QString getCalculationsResult() const;
-    int getBaseInput() const;
-    int getBaseOutput() const;
-    void setBigNumber1(const QString &new_bigNumber1);
-    void setBigNumber2(const QString &new_bigNumber2);
-    void setCalculationsResult(const QString &new_calculationsResult);
-    void setBaseInput(const int &new_baseInput);
-    void setBaseOutput(const int &new_baseOutput);
+    uint8_t getBaseInput() const;
+    uint8_t getBaseOutput() const;
+    void setBigNumber1(const QString& new_bigNumber1);
+    void setBigNumber2(const QString& new_bigNumber2);
+    void setCalculationsResult(const QString& new_calculationsResult);
+    void setBaseInput(const uint8_t& new_baseInput);
+    void setBaseOutput(const uint8_t& new_baseOutput);
 
     Q_INVOKABLE void calculate(const QString& operation);
 
@@ -42,8 +42,8 @@ private:
     BigInt m_bigNumber1;
     BigInt m_bigNumber2;
     BigInt m_calculationsResult;
-    int m_baseInput;
-    int m_baseOutput;
+    uint8_t m_baseInput;
+    uint8_t m_baseOutput;
 
 };
 

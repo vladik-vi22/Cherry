@@ -19,23 +19,5 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
     return app.exec();
-
-    std::vector<uint32_t> a = {0, 0, 0, 0};
-    std::cout << a.empty() << std::endl;
-
-    PRBgenerators test;
-    /*test.generateBuiltInCPP(2097152);
-    test.generateLehmerLow(2097152);
-    test.generateLehmerHigh(2097152);
-    test.generateL20(2097152);
-    test.generateL89(2097152);
-    test.generateGeffe(2097152);
-    test.generateWolfram(2097152);
-    test.generateLibrarian(2097152);*/
-    test.generateBlumMicaliBit(128);
-    /*test.generateBlumMicaliByte(128);
-    test.generateBlumBlumShubBit(128);
-    test.generateBlumBlumShubByte(128);*/
-    return 0;
 }
 

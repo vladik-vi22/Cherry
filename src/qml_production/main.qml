@@ -44,7 +44,7 @@ ApplicationWindow
         onClicked:
         {
             menuLoader.source = ""
-            menuLoader.source = "PRBgenerators/PRBgeneratorsMenu.qml"
+            menuLoader.source = "PRBgenerators/PRBgeneratorsNtests.qml"
             menu.close()
         }
     }
