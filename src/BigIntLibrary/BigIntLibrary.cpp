@@ -25,12 +25,6 @@ BigInt::BigInt(const BigInt& bigNumber)
 
 BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
 {
-    if(bigNumberStdString == "0")
-    {
-        positive = true;
-        bigNumArr.push_back(0);
-        return;
-    }
     std::string bigNumberStdStringInput = bigNumberStdString;
     if(bigNumberStdStringInput[0] == '-')
     {
@@ -1010,7 +1004,7 @@ std::string BigInt::toStdString(const int& base) const
     std::string bigNumberString;
     if(!bigNumArr.size())
     {
-        return "";
+        return "NULL";
     }
     else if(isZero())
     {
@@ -1082,7 +1076,14 @@ bool BigInt::isOdd() const
 
 bool BigInt::isZero() const
 {
-    return bigNumArr.size() == 1 && !bigNumArr.front();
+    for(std::vector<uint32_t>::const_iterator iteratorBigNumArr = bigNumArr.cbegin(); iteratorBigNumArr != bigNumArr.cend(); ++iteratorBigNumArr)
+    {
+        if(*iteratorBigNumArr != 0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void BigInt::alignTo(BigInt& aligned)
@@ -1151,6 +1152,10 @@ BigInt BigInt::toBigIntDec() const
 
 std::string strDec2strBin(std::string strDec)
 {
+    if(strDec == "0")
+    {
+        return "0";
+    }
     const uint8_t sizeOfCell = 9;
     const uint32_t basisCalc = 1000000000;
     std::string strBin;

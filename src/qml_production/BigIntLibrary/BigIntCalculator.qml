@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import QtQuick.Controls 1.2
 
 import BigIntLibrary 2.0
@@ -85,6 +85,15 @@ ApplicationWindow
         anchors.left: bigIntCalculator.left
         wrapMode: TextEdit.Wrap
 
+        onTextChanged:
+        {
+            if(text.length > 1 && text.charAt(0) === '0')
+            {
+                remove(0, 1)
+                cursorPosition = 1
+            }
+        }
+
         function setBigNumber1ToCPP()
         {
             bigIntNumbersBases.bigNumber1 = bigNumber1.text
@@ -99,6 +108,15 @@ ApplicationWindow
         anchors.top: bigNumber1.bottom
         anchors.left: bigIntCalculator.left
         wrapMode: TextEdit.Wrap
+
+        onTextChanged:
+        {
+            if(text.length > 1 && text.charAt(0) === '0')
+            {
+                remove(0, 1)
+                cursorPosition = 1
+            }
+        }
 
         function setBigNumber2ToCPP()
         {
@@ -182,270 +200,46 @@ ApplicationWindow
         }
     }
 
-    Button
+    Grid
     {
-        id: addition
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
+        id: buttonGrid
+        columns: 2
         anchors.top: bigIntCalculator.top
         anchors.left: calculationsResult.right
 
-        text: "+"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(addition.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
+        property real buttonWidth: bigIntCalculator.width / 10
+        property real buttonHeight: bigIntCalculator.height / 10
 
-    Button
-    {
-        id: subtraction
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bigIntCalculator.top
-        anchors.left: addition.right
-
-        text: "-"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(subtraction.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: multiplication
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: addition.bottom
-        anchors.left: calculationsResult.right
-
-        text: "*"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(multiplication.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: division
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: subtraction.bottom
-        anchors.left: multiplication.right
-
-        text: "/"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(division.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: modulo
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: multiplication.bottom
-        anchors.left: calculationsResult.right
-
-        text: "%"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(modulo.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: power
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: division.bottom
-        anchors.left: modulo.right
-
-        text: "pow"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(power.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseNOT
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length === 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: modulo.bottom
-        anchors.left: calculationsResult.right
-
-        text: "~"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseNOT.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseAND
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: power.bottom
-        anchors.left: bitwiseNOT.right
-
-        text: "&&"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseAND.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseOR
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseNOT.bottom
-        anchors.left: calculationsResult.right
-
-        text: "|"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseOR.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseXOR
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseAND.bottom
-        anchors.left: bitwiseOR.right
-
-        text: "^"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseXOR.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseLeftShift
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseOR.bottom
-        anchors.left: calculationsResult.right
-
-        text: "<<"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseLeftShift.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: bitwiseRightShift
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseXOR.bottom
-        anchors.left: bitwiseLeftShift.right
-
-        text: ">>"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(bitwiseRightShift.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: gcd
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseLeftShift.bottom
-        anchors.left: calculationsResult.right
-
-        text: "gcd"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(gcd.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
-    }
-
-    Button
-    {
-        id: lcm
-        enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-        width: bigIntCalculator.width / 10
-        height: bigIntCalculator.height / 10
-        anchors.top: bitwiseRightShift.bottom
-        anchors.left: gcd.right
-
-        text: "lcm"
-        onClicked:
-        {
-            bigNumber1.setBigNumber1ToCPP()
-            bigNumber2.setBigNumber2ToCPP()
-            bigIntNumbersBases.calculate(lcm.text)
-            calculationsResult.getCalculationsResultFromCPP()
-        }
+        Button { text: "+"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "-"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "*"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "/"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { if(bigNumber2.text !== "0") { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() }
+                         else { calculationsResult.text = "Divide by zero exception" } } }
+        Button { text: "%"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { if(bigNumber2.text !== "0") { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() }
+                         else { calculationsResult.text = "Divide by zero exception" } } }
+        Button { text: "pow"; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "~"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length === 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "&&" ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "|"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "^"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "<<" ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: ">>" ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "gcd"; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
+        Button { text: "lcm"; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
     }
 
     Button
@@ -486,10 +280,4 @@ ApplicationWindow
             bigIntCalculator.close()
         }
     }
-
-
-
 }
-
-
-

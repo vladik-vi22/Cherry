@@ -12,6 +12,7 @@ class PRBgenerators: public QObject
     Q_OBJECT
     Q_PROPERTY(QString numberOfBit READ getNumberOfBit WRITE setNumberOfBit NOTIFY numberOfBitChanged)
     Q_PROPERTY(QString alpha READ getAlpha WRITE setAlpha NOTIFY alphaChanged)
+    Q_PROPERTY(QString numberOfSegment READ getNumberOfSegment WRITE setNumberOfSegment NOTIFY numberOfSegmentChanged)
 
     static float Z_1minusAlpha;
 
@@ -21,13 +22,15 @@ public:
 
     QString getNumberOfBit() const;
     QString getAlpha() const;
+    QString getNumberOfSegment() const;
     void setNumberOfBit(const QString& new_numberOfBit);
     void setAlpha(const QString& new_alpha);
+    void setNumberOfSegment(const QString& new_numberOfSegment);
 
 signals:
     void numberOfBitChanged();
     void alphaChanged();
-    void generatedPRBSChanged();
+    void numberOfSegmentChanged();
 
 public:
     Q_INVOKABLE void generateBuiltInCPP();
@@ -47,12 +50,13 @@ public:
     Q_INVOKABLE bool testOfHomogeneity() const;
     Q_INVOKABLE bool testOfIndependence() const;
 
-    Q_INVOKABLE QString getQStringGeneratedPRBS();
+    Q_INVOKABLE QString getQStringGeneratedPRBS() const;
 
 private:
     std::vector<uint8_t> m_generatedPRBS;
     uint32_t m_numberOfBit;
     float m_alpha;
+    uint32_t m_numberOfSegment;
 
     std::vector<uint8_t> m_generatedBuiltInCPP;
     std::vector<uint8_t> m_generatedLehmerLow;

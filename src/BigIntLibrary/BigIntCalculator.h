@@ -39,9 +39,9 @@ signals:
     void baseOutputChanged();
 
 private:
-    BigInt m_bigNumber1;
-    BigInt m_bigNumber2;
-    BigInt m_calculationsResult;
+    QString m_bigNumber1;
+    QString m_bigNumber2;
+    QString m_calculationsResult;
     uint8_t m_baseInput;
     uint8_t m_baseOutput;
 

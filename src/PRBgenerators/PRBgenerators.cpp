@@ -22,6 +22,11 @@ QString PRBgenerators::getAlpha() const
     return QString::number(m_alpha);
 }
 
+QString PRBgenerators::getNumberOfSegment() const
+{
+    return QString::number(m_numberOfSegment);
+}
+
 void PRBgenerators::setNumberOfBit(const QString& new_numberOfBit)
 {
     if(QString::number(m_numberOfBit) != new_numberOfBit)
@@ -36,7 +41,7 @@ void PRBgenerators::setAlpha(const QString& new_alpha)
     if(QString::number(m_alpha) != new_alpha)
     {
         m_alpha = new_alpha.toFloat();
-        switch((int)m_alpha * 100)
+        switch((int)(m_alpha * 100.1))
         {
         case 1:
             Z_1minusAlpha = 2.326;
@@ -68,7 +73,7 @@ void PRBgenerators::setAlpha(const QString& new_alpha)
         case 10:
             Z_1minusAlpha = 1.282;
             break;
-        default:
+        default: // m_alpha = 0.05
             Z_1minusAlpha = 1.645;
             break;
         }
@@ -76,7 +81,16 @@ void PRBgenerators::setAlpha(const QString& new_alpha)
     }
 }
 
-QString PRBgenerators::getQStringGeneratedPRBS()
+void PRBgenerators::setNumberOfSegment(const QString& new_numberOfSegment)
+{
+    if(QString::number(m_numberOfSegment) != new_numberOfSegment)
+    {
+        m_numberOfSegment = new_numberOfSegment.toULong();
+        emit numberOfSegmentChanged();
+    }
+}
+
+QString PRBgenerators::getQStringGeneratedPRBS() const
 {
     QString QStringGeneratedPRBS = StdVectorUint8_tToQString(m_generatedPRBS);
     if(QStringGeneratedPRBS.size() <= 16384)
@@ -383,7 +397,7 @@ bool PRBgenerators::testOfGoodnessOfFit() const
     {
         ++byteFrequency[*iteratorStdVectorUint8_t];
     }
-    float ChiSquare = 0.0;
+    float ChiSquare = 0;
     uint8_t byte = 0;
     do
     {
@@ -396,30 +410,36 @@ bool PRBgenerators::testOfGoodnessOfFit() const
 
 bool PRBgenerators::testOfHomogeneity() const
 {
-    const uint32_t numberOfSegment = 16;
-    const uint32_t lenghtOfSegment = m_generatedPRBS.size() / numberOfSegment;
-    const uint32_t numberOfByte = numberOfSegment * lenghtOfSegment;
-    std::vector<uint32_t> byteFrequency;
-    byteFrequency.resize(UINT8_MAX + 1, 0);
-    for(std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = m_generatedPRBS.cbegin(); iteratorStdVectorUint8_t != m_generatedPRBS.cend(); ++iteratorStdVectorUint8_t)
+    if(m_generatedPRBS.size() >= m_numberOfSegment)
     {
-        ++byteFrequency[*iteratorStdVectorUint8_t];
-    }
-    float ChiSquare = 0.0;
-    uint8_t byte = 0;
-    do
-    {
-        std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = m_generatedPRBS.cbegin();
-        for(uint32_t indexSegment = 0; indexSegment < numberOfSegment; ++indexSegment)
+        const uint32_t lenghtOfSegment = m_generatedPRBS.size() / m_numberOfSegment;
+        const uint32_t numberOfByte = m_numberOfSegment * lenghtOfSegment;
+        std::vector<uint32_t> byteFrequency;
+        byteFrequency.resize(UINT8_MAX + 1, 0);
+        for(std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = m_generatedPRBS.cbegin(); iteratorStdVectorUint8_t != m_generatedPRBS.cend(); ++iteratorStdVectorUint8_t)
         {
-            ChiSquare += (std::pow(std::count(iteratorStdVectorUint8_t, iteratorStdVectorUint8_t + lenghtOfSegment - 1, byte), 2) * numberOfByte) / (byteFrequency[byte] * lenghtOfSegment);
-            iteratorStdVectorUint8_t += lenghtOfSegment;
+            ++byteFrequency[*iteratorStdVectorUint8_t];
         }
+        float ChiSquare = 0;
+        uint8_t byte = 0;
+        do
+        {
+            std::vector<uint8_t>::const_iterator iteratorStdVectorUint8_t = m_generatedPRBS.cbegin();
+            for(uint32_t indexSegment = 0; indexSegment < m_numberOfSegment; ++indexSegment)
+            {
+                ChiSquare += (std::pow(std::count(iteratorStdVectorUint8_t, iteratorStdVectorUint8_t + lenghtOfSegment - 1, byte), 2) * numberOfByte) / (byteFrequency[byte] * lenghtOfSegment);
+                iteratorStdVectorUint8_t += lenghtOfSegment;
+            }
+        }
+        while(++byte);
+        ChiSquare -= numberOfByte;
+        float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX * (m_numberOfSegment - 1)) * Z_1minusAlpha + UINT8_MAX * (m_numberOfSegment - 1);
+        return ChiSquare <= ChiSquare_1minusAlpha;
     }
-    while(++byte);
-    ChiSquare -= numberOfByte;
-    float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX * (numberOfSegment - 1)) * Z_1minusAlpha + UINT8_MAX * (numberOfSegment - 1);
-    return ChiSquare <= ChiSquare_1minusAlpha;
+    else
+    {
+        return false;
+    }
 }
 
 bool PRBgenerators::testOfIndependence() const

@@ -1,5 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import QtQuick.Controls 1.2
+
 import PRBgenerators 1.0
 
 ApplicationWindow
@@ -174,6 +175,7 @@ ApplicationWindow
 
         onClicked:
         {
+            alpha.setAlphaToCPP()
             resultTestOfGoodnessOfFit.text = prbGeneratorsNtests.testOfGoodnessOfFit() ? "test passed" : "test failed"
             resultTestOfGoodnessOfFit.textColor = prbGeneratorsNtests.testOfGoodnessOfFit() ? "green" : "red"
         }
@@ -189,16 +191,42 @@ ApplicationWindow
         anchors.top: testOfGoodnessOfFit.bottom
     }
 
+    Text
+    {
+        id: textNumberOfSegment
+        text: qsTr(" number of segment = ")
+        width: prbGenerators.width / 4
+        height: numberOfSegment.height
+        anchors.top: resultTestOfGoodnessOfFit.bottom
+        horizontalAlignment: Text.AlignRight
+        verticalAlignment: Text.AlignVCenter
+    }
+
+    TextField
+    {
+        id: numberOfSegment
+        width: prbGenerators.width / 4
+        anchors.top: resultTestOfGoodnessOfFit.bottom
+        anchors.left: textNumberOfSegment.right
+
+        function setNumberOfSegmentToCPP()
+        {
+            prbGeneratorsNtests.numberOfSegment = numberOfSegment.text
+        }
+    }
+
     Button
     {
         id: testOfHomogeneity
-        enabled: alpha.length != 0 && generatedPRBS.length != 0
+        enabled: alpha.length != 0 && generatedPRBS.length != 0 && numberOfSegment.length != 0
         text: qsTr("test of Homogeneity")
         width:prbGenerators.width / 2
-        anchors.top: resultTestOfGoodnessOfFit.bottom
+        anchors.top: numberOfSegment.bottom
 
         onClicked:
         {
+            alpha.setAlphaToCPP()
+            numberOfSegment.setNumberOfSegmentToCPP()
             resultTestOfHomogeneity.text = prbGeneratorsNtests.testOfHomogeneity() ? "test passed" : "test failed"
             resultTestOfHomogeneity.textColor = prbGeneratorsNtests.testOfHomogeneity() ? "green" : "red"
         }
@@ -224,6 +252,7 @@ ApplicationWindow
 
         onClicked:
         {
+            alpha.setAlphaToCPP()
             resultTestIndependence.text = prbGeneratorsNtests.testOfIndependence() ? "test passed" : "test failed"
             resultTestIndependence.textColor = prbGeneratorsNtests.testOfIndependence() ? "green" : "red"
         }

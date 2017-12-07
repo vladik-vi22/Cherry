@@ -23,17 +23,17 @@ uint8_t BigIntCalculator::getBaseOutput() const
 
 QString BigIntCalculator::getBigNumber1() const
 {
-    return QString::fromStdString(m_bigNumber1.toStdString(m_baseInput));
+    return m_bigNumber1;
 }
 
 QString BigIntCalculator::getBigNumber2() const
 {
-    return QString::fromStdString(m_bigNumber2.toStdString(m_baseInput));
+    return m_bigNumber2;
 }
 
 QString BigIntCalculator::getCalculationsResult() const
 {
-    return QString::fromStdString(m_calculationsResult.toStdString(m_baseOutput));
+    return m_calculationsResult;
 }
 
 void BigIntCalculator::setBaseInput(const uint8_t &new_baseInput)
@@ -56,27 +56,27 @@ void BigIntCalculator::setBaseOutput(const uint8_t &new_baseOutput)
 
 void BigIntCalculator::setBigNumber1(const QString &new_bigNumber1)
 {
-    if(m_bigNumber1.toStdString(m_baseInput) != new_bigNumber1.toStdString())
+    if(m_bigNumber1 != new_bigNumber1)
     {
-        m_bigNumber1 = BigInt(new_bigNumber1.toStdString(), m_baseInput);
+        m_bigNumber1 = new_bigNumber1;
         emit bigNumber1Changed();
     }
 }
 
 void BigIntCalculator::setBigNumber2(const QString &new_bigNumber2)
 {
-    if(m_bigNumber2.toStdString(m_baseInput) != new_bigNumber2.toStdString())
+    if(m_bigNumber2 != new_bigNumber2)
     {
-        m_bigNumber2 = BigInt(new_bigNumber2.toStdString(), m_baseInput);
+        m_bigNumber2 = new_bigNumber2;
         emit bigNumber2Changed();
     }
 }
 
 void BigIntCalculator::setCalculationsResult(const QString &new_calculationResult)
 {
-    if(m_calculationsResult.toStdString(m_baseOutput) != new_calculationResult.toStdString())
+    if(m_calculationsResult != new_calculationResult)
     {
-        m_calculationsResult = BigInt(new_calculationResult.toStdString(), m_baseOutput);
+        m_calculationsResult = new_calculationResult;
         emit calculationsResultChanged();
     }
 }
@@ -85,62 +85,62 @@ void BigIntCalculator::calculate(const QString& operation)
 {
     if(operation == "+")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 + m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) + BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "-")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 - m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) - BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "*")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 * m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) * BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "/")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 / m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) / BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "%")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 % m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) % BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "pow")
     {
-        setCalculationsResult(QString::fromStdString(pow(m_bigNumber1, m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString(pow(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "~")
     {
-        setCalculationsResult(QString::fromStdString((~m_bigNumber1).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((~BigInt(m_bigNumber1.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "&&")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 & m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) & BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "|")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 | m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) | BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "^")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 ^ m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) ^ BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "<<")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 << m_bigNumber2.toUint32_t()).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) << BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
     }
     else if(operation == ">>")
     {
-        setCalculationsResult(QString::fromStdString((m_bigNumber1 >> m_bigNumber2.toUint32_t()).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) >> BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
     }
     else if(operation == "gcd")
     {
-        setCalculationsResult(QString::fromStdString(gcd(m_bigNumber1, m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString(gcd(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else if(operation == "lcm")
     {
-        setCalculationsResult(QString::fromStdString(lcm(m_bigNumber1, m_bigNumber2).toStdString(m_baseOutput)));
+        setCalculationsResult(QString::fromStdString(lcm(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
     }
     else
     {
-        setCalculationsResult("0");
+        setCalculationsResult("");
     }
 }
