@@ -14,10 +14,15 @@ class BigIntCalculator : public QObject
     Q_PROPERTY(int baseInput READ getBaseInput WRITE setBaseInput NOTIFY baseInputChanged)
     Q_PROPERTY(int baseOutput READ getBaseOutput WRITE setBaseOutput NOTIFY baseOutputChanged)
 
+    static const QString usedCharsBinary; // "01"
+    static const QString usedCharsDecimal; // "0123456789"
+    static const QString usedCharsHexadecimal; // "0123456789abcdefABCDEF"
+
 public:
     explicit BigIntCalculator(QObject *parent = 0);
     ~BigIntCalculator();
 
+private:
     QString getBigNumber1() const;
     QString getBigNumber2() const;
     QString getCalculationsResult() const;
@@ -29,6 +34,9 @@ public:
     void setBaseInput(const uint8_t& new_baseInput);
     void setBaseOutput(const uint8_t& new_baseOutput);
 
+    bool isCorrect(const QString& bigNumberQString) const;
+
+public:
     Q_INVOKABLE void calculate(const QString& operation);
 
 signals:

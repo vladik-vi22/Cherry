@@ -43,7 +43,7 @@ ApplicationWindow
     Text
     {
         id: textNumberOfBit
-        text: qsTr(" number of bit = ")
+        text: qsTr("number of bit =")
         width: prbGenerators.width / 4
         height: numberOfBit.height
         anchors.top: prbGeneratorsSelector.bottom
@@ -143,7 +143,7 @@ ApplicationWindow
     Text
     {
         id: textAlpha
-        text: qsTr(" alpha = ")
+        text: qsTr("alpha =")
         width: prbGenerators.width / 4
         height: alpha.height
         anchors.top: generate.bottom
@@ -194,7 +194,7 @@ ApplicationWindow
     Text
     {
         id: textNumberOfSegment
-        text: qsTr(" number of segment = ")
+        text: qsTr("number of segment =")
         width: prbGenerators.width / 4
         height: numberOfSegment.height
         anchors.top: resultTestOfGoodnessOfFit.bottom

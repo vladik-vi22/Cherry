@@ -14,12 +14,7 @@ class BigInt
     static const uint8_t baseBinary; // 2
     static const uint8_t baseDecimal; // 10
     static const uint8_t baseHexadecimal; // 16
-    static const std::string usedCharsBinary; // "01"
-    static const std::string usedCharsDecimal; // "0123456789"
-    static const std::string usedCharsHexadecimal; // "0123456789abcdefABCDEF"
     static const uint64_t basisCalcSys; // UINT32_MAX + 1 // 2^32 // 4294967296
-    static const uint8_t sizeOfCellBin; // 32
-    static const uint8_t sizeOfCellHex; // 8
 
     static uint8_t baseInput;
     static uint8_t baseOutput;

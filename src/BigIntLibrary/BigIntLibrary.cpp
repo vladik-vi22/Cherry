@@ -3,12 +3,7 @@
 const uint8_t BigInt::baseBinary = 2;
 const uint8_t BigInt::baseDecimal = 10;
 const uint8_t BigInt::baseHexadecimal = 16;
-const std::string BigInt::usedCharsBinary = "01";
-const std::string BigInt::usedCharsDecimal = "0123456789";
-const std::string BigInt::usedCharsHexadecimal = "0123456789abcdefABCDEF";
 const uint64_t BigInt::basisCalcSys = (uint64_t) UINT32_MAX + 1; // 2^32 // 4294967296
-const uint8_t BigInt::sizeOfCellBin = 32;
-const uint8_t BigInt::sizeOfCellHex = 8;
 
 uint8_t BigInt::baseInput = baseDecimal;
 uint8_t BigInt::baseOutput = baseDecimal;
@@ -25,6 +20,7 @@ BigInt::BigInt(const BigInt& bigNumber)
 
 BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
 {
+    const uint8_t sizeOfCell = base == baseHexadecimal ? (sizeof(uint32_t) * 2) : (sizeof(uint32_t) * 8);
     std::string bigNumberStdStringInput = bigNumberStdString;
     if(bigNumberStdStringInput[0] == '-')
     {
@@ -35,14 +31,6 @@ BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
     {
         positive = true;
     }
-    const std::string usedChars = base == baseBinary ? usedCharsBinary : (base == baseDecimal ? usedCharsDecimal : usedCharsHexadecimal);
-    if(bigNumberStdStringInput.find_first_not_of(usedChars) != std::string::npos)
-    {
-        positive = true;
-        bigNumArr.push_back(0);
-        return;
-    }
-    const uint8_t sizeOfCell = base == baseHexadecimal ? sizeOfCellHex : sizeOfCellBin;
     if(base == baseDecimal)
     {
         bigNumberStdStringInput = strDec2strBin(bigNumberStdStringInput);
@@ -1018,7 +1006,7 @@ std::string BigInt::toStdString(const int& base) const
     {
         for(std::vector<uint32_t>::const_reverse_iterator iterator = bigNumArr.crbegin(); iterator != bigNumArr.crend(); ++iterator)
         {
-            bigNumberStringStream << std::bitset<sizeOfCellBin>(*iterator);
+            bigNumberStringStream << std::bitset<sizeof(uint32_t) * 8>(*iterator);
         }
     }
     else if(base == baseHexadecimal)
@@ -1140,10 +1128,9 @@ BigInt BigInt::toBigIntDec() const
     BigInt bigNumberDec;
     bigNumberDec.positive = positive;
     bigNumberDec.bigNumArr.reserve(bigNumArr.size() + 1);
-    std::pair<BigInt, BigInt> BigNumberDivModBasisCalcSysDec;
     while(!bigNumber.isZero())
     {
-        BigNumberDivModBasisCalcSysDec = bigNumber.DivMod(basisCalcSysDec);
+        std::pair<BigInt, BigInt> BigNumberDivModBasisCalcSysDec = bigNumber.DivMod(basisCalcSysDec);
         bigNumberDec.bigNumArr.push_back(BigNumberDivModBasisCalcSysDec.second.bigNumArr.front());
         bigNumber = BigNumberDivModBasisCalcSysDec.first;
     }

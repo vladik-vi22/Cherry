@@ -217,11 +217,9 @@ ApplicationWindow
         Button { text: "*"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
             onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
         Button { text: "/"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-            onClicked: { if(bigNumber2.text !== "0") { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() }
-                         else { calculationsResult.text = "Divide by zero exception" } } }
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
         Button { text: "%"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
-            onClicked: { if(bigNumber2.text !== "0") { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() }
-                         else { calculationsResult.text = "Divide by zero exception" } } }
+            onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
         Button { text: "pow"; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length !== 0
             onClicked: { bigNumber1.setBigNumber1ToCPP(); bigNumber2.setBigNumber2ToCPP(); bigIntNumbersBases.calculate(text); calculationsResult.getCalculationsResultFromCPP() } }
         Button { text: "~"  ; width: buttonGrid.buttonWidth; height: buttonGrid.buttonHeight; enabled: bigNumber1.text.length !== 0 && bigNumber2.text.length === 0

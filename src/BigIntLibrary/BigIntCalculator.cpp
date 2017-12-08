@@ -1,5 +1,9 @@
 #include "BigIntCalculator.h"
 
+const QString BigIntCalculator::usedCharsBinary = "01";
+const QString BigIntCalculator::usedCharsDecimal = "0123456789";
+const QString BigIntCalculator::usedCharsHexadecimal = "0123456789abcdefABCDEF";
+
 BigIntCalculator::BigIntCalculator(QObject* parent): QObject(parent)
 {
     m_baseInput = 10;
@@ -81,66 +85,121 @@ void BigIntCalculator::setCalculationsResult(const QString &new_calculationResul
     }
 }
 
+bool BigIntCalculator::isCorrect(const QString& bigNumberQString) const
+{
+    QString usedChars = m_baseInput == 2 ? usedCharsBinary : (m_baseInput == 10 ? usedCharsDecimal : usedCharsHexadecimal);
+    for(QString::const_iterator iteratorBigNumberQString = bigNumberQString.constBegin(); iteratorBigNumberQString != bigNumberQString.constEnd(); ++ iteratorBigNumberQString)
+    {
+        if(!usedChars.contains(*iteratorBigNumberQString))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void BigIntCalculator::calculate(const QString& operation)
 {
-    if(operation == "+")
+    if(isCorrect(m_bigNumber1) && isCorrect(m_bigNumber2))
     {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) + BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "-")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) - BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "*")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) * BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "/")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) / BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "%")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) % BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "pow")
-    {
-        setCalculationsResult(QString::fromStdString(pow(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "~")
-    {
-        setCalculationsResult(QString::fromStdString((~BigInt(m_bigNumber1.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "&&")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) & BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "|")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) | BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "^")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) ^ BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "<<")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) << BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
-    }
-    else if(operation == ">>")
-    {
-        setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) >> BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
-    }
-    else if(operation == "gcd")
-    {
-        setCalculationsResult(QString::fromStdString(gcd(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
-    }
-    else if(operation == "lcm")
-    {
-        setCalculationsResult(QString::fromStdString(lcm(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        if(operation == "+")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) + BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "-")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) - BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "*")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) * BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "/")
+        {
+            if(m_bigNumber2 != "0")
+            {
+                setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) / BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+            }
+            else
+            {
+                setCalculationsResult("division by zero exeption");
+            }
+        }
+        else if(operation == "%")
+        {
+            if(m_bigNumber2 != "0")
+            {
+                setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) % BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+            }
+            else
+            {
+                setCalculationsResult("division by zero exeption");
+            }
+        }
+        else if(operation == "pow")
+        {
+            if(m_bigNumber1 != "0" && m_bigNumber2 != "0")
+            {
+                setCalculationsResult(QString::fromStdString(pow(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+            }
+            else
+            {
+                setCalculationsResult("zero to power zero exeption");
+            }
+        }
+        else if(operation == "~")
+        {
+            setCalculationsResult(QString::fromStdString((~BigInt(m_bigNumber1.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "&&")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) & BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "|")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) | BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "^")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) ^ BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+        }
+        else if(operation == "<<")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) << BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
+        }
+        else if(operation == ">>")
+        {
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) >> BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
+        }
+        else if(operation == "gcd")
+        {
+            if(m_bigNumber1 != "0" && m_bigNumber2 != "0")
+            {
+            setCalculationsResult(QString::fromStdString(gcd(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+            }
+            else
+            {
+                setCalculationsResult("division by zero exeption");
+            }
+        }
+        else if(operation == "lcm")
+        {
+            if(m_bigNumber1 != "0" && m_bigNumber2 != "0")
+            {
+            setCalculationsResult(QString::fromStdString(lcm(BigInt(m_bigNumber1.toStdString(), m_baseInput), BigInt(m_bigNumber2.toStdString(), m_baseInput)).toStdString(m_baseOutput)));
+            }
+            else
+            {
+                setCalculationsResult("lcm(0,0) exeption");
+            }
+        }
+        else
+        {
+            setCalculationsResult("");
+        }
     }
     else
     {
-        setCalculationsResult("");
+        setCalculationsResult("incorrect input");
     }
 }
