@@ -4,6 +4,8 @@
 
 #include "src/BigIntLibrary/BigIntCalculator.h"
 #include "src/PRBgenerators/PRBgenerators.h"
+#include "src/RPNgenerator/RPNgenerator.h"
+#include "src/Cryptosystems/RSAcryptosystem.h"
 #include "src/EDHcryptor/EDHcryptorVizhener.h"
 #include "src/EDHcryptor/EDHcryptorAffine.h"
 

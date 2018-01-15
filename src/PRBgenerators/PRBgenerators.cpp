@@ -4,8 +4,7 @@ float PRBgenerators::Z_1minusAlpha;
 
 PRBgenerators::PRBgenerators(QObject* parent): QObject(parent)
 {
-    m_alpha = 0.05;
-    Z_1minusAlpha = 1.645;
+    srand(time(NULL));
 }
 
 PRBgenerators::~PRBgenerators()
@@ -25,6 +24,11 @@ QString PRBgenerators::getAlpha() const
 QString PRBgenerators::getNumberOfSegment() const
 {
     return QString::number(m_numberOfSegment);
+}
+
+std::vector<uint8_t> PRBgenerators::getGeneratedPRBS() const
+{
+    return m_generatedPRBS;
 }
 
 void PRBgenerators::setNumberOfBit(const QString& new_numberOfBit)
@@ -110,7 +114,6 @@ void PRBgenerators::generateBuiltInCPP()
     std::clock_t begin_time = std::clock();
     uint32_t numberOfByte = m_numberOfBit & 7 ? (m_numberOfBit >> 3) + 1 : m_numberOfBit >> 3;
     m_generatedBuiltInCPP.reserve(numberOfByte);
-    srand(time(NULL));
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
         m_generatedBuiltInCPP.push_back(rand() & UINT8_MAX);
@@ -127,7 +130,6 @@ void PRBgenerators::generateLehmerLow()
     const uint32_t c = 119;
     uint32_t numberOfByte = m_numberOfBit & 7 ? (m_numberOfBit >> 3) + 1 : m_numberOfBit >> 3;
     m_generatedLehmerLow.reserve(numberOfByte);
-    srand(time(NULL));
     uint32_t lehmerUint32_t = rand() + 1;
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
@@ -146,7 +148,6 @@ void PRBgenerators::generateLehmerHigh()
     const uint32_t c = 119;
     uint32_t numberOfByte = m_numberOfBit & 7 ? (m_numberOfBit >> 3) + 1 : m_numberOfBit >> 3;
     m_generatedLehmerHigh.reserve(numberOfByte);
-    srand(time(NULL));
     uint32_t lehmerUint32_t = rand() + 1;
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
@@ -161,10 +162,17 @@ void PRBgenerators::generateL20()
 {
     std::clock_t begin_time = std::clock();
     std::vector<bool> stdVectorBool;
-    stdVectorBool.reserve(m_numberOfBit);
-    stdVectorBool.resize(m_numberOfBit);
+    if(m_numberOfBit >= 20)
+    {
+        stdVectorBool.reserve(m_numberOfBit);
+        stdVectorBool.resize(m_numberOfBit);
+    }
+    else
+    {
+        stdVectorBool.reserve(20);
+        stdVectorBool.resize(20);
+    }
     std::vector<bool>::iterator iteratorStdVectorBool = stdVectorBool.begin();
-    srand(time(NULL));
     for(uint8_t indexFirst20Bit = 0; indexFirst20Bit < 20; ++indexFirst20Bit)
     {
         *iteratorStdVectorBool = rand() & 1;
@@ -184,10 +192,17 @@ void PRBgenerators::generateL89()
 {
     std::clock_t begin_time = std::clock();
     std::vector<bool> stdVectorBool;
-    stdVectorBool.reserve(m_numberOfBit);
-    stdVectorBool.resize(m_numberOfBit);
+    if(m_numberOfBit >= 89)
+    {
+        stdVectorBool.reserve(m_numberOfBit);
+        stdVectorBool.resize(m_numberOfBit);
+    }
+    else
+    {
+        stdVectorBool.reserve(89);
+        stdVectorBool.resize(89);
+    }
     std::vector<bool>::iterator iteratorStdVectorBool = stdVectorBool.begin();
-    srand(time(NULL));
     for(uint8_t indexFirst89Bit = 0; indexFirst89Bit < 89; ++indexFirst89Bit)
     {
         *iteratorStdVectorBool = rand() & 1;
@@ -210,19 +225,32 @@ void PRBgenerators::generateGeffe()
     std::vector<bool> stdVectorBoolL9;
     std::vector<bool> stdVectorBoolL10;
     std::vector<bool> stdVectorBoolL11;
-    stdVectorBool.reserve(m_numberOfBit);
-    stdVectorBool.resize(m_numberOfBit);
-    stdVectorBoolL9.reserve(m_numberOfBit);
-    stdVectorBoolL9.resize(m_numberOfBit);
-    stdVectorBoolL10.reserve(m_numberOfBit);
-    stdVectorBoolL10.resize(m_numberOfBit);
-    stdVectorBoolL11.reserve(m_numberOfBit);
-    stdVectorBoolL11.resize(m_numberOfBit);
+    if(m_numberOfBit >= 11)
+    {
+        stdVectorBool.reserve(m_numberOfBit);
+        stdVectorBool.resize(m_numberOfBit);
+        stdVectorBoolL9.reserve(m_numberOfBit);
+        stdVectorBoolL9.resize(m_numberOfBit);
+        stdVectorBoolL10.reserve(m_numberOfBit);
+        stdVectorBoolL10.resize(m_numberOfBit);
+        stdVectorBoolL11.reserve(m_numberOfBit);
+        stdVectorBoolL11.resize(m_numberOfBit);
+    }
+    else
+    {
+        stdVectorBool.reserve(11);
+        stdVectorBool.resize(11);
+        stdVectorBoolL9.reserve(11);
+        stdVectorBoolL9.resize(11);
+        stdVectorBoolL10.reserve(11);
+        stdVectorBoolL10.resize(11);
+        stdVectorBoolL11.reserve(11);
+        stdVectorBoolL11.resize(11);
+    }
     std::vector<bool>::iterator iteratorStdVectorBool = stdVectorBool.begin();
     std::vector<bool>::iterator iteratorStdVectorBoolL9 = stdVectorBoolL9.begin();
     std::vector<bool>::iterator iteratorStdVectorBoolL10 = stdVectorBoolL10.begin();
     std::vector<bool>::iterator iteratorStdVectorBoolL11 = stdVectorBoolL11.begin();
-    srand(time(NULL));
     for(uint8_t indexFirst9Bit = 0; indexFirst9Bit < 9; ++indexFirst9Bit)
     {
         *iteratorStdVectorBoolL9 = rand() & 1;
@@ -274,7 +302,6 @@ void PRBgenerators::generateWolfram()
     std::clock_t begin_time = std::clock();
     std::vector<bool> stdVectorBool;
     stdVectorBool.reserve(m_numberOfBit);
-    srand(time(NULL));
     uint32_t r = rand() + 1;
     for(uint32_t indexBit = 0; indexBit < m_numberOfBit; ++indexBit)
     {
@@ -300,6 +327,7 @@ void PRBgenerators::generateLibrarian()
         randomStdString = randomQString.toStdString();
         fileRandomString.close();
     }
+
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
         m_generatedLibrarian.push_back(randomStdString[indexByte]);
@@ -316,7 +344,6 @@ void PRBgenerators::generateBlumMicaliBit()
     const BigInt q("675215CC3E227D3216C056CFA8F8822BB486F788641E85E0DE77097E1DB049F1", 16); // q = (p - 1) / 2
     std::vector<bool> stdVectorBool;
     stdVectorBool.reserve(m_numberOfBit);
-    srand(time(NULL));
     BigInt T(rand());
     for(uint32_t indexBit = 0; indexBit < m_numberOfBit; ++indexBit)
     {
@@ -337,7 +364,6 @@ void PRBgenerators::generateBlumMicaliByte()
     const BigInt q("675215CC3E227D3216C056CFA8F8822BB486F788641E85E0DE77097E1DB049F1", 16); // q = (p - 1) / 2
     uint32_t numberOfByte = m_numberOfBit & 7 ? (m_numberOfBit >> 3) + 1 : m_numberOfBit >> 3;
     m_generatedBlumMicaliByte.reserve(numberOfByte);
-    srand(time(NULL));
     BigInt T(rand());
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
@@ -356,7 +382,6 @@ void PRBgenerators::generateBlumBlumShubBit()
     const BigInt n("37682f6947aaab110517c20b76df64781da78b3e87eb58379085d3395793bdb9d9", 16); // p * q
     std::vector<bool> stdVectorBool;
     stdVectorBool.reserve(m_numberOfBit);
-    srand(time(NULL));
     BigInt r(rand() + 2);
     for(uint32_t indexBit = 0; indexBit < m_numberOfBit; ++indexBit)
     {
@@ -377,7 +402,6 @@ void PRBgenerators::generateBlumBlumShubByte()
     const BigInt n("37682f6947aaab110517c20b76df64781da78b3e87eb58379085d3395793bdb9d9", 16); // p * q
     uint32_t numberOfByte = m_numberOfBit & 7 ? (m_numberOfBit >> 3) + 1 : m_numberOfBit >> 3;
     m_generatedBlumBlumShubByte.reserve(numberOfByte);
-    srand(time(NULL));
     BigInt r(rand() + 2);
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
@@ -405,6 +429,8 @@ bool PRBgenerators::testOfGoodnessOfFit() const
     }
     while(++byte);
     float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX) * Z_1minusAlpha + UINT8_MAX;
+    std::cout << "ChiSquare             = " << ChiSquare << std::endl;
+    std::cout << "ChiSquare_1minusAlpha = " << ChiSquare_1minusAlpha << std::endl;
     return ChiSquare <= ChiSquare_1minusAlpha;
 }
 
@@ -434,6 +460,8 @@ bool PRBgenerators::testOfHomogeneity() const
         while(++byte);
         ChiSquare -= numberOfByte;
         float ChiSquare_1minusAlpha = std::sqrt(2 * UINT8_MAX * (m_numberOfSegment - 1)) * Z_1minusAlpha + UINT8_MAX * (m_numberOfSegment - 1);
+        std::cout << "ChiSquare             = " << ChiSquare << std::endl;
+        std::cout << "ChiSquare_1minusAlpha = " << ChiSquare_1minusAlpha << std::endl;
         return ChiSquare <= ChiSquare_1minusAlpha;
     }
     else
@@ -467,6 +495,8 @@ bool PRBgenerators::testOfIndependence() const
     while(++bytePair);
     ChiSquare -= numberOfBytePair;
     float ChiSquare_1minusAlpha = std::sqrt(2) * UINT8_MAX * Z_1minusAlpha + std::pow(UINT8_MAX, 2);
+    std::cout << "ChiSquare             = " << ChiSquare << std::endl;
+    std::cout << "ChiSquare_1minusAlpha = " << ChiSquare_1minusAlpha << std::endl;
     return ChiSquare <= ChiSquare_1minusAlpha;
 }
 

@@ -23,6 +23,7 @@ public:
     QString getNumberOfBit() const;
     QString getAlpha() const;
     QString getNumberOfSegment() const;
+    std::vector<uint8_t> getGeneratedPRBS() const;
     void setNumberOfBit(const QString& new_numberOfBit);
     void setAlpha(const QString& new_alpha);
     void setNumberOfSegment(const QString& new_numberOfSegment);

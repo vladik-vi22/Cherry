@@ -495,7 +495,7 @@ BigInt& BigInt::operator *= (const BigInt& multiplier)
 
 std::pair<BigInt, BigInt> BigInt::DivMod(const BigInt& divisor) const
 {
-    uint32_t bitLenghtDivisor = divisor.bitLenght();
+    const uint32_t bitLenghtDivisor = divisor.bitLenght();
     BigInt fraction(0);
     fraction.bigNumArr.reserve(bigNumArr.size());
     BigInt remainder = abs(*this);
@@ -565,7 +565,7 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
     return power;
 }
 
-BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
+/*BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
 {
     BigInt power(1);
     power.bigNumArr.reserve(divisor.bigNumArr.size());
@@ -580,6 +580,111 @@ BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
         base = BarrettReduction(base * base, divisor, mu);
     }
     return power;
+}*/
+
+BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor)
+{
+    BigInt power(1);
+    power.bigNumArr.reserve(divisor.bigNumArr.size());
+    for(uint32_t indexBitExponent = exponent.bitLenght() - 1; indexBitExponent != UINT32_MAX; --indexBitExponent)
+    {
+        power = (power * power) % divisor;
+        if(exponent.bigNumArr[indexBitExponent >> 5] & (1 << (indexBitExponent & 31)))
+        {
+            power = (power * base) % divisor;
+        }
+    }
+    return power;
+}
+
+BigInt inversemod(BigInt dividend, const BigInt& divisor)
+{
+    if(divisor.isZero())
+    {
+        return BigInt(0);
+    }
+    BigInt divisor_copy(divisor);
+    BigInt x0(0);
+    BigInt x1(1);
+    while (dividend > BigInt(1))
+    {
+        BigInt fraction(dividend / divisor_copy);
+        BigInt temp(divisor_copy);
+        divisor_copy = dividend % divisor_copy;
+        dividend = temp;
+        temp = x0;
+        x0 = x1 - (fraction * x0);
+        x1 = temp;
+    }
+    if(!x1.positive)
+    {
+        x1 += divisor;
+    }
+    return x1;
+}
+
+bool congruencemod(const BigInt& dividend1, const BigInt& dividend2, const BigInt divisor)
+{
+    BigInt remainder1(dividend1 % divisor);
+    BigInt remainder2(dividend2 % divisor);
+    while(!remainder1.positive)
+    {
+        remainder1 += divisor;
+    }
+    while(remainder1 > divisor)
+    {
+        remainder1 -= divisor;
+    }
+    while(!remainder2.positive)
+    {
+        remainder2 += divisor;
+    }
+    while(remainder2 > divisor)
+    {
+        remainder2 -= divisor;
+    }
+    return remainder1 == remainder2;
+}
+
+int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2)
+{
+    if(gcd(bigNum1, bigNum2) != BigInt(1))
+    {
+        return 0;
+    }
+    int8_t symbolJacobi = 1;
+    if(!bigNum1.positive)
+    {
+        bigNum1.positive = true;
+        if(bigNum2 % BigInt(4) == BigInt(3))
+        {
+            symbolJacobi = -symbolJacobi;
+        }
+    }
+    while(!bigNum1.isZero())
+    {
+        uint32_t iterator = 0;
+        while(bigNum1.isEven())
+        {
+            bigNum1 >>= 1;
+            ++iterator;
+        }
+        if(iterator % 2)
+        {
+            if(bigNum2 % BigInt(8) == BigInt(3) || bigNum2 % BigInt(8) == BigInt(5))
+            {
+                symbolJacobi = -symbolJacobi;
+            }
+        }
+        if(bigNum1 % BigInt(4) == BigInt(3) && bigNum2 % BigInt(4) == BigInt(3))
+        {
+            symbolJacobi = -symbolJacobi;
+        }
+        BigInt bigNum3(bigNum1);
+        bigNum1 = bigNum2 % bigNum3;
+        bigNum2 = bigNum3;
+    }
+    return symbolJacobi;
 }
 
 BigInt BigInt::operator ~() const
@@ -912,6 +1017,16 @@ BigInt abs(const BigInt& bigNum)
 
 BigInt gcd(BigInt bigNum1, BigInt bigNum2)
 {
+    if(bigNum1.isZero())
+    {
+        return bigNum2;
+    }
+    else if(bigNum2.isZero())
+    {
+        return bigNum1;
+    }
+    bigNum1.positive = true;
+    bigNum2.positive = true;
     BigInt greatestCommonDivisor(1);
     while(bigNum1.isEven() && bigNum2.isEven())
     {
@@ -977,8 +1092,7 @@ std::istream& operator >> (std::istream& in, BigInt& bigNum)
 
 BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu)
 {
-    BigInt fraction = (dividend.shiftDigitsToLow(divisor.bigNumArr.size() - 1) * mu).shiftDigitsToLow(divisor.bigNumArr.size() + 1) * divisor;
-    BigInt remainder = dividend - fraction;
+    BigInt remainder = dividend - ((dividend.shiftDigitsToLow(divisor.bigNumArr.size() - 1) * mu).shiftDigitsToLow(divisor.bigNumArr.size() + 1) * divisor);
     while(remainder >= divisor)
     {
         remainder -= divisor;
@@ -1027,6 +1141,13 @@ std::string BigInt::toStdString(const int& base) const
     bigNumberString = bigNumberStringStream.str();
     bigNumberString.erase(positive ? 0 : 1, bigNumberString.find_first_not_of("-0") - (positive ? 0 : 1));
     return bigNumberString;
+}
+
+std::vector<uint32_t> BigInt::toStdVectorUint32_t() const
+{
+    std::vector<uint32_t> bigNumberStdVectorUint32_t = bigNumArr;
+    std::reverse(bigNumberStdVectorUint32_t.begin(), bigNumberStdVectorUint32_t.end());
+    return bigNumberStdVectorUint32_t;
 }
 
 uint32_t BigInt::toUint32_t() const

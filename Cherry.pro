@@ -10,7 +10,9 @@ SOURCES += src/main.cpp\
     src/EDHcryptor/EDHcryptorVizhener.cpp \
     src/PRBgenerators/PRBgenerators.cpp \
     src/BigIntLibrary/BigIntLibrary.cpp \
-    src/BigIntLibrary/BigIntCalculator.cpp
+    src/BigIntLibrary/BigIntCalculator.cpp \
+    src/RPNgenerator/RPNgenerator.cpp \
+    src/Cryptosystems/RSAcryptosystem.cpp
 
 RESOURCES += qml.qrc
 
@@ -25,7 +27,9 @@ HEADERS += \
     src/EDHcryptor/EDHcryptorVizhener.h \
     src/PRBgenerators/PRBgenerators.h \
     src/BigIntLibrary/BigIntLibrary.h \
-    src/BigIntLibrary/BigIntCalculator.h
+    src/BigIntLibrary/BigIntCalculator.h \
+    src/RPNgenerator/RPNgenerator.h \
+    src/Cryptosystems/RSAcryptosystem.h
 
 DISTFILES += \
     src/PRBgenerators/generateLibrarian.txt

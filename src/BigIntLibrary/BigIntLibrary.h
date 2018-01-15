@@ -72,7 +72,13 @@ public:
     BigInt& operator %= (const BigInt& divisor); // modulo assignment
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
-    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
+
+//    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
+    friend BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // power by modulo
+    friend BigInt inversemod(BigInt dividend, const BigInt& divisor); // inversr by modulo // gcd(dividend, divisor) = 1
+    friend bool congruencemod(const BigInt& dividend1, const BigInt& dividend2, const BigInt divisor); // congruence by modulo
+
+    friend int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2);
 
     BigInt operator ~() const; // bitwise NOT
     BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND
@@ -110,6 +116,7 @@ public:
     friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
 
     std::string toStdString(const int& base = baseOutput) const;
+    std::vector<uint32_t> toStdVectorUint32_t() const;
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
     uint32_t bitLenght() const;
     bool isEven() const;
