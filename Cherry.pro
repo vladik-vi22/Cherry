@@ -12,7 +12,8 @@ SOURCES += src/main.cpp\
     src/BigIntLibrary/BigIntLibrary.cpp \
     src/BigIntLibrary/BigIntCalculator.cpp \
     src/RPNgenerator/RPNgenerator.cpp \
-    src/Cryptosystems/RSAcryptosystem.cpp
+    src/Cryptosystems/RSAcryptosystem.cpp \
+    src/Cryptosystems/CompactLWE.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,7 +30,8 @@ HEADERS += \
     src/BigIntLibrary/BigIntLibrary.h \
     src/BigIntLibrary/BigIntCalculator.h \
     src/RPNgenerator/RPNgenerator.h \
-    src/Cryptosystems/RSAcryptosystem.h
+    src/Cryptosystems/RSAcryptosystem.h \
+    src/Cryptosystems/CompactLWE.h
 
 DISTFILES += \
     src/PRBgenerators/generateLibrarian.txt

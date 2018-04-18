@@ -1058,6 +1058,11 @@ BigInt lcm(BigInt bigNum1, BigInt bigNum2)
     return (bigNum1 * bigNum2) / gcd(bigNum1, bigNum2);
 }
 
+bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2)
+{
+    return gcd(bigNum1, bigNum2) == BigInt(1);
+}
+
 const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2)
 {
     return bigNum1 > bigNum2 ? bigNum1 : bigNum2;
@@ -1150,9 +1155,32 @@ std::vector<uint32_t> BigInt::toStdVectorUint32_t() const
     return bigNumberStdVectorUint32_t;
 }
 
+uint64_t BigInt::toUint64_t() const
+{
+    if(bigNumArr.size() == 2)
+    {
+        return (uint64_t(bigNumArr.back()) << 32) | bigNumArr.front();
+    }
+    else if (bigNumArr.size() == 1)
+    {
+        return bigNumArr.front();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 uint32_t BigInt::toUint32_t() const
 {
-    return bigNumArr.front();
+    if(bigNumArr.size() == 1)
+    {
+        return bigNumArr.front();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 uint32_t BigInt::bitLenght() const

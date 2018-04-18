@@ -108,6 +108,8 @@ public:
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
     friend BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
 
+    friend bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2);
+
     friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
     friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
 
@@ -117,6 +119,7 @@ public:
 
     std::string toStdString(const int& base = baseOutput) const;
     std::vector<uint32_t> toStdVectorUint32_t() const;
+    uint64_t toUint64_t() const; // if bigNumArr.size <= 2
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
     uint32_t bitLenght() const;
     bool isEven() const;
