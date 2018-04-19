@@ -16,7 +16,7 @@ void RSAcryptosystem::generateKeyPair(const uint32_t& numberOfBit)
     const BigInt p(rpnGenerator.generatePrimeNumber(numberOfBit));
     const BigInt q(rpnGenerator.generatePrimeNumber(numberOfBit));
     publicModulus =  p * q;
-    publicExponent = BigInt((uint32_t) UINT16_MAX + 2);
+    publicExponent = BigInt(65537); // 2^16 + 1
     const BigInt phiPublicModulus((p - BigInt(1)) * (q - BigInt(1)));
     privateKey = inversemod(publicExponent, phiPublicModulus);
 }

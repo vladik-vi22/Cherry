@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <iostream>
 
 #include "src/BigIntLibrary/BigIntCalculator.h"
 #include "src/PRBgenerators/PRBgenerators.h"
@@ -19,7 +20,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<Vizhener>("VizhenerTextKey", 1, 0, "VTextKey");
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
+    BigInt a1;
     CompactLWE a;
+    std::cout << sizeof(a1) << std::endl;
+    std::cout << sizeof(a) << std::endl;
     a.generatePrivateKey();
     return 0;
 

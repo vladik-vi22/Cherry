@@ -12,7 +12,7 @@ RPNgenerator::~RPNgenerator()
 BigInt RPNgenerator::generatePrimeNumber(const uint32_t& numberOfBit)
 {
     PRBgenerators generator;
-    generator.setNumberOfBit(QString::number(numberOfBit));
+    generator.setNumberOfBit(numberOfBit);
     while(true)
     {
         generator.generateL89();
@@ -73,7 +73,7 @@ bool RPNgenerator::primalityTestPherma(const BigInt& bigNum)
     PRBgenerators prbGenerator;
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBit(QString::number(2 + (rand() % (bigNum.bitLenght() - 2))));
+        prbGenerator.setNumberOfBit(2 + (rand() % (bigNum.bitLenght() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(!pseudoprimeTest(bigNum, x))
@@ -89,7 +89,7 @@ bool RPNgenerator::primalityTestSolovayStrassen(const BigInt& bigNum)
     PRBgenerators prbGenerator;
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBit(QString::number(2 + (rand() % (bigNum.bitLenght() - 2))));
+        prbGenerator.setNumberOfBit(2 + (rand() % (bigNum.bitLenght() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(!pseudoprimeTestEulerJacobi(bigNum, x))
@@ -112,7 +112,7 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
     }
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBit(QString::number(2 + (rand() % (bigNum.bitLenght() - 2))));
+        prbGenerator.setNumberOfBit(2 + (rand() % (bigNum.bitLenght() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(gcd(x, bigNum) != BigInt(1))

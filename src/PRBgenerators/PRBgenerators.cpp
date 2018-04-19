@@ -40,6 +40,15 @@ void PRBgenerators::setNumberOfBit(const QString& new_numberOfBit)
     }
 }
 
+void PRBgenerators::setNumberOfBit(const uint32_t& new_numberOfBit)
+{
+    if(m_numberOfBit != new_numberOfBit)
+    {
+        m_numberOfBit = new_numberOfBit;
+        emit numberOfBitChanged();
+    }
+}
+
 void PRBgenerators::setAlpha(const QString& new_alpha)
 {
     if(QString::number(m_alpha) != new_alpha)
@@ -184,7 +193,7 @@ void PRBgenerators::generateL20()
         ++iteratorStdVectorBool;
     }
     m_generatedL20 = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
-    std::cout << "time to generate L20 on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+    //std::cout << "time to generate L20 on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
     m_generatedPRBS = m_generatedL20;
 }
 
@@ -389,7 +398,7 @@ void PRBgenerators::generateBlumBlumShubBit()
         r = powmod(r, BigInt(2), n);
     }
     m_generatedBlumBlumShubBit = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
-    std::cout << "time to generate BlumBlumShubBit on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+    //std::cout << "time to generate BlumBlumShubBit on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
     m_generatedPRBS = m_generatedBlumBlumShubBit;
 }
 

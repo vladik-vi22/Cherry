@@ -3,7 +3,7 @@
 const uint8_t BigInt::baseBinary = 2;
 const uint8_t BigInt::baseDecimal = 10;
 const uint8_t BigInt::baseHexadecimal = 16;
-const uint64_t BigInt::basisCalcSys = (uint64_t) UINT32_MAX + 1; // 2^32 // 4294967296
+const uint64_t BigInt::basisCalcSys = 4294967296; // 2^32
 
 uint8_t BigInt::baseInput = baseDecimal;
 uint8_t BigInt::baseOutput = baseDecimal;

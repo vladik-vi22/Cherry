@@ -14,7 +14,7 @@ class BigInt
     static const uint8_t baseBinary; // 2
     static const uint8_t baseDecimal; // 10
     static const uint8_t baseHexadecimal; // 16
-    static const uint64_t basisCalcSys; // UINT32_MAX + 1 // 2^32 // 4294967296
+    static const uint64_t basisCalcSys; // 2^32 // 4294967296
 
     static uint8_t baseInput;
     static uint8_t baseOutput;
