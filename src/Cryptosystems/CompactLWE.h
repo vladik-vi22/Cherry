@@ -44,6 +44,16 @@ struct PrivateKey
     uint64_t ckPrime;
     uint64_t p;
 };
+
+struct PublicKeySample
+{
+    std::vector<uint8_t> a;
+    uint64_t u;
+    BigInt pk;
+    BigInt pkPrime;
+};
+
+typedef std::vector<PublicKeySample> PublicKey;
 }
 
 class CompactLWE : public QObject
@@ -52,6 +62,7 @@ class CompactLWE : public QObject
 
 private:
     Keys::PrivateKey privateKey;
+    Keys::PublicKey publicKey;
     Paramethers::PublicParamethers publicParamethers;
     Paramethers::PrivateParamethers privateParamethers;
 

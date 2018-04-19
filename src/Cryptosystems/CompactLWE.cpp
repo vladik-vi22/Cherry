@@ -100,5 +100,47 @@ void CompactLWE::generatePrivateKey()
 
 void CompactLWE::generatePublicKey()
 {
-
+    PRBgenerators prbGenerator;
+    publicKey.reserve(publicParamethers.m);
+    Keys::PublicKeySample publicKeySample;
+    uint16_t e;
+    uint16_t ePrime;
+    uint64_t r;
+    BigInt R;
+    uint64_t rPrime;
+    BigInt RPrime;
+    const BigInt P(privateKey.p);
+    const BigInt CK(privateKey.ck);
+    const BigInt CKPrime(privateKey.ckPrime);
+    const uint8_t pBitLenght = P.bitLenght();
+    const uint8_t bPrimeBitLenght = BigInt(publicParamethers.bPrime).bitLenght();
+    for(uint8_t indexPublicKeySample = 0; indexPublicKeySample < publicParamethers.m; ++indexPublicKeySample)
+    {
+        for(uint8_t indexA = 0; indexA < publicParamethers.n; ++indexA)
+        {
+            publicKeySample.a.push_back(std::rand() % publicParamethers.b);
+        }
+        prbGenerator.setNumberOfBit(std::rand() % bPrimeBitLenght);
+        prbGenerator.generateL20();
+        publicKeySample.u = BigInt(prbGenerator.getGeneratedPRBS()).toUint64_t();
+        do
+        {
+            e = std::rand() % (privateParamethers.e_max + 1);
+        }
+        while(e < privateParamethers.e_min || e > privateParamethers.e_max);
+        do
+        {
+            ePrime = std::rand() % (privateParamethers.e_max + 1);
+        }
+        while(ePrime < privateParamethers.e_min || ePrime > privateParamethers.e_max);
+        prbGenerator.setNumberOfBit(pBitLenght);
+        do
+        {
+            prbGenerator.generateL20();
+            R = BigInt(prbGenerator.getGeneratedPRBS());
+            prbGenerator.generateL20();
+            RPrime = BigInt(prbGenerator.getGeneratedPRBS());
+        }
+        while((CK * R + CKPrime * RPrime) % P != BigInt(0));
+    }
 }

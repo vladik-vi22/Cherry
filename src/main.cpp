@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<Vizhener>("VizhenerTextKey", 1, 0, "VTextKey");
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
-    BigInt a1;
     CompactLWE a;
-    std::cout << sizeof(a1) << std::endl;
-    std::cout << sizeof(a) << std::endl;
     a.generatePrivateKey();
+    std::cout << "1";
+    a.generatePublicKey();
+    std::cout << "2";
     return 0;
 
     QQmlApplicationEngine engine;

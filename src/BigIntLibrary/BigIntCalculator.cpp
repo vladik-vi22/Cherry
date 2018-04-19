@@ -122,7 +122,7 @@ void BigIntCalculator::calculate(const QString& operation)
             }
             else
             {
-                setCalculationsResult("division by zero exeption");
+                setCalculationsResult("divide be zero exception");
             }
         }
         else if(operation == "%")
@@ -133,7 +133,7 @@ void BigIntCalculator::calculate(const QString& operation)
             }
             else
             {
-                setCalculationsResult("division by zero exeption");
+                setCalculationsResult("divide be zero exception");
             }
         }
         else if(operation == "pow")
@@ -144,7 +144,7 @@ void BigIntCalculator::calculate(const QString& operation)
             }
             else
             {
-                setCalculationsResult("zero to power zero exeption");
+                setCalculationsResult("zero to power zero exception");
             }
         }
         else if(operation == "~")
@@ -179,7 +179,7 @@ void BigIntCalculator::calculate(const QString& operation)
             }
             else
             {
-                setCalculationsResult("division by zero exeption");
+                setCalculationsResult("divide be zero exception");
             }
         }
         else if(operation == "lcm")
