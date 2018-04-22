@@ -1223,6 +1223,16 @@ bool BigInt::isZero() const
     return true;
 }
 
+bool BigInt::isPositive() const
+{
+    return positive;
+}
+
+bool BigInt::isNegative() const
+{
+    return !positive;
+}
+
 void BigInt::alignTo(BigInt& aligned)
 {
     if(bigNumArr.size() > aligned.bigNumArr.size())

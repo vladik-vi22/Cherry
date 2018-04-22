@@ -22,9 +22,7 @@ int main(int argc, char *argv[])
 
     CompactLWE a;
     a.generatePrivateKey();
-    std::cout << "1";
     a.generatePublicKey();
-    std::cout << "2";
     return 0;
 
     QQmlApplicationEngine engine;

@@ -125,6 +125,8 @@ public:
     bool isEven() const;
     bool isOdd() const;
     bool isZero() const;
+    bool isPositive() const;
+    bool isNegative() const;
 
 private:
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;

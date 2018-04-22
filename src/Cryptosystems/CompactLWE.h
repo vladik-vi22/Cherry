@@ -6,54 +6,51 @@
 #include "../BigIntLibrary/BigIntLibrary.h"
 #include "../PRBgenerators/PRBgenerators.h"
 
-namespace Paramethers
+namespace PublicParamethers
 {
-struct PublicParamethers
-{
-    const BigInt q = BigInt(std::vector<uint32_t>{1, 0, 0}, true); // 2^64
+    const BigInt q(std::vector<uint32_t>{1, 0, 0}, true); // 2^64
     const uint64_t t = 4294967296; // 2^32
     const uint8_t n = 8;
     const uint8_t m = 128;
-    const uint8_t w = 224;
-    const uint8_t wPrime = 32;
-    const uint8_t b = 16;
-    const uint64_t bPrime = 68719476736;
+    const BigInt w(224);
+    const BigInt wPrime(32);
+    const BigInt b(16);
+    const BigInt bPrime(uint64_t(68719476736));
     const uint8_t l = 8;
-};
+}
 
-struct PrivateParamethers
+namespace PrivateParamethers
 {
-    const uint32_t sk_max = 229119;
-    const uint32_t p_size = 16777216;
-    const uint16_t e_min = 457;
-    const uint16_t e_max = 3200;
-};
+    const BigInt sk_max(229119);
+    const BigInt p_size(16777216);
+    const BigInt e_min(457);
+    const BigInt e_max(3200);
 }
 
 namespace Keys
 {
 struct PrivateKey
 {
-    std::vector<uint64_t> s;
-    uint64_t k;
-    uint32_t sk;
-    uint64_t ck;
-    std::vector<uint64_t> sPrime;
-    uint64_t kPrime;
-    uint32_t skPrime;
-    uint64_t ckPrime;
-    uint64_t p;
+    std::array<BigInt, PublicParamethers::n> s;
+    BigInt k;
+    BigInt sk;
+    BigInt ck;
+    std::array<BigInt, PublicParamethers::n> sPrime;
+    BigInt kPrime;
+    BigInt skPrime;
+    BigInt ckPrime;
+    BigInt p;
 };
 
 struct PublicKeySample
 {
-    std::vector<uint8_t> a;
-    uint64_t u;
+    std::array<BigInt, PublicParamethers::n> a;
+    BigInt u;
     BigInt pk;
     BigInt pkPrime;
 };
 
-typedef std::vector<PublicKeySample> PublicKey;
+typedef std::array<Keys::PublicKeySample, 1/*PublicParamethers::m*/> PublicKey;
 }
 
 class CompactLWE : public QObject
@@ -63,8 +60,6 @@ class CompactLWE : public QObject
 private:
     Keys::PrivateKey privateKey;
     Keys::PublicKey publicKey;
-    Paramethers::PublicParamethers publicParamethers;
-    Paramethers::PrivateParamethers privateParamethers;
 
 public:
     explicit CompactLWE(QObject *parent = 0);

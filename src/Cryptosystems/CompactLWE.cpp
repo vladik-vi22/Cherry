@@ -13,147 +13,120 @@ CompactLWE::~CompactLWE()
 void CompactLWE::generatePrivateKey()
 {
     PRBgenerators prbGenerator;
-    const uint8_t qBitLenght = publicParamethers.q.bitLenght();
-    privateKey.s.reserve(publicParamethers.n);
-    privateKey.sPrime.reserve(publicParamethers.n);
-    BigInt S;
-    while(privateKey.s.size() < publicParamethers.n)
+    const uint8_t qBitLenght = PublicParamethers::q.bitLenght();
+    for(std::array<BigInt, PublicParamethers::n>::iterator iteratorS = privateKey.s.begin(); iteratorS != privateKey.s.end(); ++iteratorS)
     {
         prbGenerator.setNumberOfBit(std::rand() % qBitLenght);
         prbGenerator.generateL20();
-        S = BigInt(prbGenerator.getGeneratedPRBS());
-        privateKey.s.push_back(S.toUint64_t());
+        *iteratorS = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    while(privateKey.sPrime.size() < publicParamethers.n)
+    for(std::array<BigInt, PublicParamethers::n>::iterator iteratorSPrime = privateKey.sPrime.begin(); iteratorSPrime != privateKey.sPrime.end(); ++iteratorSPrime)
     {
         prbGenerator.setNumberOfBit(std::rand() % qBitLenght);
         prbGenerator.generateL20();
-        S = BigInt(prbGenerator.getGeneratedPRBS());
-        privateKey.sPrime.push_back(S.toUint64_t());
+        *iteratorSPrime = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    BigInt& K = S;
     do
     {
         prbGenerator.setNumberOfBit(std::rand() % qBitLenght);
         prbGenerator.generateL20();
-        K = BigInt(prbGenerator.getGeneratedPRBS());
+        privateKey.k = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    while(!isCoprime(publicParamethers.q, K));
-    privateKey.k = K.toUint64_t();
+    while(!isCoprime(PublicParamethers::q, privateKey.k));
     do
     {
         prbGenerator.setNumberOfBit(std::rand() % qBitLenght);
         prbGenerator.generateL20();
-        K = BigInt(prbGenerator.getGeneratedPRBS());
+        privateKey.kPrime = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    while(!isCoprime(publicParamethers.q, K));
-    privateKey.kPrime = K.toUint64_t();
-    const BigInt p_min = BigInt((publicParamethers.w + publicParamethers.wPrime) * publicParamethers.bPrime);
+    while(!isCoprime(PublicParamethers::q, privateKey.kPrime));
+    const BigInt p_min = (PublicParamethers::w + PublicParamethers::wPrime) * PublicParamethers::bPrime;
     //    const uint8_t p_minBitLenght = p_min.bitLenght();
-    const BigInt p_max = p_min + BigInt(privateParamethers.p_size);
+    const BigInt p_max = p_min + PrivateParamethers::p_size;
     //    const uint8_t p_maxBitLenght = p_max.bitLenght();
-    const BigInt sk_maxMULbPrime = BigInt(privateParamethers.sk_max) * BigInt(publicParamethers.bPrime);
-    const BigInt qDIVwADDwPrime = publicParamethers.q / BigInt(publicParamethers.w + publicParamethers.wPrime);
-    BigInt& P = K;
-    P = p_min;
+    const BigInt sk_maxMULbPrime = PrivateParamethers::sk_max * PublicParamethers::bPrime;
+    const BigInt qDIVwADDwPrime = PublicParamethers::q / (PublicParamethers::w + PublicParamethers::wPrime);
+    privateKey.p = p_min;
     do
     {
         /*prbGenerator.setNumberOfBit(std::rand() % (p_maxBitLenght - p_minBitLenght + 1) + p_minBitLenght);
         prbGenerator.generateBlumBlumShubBit();
-        P = BigInt(prbGenerator.getGeneratedPRBS());*/
-        ++P;
+        privateKey.p = BigInt(prbGenerator.getGeneratedPRBS());*/
+        ++privateKey.p;
     }
-    while(!((P >= p_min) && (P <= p_max) && isCoprime(publicParamethers.q, P) && (sk_maxMULbPrime + P + BigInt(privateParamethers.e_max) * P < qDIVwADDwPrime)));
-    privateKey.p = P.toUint64_t();
-    const uint8_t pBitLenght = P.bitLenght();
-    BigInt CK;
+    while(!((privateKey.p >= p_min) && (privateKey.p <= p_max) && isCoprime(PublicParamethers::q, privateKey.p) && (sk_maxMULbPrime + privateKey.p + PrivateParamethers::e_max * privateKey.p < qDIVwADDwPrime)));
+    const uint8_t pBitLenght = privateKey.p.bitLenght();
     prbGenerator.setNumberOfBit(std::rand() % pBitLenght);
     prbGenerator.generateL20();
-    CK = BigInt(prbGenerator.getGeneratedPRBS());
-    privateKey.ck = CK.toUint64_t();
-    BigInt CKPrime;
+    privateKey.ck = BigInt(prbGenerator.getGeneratedPRBS());
     do
     {
         prbGenerator.setNumberOfBit(std::rand() % pBitLenght);
         prbGenerator.generateL20();
-        CKPrime = BigInt(prbGenerator.getGeneratedPRBS());
+        privateKey.ckPrime = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    while(!isCoprime(CKPrime, P));
-    privateKey.ckPrime = CKPrime.toUint64_t();
-    const BigInt SK_MAX = BigInt(privateParamethers.sk_max);
-    const uint8_t sk_maxBitLenght = SK_MAX.bitLenght();
-    BigInt SK;
-    BigInt SKPrime;
+    while(!isCoprime(privateKey.ckPrime, privateKey.p));
+    const uint8_t sk_maxBitLenght = PrivateParamethers::sk_max.bitLenght();
     do
     {
         prbGenerator.setNumberOfBit(std::rand() % sk_maxBitLenght);
         prbGenerator.generateBlumBlumShubBit();
-        SK = BigInt(prbGenerator.getGeneratedPRBS());
+        privateKey.sk = BigInt(prbGenerator.getGeneratedPRBS());
         prbGenerator.setNumberOfBit(std::rand() % sk_maxBitLenght);
         prbGenerator.generateBlumBlumShubBit();
-        SKPrime = BigInt(prbGenerator.getGeneratedPRBS());
+        privateKey.skPrime = BigInt(prbGenerator.getGeneratedPRBS());
     }
-    while(!isCoprime(SK * CK + SKPrime * CKPrime, P));
-    privateKey.sk = SK.toUint32_t();
-    privateKey.skPrime = SKPrime.toUint32_t();
+    while(!isCoprime(privateKey.sk * privateKey.ck + privateKey.skPrime * privateKey.ckPrime, privateKey.p));
 }
 
 void CompactLWE::generatePublicKey()
 {
     PRBgenerators prbGenerator;
-    publicKey.reserve(publicParamethers.m);
-    Keys::PublicKeySample publicKeySample;
-    uint16_t e;
-    uint16_t ePrime;
-    BigInt R;
-    BigInt RPrime;
-    const BigInt P(privateKey.p);
-    const BigInt CK(privateKey.ck);
-    const BigInt CKPrime(privateKey.ckPrime);
-    const uint8_t pBitLenght = P.bitLenght();
-    const uint8_t bPrimeBitLenght = BigInt(publicParamethers.bPrime).bitLenght();
-    for(uint8_t indexPublicKeySample = 0; indexPublicKeySample < 1/*publicParamethers.m*/; ++indexPublicKeySample)
+    BigInt e;
+    BigInt ePrime;
+    BigInt r;
+    BigInt rPrime;
+    const uint8_t bBitLenght = PublicParamethers::b.bitLenght();
+    const uint8_t bPrimeBitLenght = PublicParamethers::bPrime.bitLenght();
+    const uint8_t e_minBitLenght = PrivateParamethers::e_min.bitLenght();
+    const uint8_t e_maxBitLenght = PrivateParamethers::e_max.bitLenght();
+    for(std::array<Keys::PublicKeySample, PublicParamethers::m>::iterator iteratorPublicKey = publicKey.begin(); iteratorPublicKey != publicKey.end(); ++iteratorPublicKey)
     {
-        for(uint8_t indexA = 0; indexA < publicParamethers.n; ++indexA)
+        for(std::array<BigInt, PublicParamethers::n>::iterator iteratorA = iteratorPublicKey->a.begin(); iteratorA != iteratorPublicKey->a.end(); ++iteratorA)
         {
-            publicKeySample.a.push_back(std::rand() % publicParamethers.b);
+            prbGenerator.setNumberOfBit(std::rand() % bBitLenght);
+            prbGenerator.generateBlumBlumShubBit();
+            *iteratorA = BigInt(prbGenerator.getGeneratedPRBS());
         }
         prbGenerator.setNumberOfBit(std::rand() % bPrimeBitLenght);
         prbGenerator.generateL20();
-        publicKeySample.u = BigInt(prbGenerator.getGeneratedPRBS()).toUint64_t();
+        iteratorPublicKey->u = BigInt(prbGenerator.getGeneratedPRBS());
         do
         {
-            e = std::rand() % (privateParamethers.e_max + 1);
+            prbGenerator.setNumberOfBit(std::rand() % (e_maxBitLenght - e_minBitLenght + 1) + e_minBitLenght);
+            prbGenerator.generateBlumBlumShubBit();
+            e = BigInt(prbGenerator.getGeneratedPRBS());
         }
-        while(e < privateParamethers.e_min || e > privateParamethers.e_max);
+        while(e < PrivateParamethers::e_min || e > PrivateParamethers::e_max);
         do
         {
-            ePrime = std::rand() % (privateParamethers.e_max + 1);
+            prbGenerator.setNumberOfBit(std::rand() % (e_maxBitLenght - e_minBitLenght + 1) + e_minBitLenght);
+            prbGenerator.generateBlumBlumShubBit();
+            ePrime = BigInt(prbGenerator.getGeneratedPRBS());
         }
-        while(ePrime < privateParamethers.e_min || ePrime > privateParamethers.e_max);
+        while(ePrime < PrivateParamethers::e_min || ePrime > PrivateParamethers::e_max);
         //CK * R + CKPrime * RPrime = 0 mod P
-        uint64_t eq = CK.toUint64_t();
-        uint64_t ep = P.toUint64_t();
-        uint64_t epp = CKPrime.toUint64_t();
-        R = inversemod(CK, P);
-        while(R <= BigInt(0))
+        r = inversemod(privateKey.ck, privateKey.p);
+        rPrime = -inversemod(privateKey.ckPrime, privateKey.p) + privateKey.p;
+        /*if(rPrime.isNegative())
         {
-            R += P;
-        }
-        while(R >= P)
-        {
-            R -= P;
-        }
-        RPrime = -inversemod(CKPrime, P);
-        while(RPrime <= BigInt(0))
-        {
-            RPrime += P;
-        }
-        while(RPrime >= P)
-        {
-            RPrime -= P;
-        }
-        std::cout << R << " " << RPrime << "\n";
-        std::cout << "222test222 " << (CK * R + CKPrime * RPrime) % P << " " << P << " end\n";
+            rPrime += (-rPrime / privateKey.p + BigInt(1)) * privateKey.p;
+        }*/
+        std::cout << privateKey.ck << "\n";
+        std::cout << privateKey.ckPrime << "\n";
+        std::cout << privateKey.p << "\n";
+        std::cout << r << "\n";
+        std::cout << rPrime << "\n";
+        std::cout << "222test222 " << (privateKey.ck * r + privateKey.ckPrime * rPrime) % privateKey.p << "\n";
     }
 }
