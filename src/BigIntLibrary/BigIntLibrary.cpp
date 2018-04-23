@@ -1285,11 +1285,12 @@ BigInt BigInt::toBigIntDec() const
     const BigInt basisCalcSysDec(1000000000);
     BigInt bigNumber = *this;
     BigInt bigNumberDec;
+    std::pair<BigInt, BigInt> BigNumberDivModBasisCalcSysDec;
     bigNumberDec.positive = positive;
     bigNumberDec.bigNumArr.reserve(bigNumArr.size() + 1);
     while(!bigNumber.isZero())
     {
-        std::pair<BigInt, BigInt> BigNumberDivModBasisCalcSysDec = bigNumber.DivMod(basisCalcSysDec);
+        BigNumberDivModBasisCalcSysDec = bigNumber.DivMod(basisCalcSysDec);
         bigNumberDec.bigNumArr.push_back(BigNumberDivModBasisCalcSysDec.second.bigNumArr.front());
         bigNumber = BigNumberDivModBasisCalcSysDec.first;
     }

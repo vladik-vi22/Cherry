@@ -192,6 +192,10 @@ void PRBgenerators::generateL20()
         *iteratorStdVectorBool = *(iteratorStdVectorBool - 3) ^ *(iteratorStdVectorBool - 5) ^ *(iteratorStdVectorBool - 9) ^ *(iteratorStdVectorBool - 20);
         ++iteratorStdVectorBool;
     }
+    if(m_numberOfBit < 20)
+    {
+        m_generatedL20.resize(m_numberOfBit);
+    }
     m_generatedL20 = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     //std::cout << "time to generate L20 on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
     m_generatedPRBS = m_generatedL20;
@@ -221,6 +225,10 @@ void PRBgenerators::generateL89()
     {
         *iteratorStdVectorBool = *(iteratorStdVectorBool - 38) ^ *(iteratorStdVectorBool - 89);
         ++iteratorStdVectorBool;
+    }
+    if(m_numberOfBit < 89)
+    {
+        m_generatedL89.resize(m_numberOfBit);
     }
     m_generatedL89 = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate L89 on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
@@ -300,6 +308,10 @@ void PRBgenerators::generateGeffe()
         ++iteratorStdVectorBoolL9;
         ++iteratorStdVectorBoolL10;
         ++iteratorStdVectorBoolL11;
+    }
+    if(m_numberOfBit < 11)
+    {
+        m_generatedGeffe.resize(m_numberOfBit);
     }
     m_generatedGeffe = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate Geffe on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
