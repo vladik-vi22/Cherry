@@ -33,7 +33,7 @@ public:
     void setPublicExponent(const BigInt& new_publicExponent);
     void setSessionKey(const BigInt& new_sessionKey);
     void setSignatureFrom(const BigInt& signature);
-    BigInt encrypt(const BigInt& message, const RSAcryptosystem& to);
+    BigInt encrypt(const BigInt& plaintext, const RSAcryptosystem& to);
     BigInt decrypt(const BigInt& ciphertext);
     BigInt signature(const BigInt& message);
     bool verify(const BigInt& message, const BigInt& signature, const RSAcryptosystem& from);

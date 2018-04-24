@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <bitset>
+#include <array>
 #include <string>
 #include <QDebug>
 #include <bitset>
@@ -35,18 +37,15 @@ public:
     explicit BigInt(const uint64_t& numberUint64_t, const bool& isPositive = true);
     explicit BigInt(const int& numberInt);
     explicit BigInt(const long long& numberLongLong);
+    template<size_t size>
+    explicit BigInt(const std::array<uint32_t, size>& bigNumberStdArrayUint32_t, const bool& isPositive = true)
+    {
+        bigNumArr = std::vector<uint32_t>(bigNumberStdArrayUint32_t.crbegin(), bigNumberStdArrayUint32_t.crend());
+        positive = isPositive;
+    }
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal); // simple assignment
-    BigInt& operator = (const std::string& equal); // simple assignment
-    BigInt& operator = (const std::vector<uint32_t>& equal); // simple assignment
-    BigInt& operator = (const std::vector<uint16_t>& equal); // simple assignment
-    BigInt& operator = (const std::vector<uint8_t>& equal); // simple assignment
-    BigInt& operator = (const std::vector<bool>& equal); // simple assignment
-    BigInt& operator = (const uint32_t& equal); // simple assignment
-    BigInt& operator = (const uint64_t& equal); // simple assignment
-    BigInt& operator = (const int& equal); // simple assignment
-    BigInt& operator = (const long long& equal); // simple assignment
 
     BigInt operator +() const; // unary plus
     BigInt operator + (const BigInt& addend) const; // addition
@@ -73,10 +72,11 @@ public:
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
-//    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
+    //    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
     friend BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // power by modulo
-    friend BigInt inversemod(BigInt dividend, const BigInt& divisor); // inversr by modulo // gcd(dividend, divisor) = 1
+    friend BigInt inversemod(BigInt dividend, const BigInt& divisor); // inverse by modulo // gcd(dividend, divisor) = 1
     friend bool congruencemod(const BigInt& dividend1, const BigInt& dividend2, const BigInt divisor); // congruence by modulo
+    friend bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2);
 
     friend int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2);
 
@@ -107,8 +107,6 @@ public:
     friend BigInt abs(const BigInt& bigNum); // absolute value
     friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
     friend BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
-
-    friend bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2);
 
     friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
     friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);

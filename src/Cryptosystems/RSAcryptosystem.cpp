@@ -51,9 +51,9 @@ void RSAcryptosystem::setSignatureFrom(const BigInt &signature)
     signatureFrom = signature;
 }
 
-BigInt RSAcryptosystem::encrypt(const BigInt& message, const RSAcryptosystem& to)
+BigInt RSAcryptosystem::encrypt(const BigInt& plaintext, const RSAcryptosystem& to)
 {
-    return powmod(message, to.getPublicExponent(), to.getPublicModulus());
+    return powmod(plaintext, to.getPublicExponent(), to.getPublicModulus());
 }
 
 BigInt RSAcryptosystem::decrypt(const BigInt& ciphertext)

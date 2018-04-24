@@ -6,36 +6,42 @@
 #include "../BigIntLibrary/BigIntLibrary.h"
 #include "../PRBgenerators/PRBgenerators.h"
 
-namespace PublicParamethers
+namespace Paramethers
 {
-    const BigInt q(std::vector<uint32_t>{1, 0, 0}, true); // 2^64
-    const uint64_t t = 4294967296; // 2^32
-    const uint8_t n = 8;
-    const uint8_t m = 128;
-    const BigInt w(224);
-    const BigInt wPrime(32);
-    const BigInt b(16);
-    const BigInt bPrime(uint64_t(68719476736));
-    const uint8_t l = 8;
-}
 
-namespace PrivateParamethers
+struct PublicParamethers
 {
-    const BigInt sk_max(229119);
-    const BigInt p_size(16777216);
-    const BigInt e_min(457);
-    const BigInt e_max(3200);
+    BigInt q;
+    BigInt t;
+    uint8_t n;
+    uint8_t m;
+    BigInt w;
+    BigInt wPrime;
+    BigInt b;
+    BigInt bPrime;
+    uint8_t l;
+};
+
+struct PrivateParamethers
+{
+    BigInt sk_max;
+    BigInt p_size;
+    BigInt e_min;
+    BigInt e_max;
+};
+
 }
 
 namespace Keys
 {
+
 struct PrivateKey
 {
-    std::array<BigInt, PublicParamethers::n> s;
+    std::vector<BigInt> s;
     BigInt k;
     BigInt sk;
     BigInt ck;
-    std::array<BigInt, PublicParamethers::n> sPrime;
+    std::vector<BigInt> sPrime;
     BigInt kPrime;
     BigInt skPrime;
     BigInt ckPrime;
@@ -44,13 +50,14 @@ struct PrivateKey
 
 struct PublicKeySample
 {
-    std::array<BigInt, PublicParamethers::n> a;
+    std::vector<BigInt> a;
     BigInt u;
     BigInt pk;
     BigInt pkPrime;
 };
 
-typedef std::array<Keys::PublicKeySample, 1/*PublicParamethers::m*/> PublicKey;
+typedef std::vector<Keys::PublicKeySample> PublicKey;
+
 }
 
 class CompactLWE : public QObject
@@ -58,6 +65,8 @@ class CompactLWE : public QObject
     Q_OBJECT
 
 private:
+    Paramethers::PublicParamethers publicParamethers;
+    Paramethers::PrivateParamethers privateParamethers;
     Keys::PrivateKey privateKey;
     Keys::PublicKey publicKey;
 
@@ -65,8 +74,11 @@ public:
     explicit CompactLWE(QObject *parent = 0);
     ~CompactLWE();
 
+    Paramethers::PublicParamethers getPublicParamethers() const;
+    Keys::PublicKey getPublicKey() const;
     void generatePrivateKey();
     void generatePublicKey();
+    BigInt basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
 };
 
 #endif // CompactLWE_H
