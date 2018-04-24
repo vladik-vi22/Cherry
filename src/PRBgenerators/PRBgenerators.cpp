@@ -31,6 +31,68 @@ std::vector<uint8_t> PRBgenerators::getGeneratedPRBS() const
     return m_generatedPRBS;
 }
 
+uint8_t PRBgenerators::getUint8_tGeneratedPRBS() const
+{
+    if(m_generatedPRBS.size() == 1)
+    {
+        return m_generatedPRBS.front();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+uint16_t PRBgenerators::getUint16_tGeneratedPRBS() const
+{
+    if(m_generatedPRBS.size() == 2)
+    {
+        return (uint16_t(m_generatedPRBS.front()) << 8) | uint16_t(m_generatedPRBS.back());
+    }
+    else if(m_generatedPRBS.size() == 1)
+    {
+        return uint16_t(m_generatedPRBS.front());
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+uint32_t PRBgenerators::getUint32_tGeneratedPRBS() const
+{
+    uint32_t result = 0;
+    if(m_generatedPRBS.size() <= 4)
+    {
+        for(uint8_t indexByte = 0; indexByte < m_generatedPRBS.size(); ++indexByte)
+        {
+            result |= (uint32_t(m_generatedPRBS[indexByte]) << ((m_generatedPRBS.size() - indexByte - 1) * 8));
+        }
+        return result;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+uint64_t PRBgenerators::getUint64_tGeneratedPRBS() const
+{
+    uint64_t result = 0;
+    if(m_generatedPRBS.size() <= 8)
+    {
+        for(uint8_t indexByte = 0; indexByte < m_generatedPRBS.size(); ++indexByte)
+        {
+            result |= (uint64_t(m_generatedPRBS[indexByte]) << ((m_generatedPRBS.size() - indexByte - 1) * 8));
+        }
+        return result;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 void PRBgenerators::setNumberOfBit(const QString& new_numberOfBit)
 {
     if(QString::number(m_numberOfBit) != new_numberOfBit)
