@@ -59,8 +59,6 @@ public:
     BigInt& operator --(); // pre-decrement
     BigInt operator --(int); // post-decrement
 
-    BigInt operator * (const uint32_t& multiplier) const; // multiplication
-    BigInt& operator *= (const uint32_t& multiplier); // multiplication assignment
     BigInt operator * (const BigInt& multiplier) const; // multiplication
     BigInt& operator *= (const BigInt& multiplier); // multiplication assignment
 
@@ -127,6 +125,8 @@ public:
     bool isNegative() const;
 
 private:
+    BigInt operator * (const uint32_t& multiplier) const; // multiplication
+    BigInt& operator *= (const uint32_t& multiplier); // multiplication assignment
     std::pair<BigInt, BigInt> DivMod(const BigInt& divisor) const;
     friend BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu);
     void alignTo(BigInt& aligned);

@@ -79,6 +79,9 @@ public:
     void generatePrivateKey();
     void generatePublicKey();
     BigInt basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
+
+private:
+    std::vector<BigInt> generateL(const CompactLWE& to);
 };
 
 #endif // CompactLWE_H

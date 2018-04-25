@@ -182,5 +182,44 @@ void CompactLWE::generatePublicKey()
 
 BigInt CompactLWE::basicEncrypt(const BigInt& plaintext, const CompactLWE& to)
 {
+    const std::vector<BigInt> l = generateL(to);
+    for(uint8_t i = 0; i < l.size(); ++i)
+    {
+        std::cout << l[i] << " ";
+    }
+}
 
+std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
+{
+    const BigInt wPlusWPrime = to.getPublicParamethers().w + to.getPublicParamethers().wPrime;
+    std::vector<BigInt> l;
+    BigInt sum(0);
+    PRBgenerators prbGenerator;
+    prbGenerator.setNumberOfBit(wPlusWPrime.toUint32_t() / to.getPublicParamethers().m + 1);
+    l.reserve(to.getPublicParamethers().m);
+    while(sum <= wPlusWPrime && l.size() <= to.getPublicParamethers().m)
+    {
+        prbGenerator.generateL20();
+        l.push_back(BigInt(prbGenerator.getGeneratedPRBS()));
+        sum += l.back();
+    }
+    l.back() = BigInt(0);
+    sum = BigInt(0);
+    while(sum >= -to.getPublicParamethers().wPrime && l.size() <= to.getPublicParamethers().m)
+    {
+        prbGenerator.generateL20();
+        l.push_back(-BigInt(prbGenerator.getGeneratedPRBS()));
+        sum += l.back();
+    }
+    l.back() = BigInt(0);
+    while(l.size() <= to.getPublicParamethers().m)
+    {
+        l.push_back(BigInt(0));
+    }
+    std::random_shuffle(l.begin(), l.end());
+    /*while(std::inner_product(l.cbegin(), l.cend(), to.getPublicKey().cbegin()->u, BigInt(0)) <= BigInt(0))
+    {
+        std::random_shuffle(l.begin(), l.end());
+    }*/
+    return l;
 }
