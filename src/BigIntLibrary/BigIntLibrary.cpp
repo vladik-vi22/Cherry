@@ -501,11 +501,7 @@ BigInt inversemod(BigInt dividend, const BigInt& divisor)
     }
     if(!x1.positive)
     {
-        x1 += (-x1 / divisor + BigInt(1)) * divisor;
-    }
-    if(x1 > divisor)
-    {
-        x1 %= divisor;
+        x1 += divisor;
     }
     return x1;
 }
