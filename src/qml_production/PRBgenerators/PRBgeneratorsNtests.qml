@@ -20,7 +20,7 @@ ApplicationWindow
     {
         id: prbGeneratorsSelector
         width: prbGenerators.width / 2
-        model: ["Built-in CPP", "Lehmer Low", "Lehmer High", "L20", "L89", "Geffe", "Wolfram", "Librarian", "Blum-Micali (bit)", "Blum-Micali (byte)", "Blum Blum Shub (bit)", "Blum Blum Shub (byte)"]
+        model: ["Built-in CPP (bit)", "Built-in CPP (byte)", "Lehmer Low", "Lehmer High", "L20", "L89", "Geffe", "Wolfram", "Librarian", "Blum-Micali (bit)", "Blum-Micali (byte)", "Blum Blum Shub (bit)", "Blum Blum Shub (byte)"]
         onCurrentIndexChanged:
         {
             generatedPRBS.text = ""
@@ -78,60 +78,65 @@ ApplicationWindow
             {
             case 0:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateBuiltInCPP()
+                prbGeneratorsNtests.generateBuiltInCPPBit()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 1:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateLehmerLow()
+                prbGeneratorsNtests.generateBuiltInCPPByte()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 2:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateLehmerHigh()
+                prbGeneratorsNtests.generateLehmerLow()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 3:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateL20()
+                prbGeneratorsNtests.generateLehmerHigh()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 4:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateL89()
+                prbGeneratorsNtests.generateL20()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 5:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateGeffe()
+                prbGeneratorsNtests.generateL89()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 6:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateWolfram()
+                prbGeneratorsNtests.generateGeffe()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 7:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateLibrarian()
+                prbGeneratorsNtests.generateWolfram()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 8:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateBlumMicaliBit()
+                prbGeneratorsNtests.generateLibrarian()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 9:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateBlumMicaliByte()
+                prbGeneratorsNtests.generateBlumMicaliBit()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 10:
                 numberOfBit.setNumberOfBitToCPP()
-                prbGeneratorsNtests.generateBlumBlumShubBit()
+                prbGeneratorsNtests.generateBlumMicaliByte()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 11:
+                numberOfBit.setNumberOfBitToCPP()
+                prbGeneratorsNtests.generateBlumBlumShubBit()
+                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
+                break
+            case 12:
                 numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBlumBlumShubByte()
                 generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()

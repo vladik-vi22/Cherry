@@ -39,7 +39,8 @@ signals:
     void numberOfSegmentChanged();
 
 public:
-    Q_INVOKABLE void generateBuiltInCPP();
+    Q_INVOKABLE void generateBuiltInCPPBit();
+    Q_INVOKABLE void generateBuiltInCPPByte();
     Q_INVOKABLE void generateLehmerLow();
     Q_INVOKABLE void generateLehmerHigh();
     Q_INVOKABLE void generateL20();
@@ -63,19 +64,6 @@ private:
     uint32_t m_numberOfBit;
     float m_alpha;
     uint32_t m_numberOfSegment;
-
-    std::vector<uint8_t> m_generatedBuiltInCPP;
-    std::vector<uint8_t> m_generatedLehmerLow;
-    std::vector<uint8_t> m_generatedLehmerHigh;
-    std::vector<uint8_t> m_generatedL20;
-    std::vector<uint8_t> m_generatedL89;
-    std::vector<uint8_t> m_generatedGeffe;
-    std::vector<uint8_t> m_generatedWolfram;
-    std::vector<uint8_t> m_generatedLibrarian;
-    std::vector<uint8_t> m_generatedBlumMicaliBit;
-    std::vector<uint8_t> m_generatedBlumMicaliByte;
-    std::vector<uint8_t> m_generatedBlumBlumShubBit;
-    std::vector<uint8_t> m_generatedBlumBlumShubByte;
 };
 
 std::vector<uint8_t> StdVectorBoolToStdVectorUint8_t(const std::vector<bool>& stdVectorBool);

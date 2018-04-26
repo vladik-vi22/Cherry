@@ -51,6 +51,7 @@ BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bo
 {
     bigNumArr = bigNumberStdVectorUint32_t;
     std::reverse(bigNumArr.begin(), bigNumArr.end());
+    deleteZeroHighOrderDigit();
     positive = isPositive;
 }
 
@@ -67,6 +68,7 @@ BigInt::BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bo
     {
         bigNumArr.push_back(*iteratorBigNumberStdVectorUint16_t);
     }
+    deleteZeroHighOrderDigit();
     positive = isPositive;
 }
 
@@ -91,6 +93,7 @@ BigInt::BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool
     {
         bigNumArr.push_back(*iteratorBigNumberStdVectorUint8_t);
     }
+    deleteZeroHighOrderDigit();
     positive = isPositive;
 }
 
@@ -119,6 +122,7 @@ BigInt::BigInt(const std::vector<bool> &bigNumberStdVectorBool, const bool &isPo
         }
         bigNumArr.push_back(bigNumArr_temp);
     }
+    deleteZeroHighOrderDigit();
     positive = isPositive;
 }
 
@@ -478,7 +482,7 @@ BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor)
 
 BigInt inversemod(BigInt dividend, const BigInt& divisor)
 {
-    if(divisor.isZero())
+    if(divisor.isZero() || !isCoprime(dividend, divisor))
     {
         return BigInt(0);
     }
