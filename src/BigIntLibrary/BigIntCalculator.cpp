@@ -190,7 +190,7 @@ void BigIntCalculator::calculate(const QString& operation)
             }
             else
             {
-                setCalculationsResult("lcm(0,0) exeption");
+                setCalculationsResult("lcm(0,0) exception");
             }
         }
         else

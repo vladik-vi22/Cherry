@@ -1,8 +1,6 @@
 #ifndef CompactLWE_H
 #define CompactLWE_H
 
-#include <QObject>
-#include <QQuickItem>
 #include "../BigIntLibrary/BigIntLibrary.h"
 #include "../PRBgenerators/PRBgenerators.h"
 
@@ -60,9 +58,8 @@ typedef std::vector<Keys::PublicKeySample> PublicKey;
 
 }
 
-class CompactLWE : public QObject
+class CompactLWE
 {
-    Q_OBJECT
 
 private:
     Paramethers::PublicParamethers publicParamethers;
@@ -71,14 +68,14 @@ private:
     Keys::PublicKey publicKey;
 
 public:
-    explicit CompactLWE(QObject *parent = 0);
+    CompactLWE();
     ~CompactLWE();
 
     Paramethers::PublicParamethers getPublicParamethers() const;
     Keys::PublicKey getPublicKey() const;
     void generatePrivateKey();
     void generatePublicKey();
-    BigInt basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
+    std::vector<BigInt> basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
 
 private:
     std::vector<BigInt> generateL(const CompactLWE& to);

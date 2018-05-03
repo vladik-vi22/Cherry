@@ -1,7 +1,8 @@
 #include "CompactLWE.h"
 #include <numeric>
+#include <algorithm>
 
-CompactLWE::CompactLWE(QObject* parent): QObject(parent)
+CompactLWE::CompactLWE()
 {
     publicParamethers.q = BigInt(std::vector<uint32_t>{1, 0, 0}, true); // 2^64
     publicParamethers.t = BigInt(uint64_t(4294967296)); // 2^32
@@ -182,10 +183,65 @@ void CompactLWE::generatePublicKey()
     qDebug("public key generated");
 }
 
-BigInt CompactLWE::basicEncrypt(const BigInt& plaintext, const CompactLWE& to)
+std::vector<BigInt> CompactLWE::basicEncrypt(const BigInt& plaintext, const CompactLWE& to)
 {
+    std::vector<BigInt> ciphertext;
     const std::vector<BigInt> l = generateL(to);
-    return BigInt(0);
+    std::vector<BigInt>::const_iterator iteratorL = l.cbegin();
+    std::vector<Keys::PublicKeySample>::const_iterator iteratorToPublicKey = to.publicKey.cbegin();
+    std::vector<BigInt> productLA;
+    BigInt innerProductLU(0);
+    BigInt innerProductLPk(0);
+    BigInt innerProductLPkPrime(0);
+    BigInt u;
+    BigInt uPrime;
+    ciphertext.reserve(to.publicParamethers.n + 3);
+    ciphertext.resize(to.getPublicParamethers().n, ConstBigInt::ZERO);
+    productLA.reserve(to.getPublicParamethers().n);
+    productLA.resize(to.getPublicParamethers().n, ConstBigInt::ZERO);
+    while(iteratorL != l.cend() && iteratorToPublicKey != to.getPublicKey().cend())
+    {
+        std::transform(iteratorToPublicKey->a.cbegin(), iteratorToPublicKey->a.cend(), productLA.begin(),
+                       std::bind1st(std::multiplies<BigInt>(), *iteratorL));
+        std::transform(ciphertext.begin(), ciphertext.end(), productLA.cbegin(), ciphertext.begin(), std::plus<BigInt>());
+        ++iteratorL;
+        ++iteratorToPublicKey;
+    }
+    iteratorL = l.cbegin();
+    iteratorToPublicKey = to.publicKey.cbegin();
+    while(iteratorL != l.cend() && iteratorToPublicKey != to.getPublicKey().cend())
+    {
+        innerProductLU += *iteratorL * iteratorToPublicKey->u;
+        ++iteratorL;
+        ++iteratorToPublicKey;
+    }
+    u = innerProductLU % to.getPublicParamethers().t;
+    uPrime = innerProductLU / to.getPublicParamethers().t;
+    while(!isCoprime(uPrime, to.getPublicParamethers().t))
+    {
+        ++uPrime;
+    }
+    ciphertext.push_back((plaintext ^ u.leftCircularShift(log2(to.getPublicParamethers().t) / 2)) * uPrime % to.getPublicParamethers().t);
+    iteratorL = l.cbegin();
+    iteratorToPublicKey = to.publicKey.cbegin();
+    while(iteratorL != l.cend() && iteratorToPublicKey != to.getPublicKey().cend())
+    {
+        innerProductLPk += *iteratorL * iteratorToPublicKey->pk;
+        ++iteratorL;
+        ++iteratorToPublicKey;
+    }
+    ciphertext.push_back(innerProductLPk % to.getPublicParamethers().q);
+    iteratorL = l.cbegin();
+    iteratorToPublicKey = to.publicKey.cbegin();
+    while(iteratorL != l.cend() && iteratorToPublicKey != to.getPublicKey().cend())
+    {
+        innerProductLPkPrime += *iteratorL * iteratorToPublicKey->pkPrime;
+        ++iteratorL;
+        ++iteratorToPublicKey;
+    }
+    ciphertext.push_back(innerProductLPkPrime % to.getPublicParamethers().q);
+    qDebug("basic encrypted");
+    return ciphertext;
 }
 
 std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
@@ -205,7 +261,7 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
         sumL += l.back();
     }
     l.pop_back();
-    sumL = BigInt(0);
+    sumL = ConstBigInt::ZERO;
     while(sumL >= -to.getPublicParamethers().wPrime && l.size() <= to.getPublicParamethers().m)
     {
         prbGenerator.generateL20();
@@ -213,21 +269,21 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
         sumL += l.back();
     }
     l.pop_back();
-    l.resize(to.getPublicParamethers().m, BigInt(0));
+    l.resize(to.getPublicParamethers().m, ConstBigInt::ZERO);
     do
     {
         std::random_shuffle(l.begin(), l.end());
         std::vector<BigInt>::const_iterator iteratorL = l.cbegin();
-        std::vector<Keys::PublicKeySample>::const_iterator iteratorPublicKey = to.publicKey.cbegin();
-        innerProductLU = BigInt(0);
-        while(iteratorL != l.cend() && iteratorPublicKey != to.getPublicKey().cend())
+        std::vector<Keys::PublicKeySample>::const_iterator iteratorToPublicKey = to.publicKey.cbegin();
+        innerProductLU = ConstBigInt::ZERO;
+        while(iteratorL != l.cend() && iteratorToPublicKey != to.getPublicKey().cend())
         {
-            innerProductLU += *iteratorL * iteratorPublicKey->u;
+            innerProductLU += *iteratorL * iteratorToPublicKey->u;
             ++iteratorL;
-            ++iteratorPublicKey;
+            ++iteratorToPublicKey;
         }
     }
-    while(innerProductLU <= BigInt(0));
+    while(innerProductLU <= ConstBigInt::ZERO);
     qDebug("l generated");
     return l;
 }

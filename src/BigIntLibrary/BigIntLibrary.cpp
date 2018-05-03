@@ -225,7 +225,7 @@ BigInt& BigInt::operator += (const BigInt& augend)
 
 BigInt& BigInt::operator ++()
 {
-    *this += BigInt(1);
+    *this += ConstBigInt::ONE;
     return *this;
 }
 
@@ -319,7 +319,7 @@ BigInt& BigInt::operator -= (const BigInt& subtrahend)
 
 BigInt& BigInt::operator -- ()
 {
-    *this -= BigInt(1);
+    *this -= ConstBigInt::ONE;
     return *this;
 }
 
@@ -391,7 +391,7 @@ std::pair<BigInt, BigInt> BigInt::DivMod(const BigInt& divisor) const
             borrow = abs(divisor) << --differenceRemainderNDivisorBitLenght;
         }
         remainder -= borrow;
-        fraction += BigInt(1) << differenceRemainderNDivisorBitLenght; // 1 << n = 2 ^ n
+        fraction += ConstBigInt::ONE << differenceRemainderNDivisorBitLenght; // 1 << n = 2 ^ n
     }
     fraction.positive = positive == divisor.positive;
     remainder.positive = positive;
@@ -425,7 +425,7 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
 {
     if(!exponent.positive)
     {
-        return BigInt(0);
+        return ConstBigInt::ZERO;
     }
     BigInt power(1);
     power.bigNumArr.reserve(base.bigNumArr.size() * exponent.toUint32_t());
@@ -446,6 +446,11 @@ BigInt pow(const BigInt& base, const BigInt& exponent)
         power.positive = exponent.isEven();
     }
     return power;
+}
+
+uint32_t log2(const BigInt& antilogarithm)
+{
+    return antilogarithm.bitLenght() - 1;
 }
 
 /*BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor)
@@ -484,12 +489,12 @@ BigInt inversemod(BigInt dividend, const BigInt& divisor)
 {
     if(divisor.isZero() || !isCoprime(dividend, divisor))
     {
-        return BigInt(0);
+        return ConstBigInt::ZERO;
     }
     BigInt divisor_copy(divisor);
     BigInt x0(0);
     BigInt x1(1);
-    while (dividend > BigInt(1))
+    while (dividend > ConstBigInt::ONE)
     {
         BigInt fraction(dividend / divisor_copy);
         BigInt temp(divisor_copy);
@@ -531,12 +536,12 @@ bool congruencemod(const BigInt& dividend1, const BigInt& dividend2, const BigIn
 
 bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2)
 {
-    return gcd(bigNum1, bigNum2) == BigInt(1);
+    return gcd(bigNum1, bigNum2) == ConstBigInt::ONE;
 }
 
 int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2)
 {
-    if(gcd(bigNum1, bigNum2) != BigInt(1))
+    if(!isCoprime(bigNum1, bigNum2))
     {
         return 0;
     }
@@ -544,7 +549,7 @@ int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2)
     if(!bigNum1.positive)
     {
         bigNum1.positive = true;
-        if(bigNum2 % BigInt(4) == BigInt(3))
+        if(bigNum2 % ConstBigInt::FOUR == ConstBigInt::THREE)
         {
             symbolJacobi = -symbolJacobi;
         }
@@ -559,12 +564,12 @@ int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2)
         }
         if(iterator % 2)
         {
-            if(bigNum2 % BigInt(8) == BigInt(3) || bigNum2 % BigInt(8) == BigInt(5))
+            if(bigNum2 % ConstBigInt::EIGHT == ConstBigInt::THREE || bigNum2 % ConstBigInt::EIGHT == ConstBigInt::FIVE)
             {
                 symbolJacobi = -symbolJacobi;
             }
         }
-        if(bigNum1 % BigInt(4) == BigInt(3) && bigNum2 % BigInt(4) == BigInt(3))
+        if(bigNum1 % ConstBigInt::FOUR == ConstBigInt::THREE && bigNum2 % ConstBigInt::FOUR == ConstBigInt::THREE)
         {
             symbolJacobi = -symbolJacobi;
         }
@@ -577,7 +582,7 @@ int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2)
 
 BigInt BigInt::operator ~() const
 {
-    return -*this - BigInt(1);
+    return -*this - ConstBigInt::ONE;
 }
 
 BigInt BigInt::operator & (const BigInt& rightBitwiseAND) const
@@ -599,15 +604,15 @@ BigInt BigInt::operator & (const BigInt& rightBitwiseAND) const
     }
     else if(!positive && !rightBitwiseAND.positive)
     {
-        return -(~*this | ~rightBitwiseAND) - BigInt(1);
+        return -(~*this | ~rightBitwiseAND) - ConstBigInt::ONE;
     }
     else if(positive && !rightBitwiseAND.positive)
     {
-        return (*this | ~rightBitwiseAND) + rightBitwiseAND + BigInt(1);
+        return (*this | ~rightBitwiseAND) + rightBitwiseAND + ConstBigInt::ONE;
     }
     else // !positive && rightBitwiseAnd.positive
     {
-        return (~*this | rightBitwiseAND) + *this + BigInt(1);
+        return (~*this | rightBitwiseAND) + *this + ConstBigInt::ONE;
     }
 }
 
@@ -644,7 +649,7 @@ BigInt BigInt::operator | (const BigInt& rightBitwiseOR) const
     }
     else if(!positive && !rightBitwiseOR.positive)
     {
-        return -(~*this & ~rightBitwiseOR) - BigInt(1);
+        return -(~*this & ~rightBitwiseOR) - ConstBigInt::ONE;
     }
     else if(positive && !rightBitwiseOR.positive)
     {
@@ -783,6 +788,16 @@ BigInt& BigInt::operator >>= (const uint32_t& shift)
 {
     *this = *this >> shift;
     return *this;
+}
+
+BigInt BigInt::leftCircularShift(const uint32_t& shift) const
+{
+    return (*this << shift) | (*this >> (bitLenght() - shift));
+}
+
+BigInt BigInt::rightCircularShift(const uint32_t& shift) const
+{
+    return (*this >> shift) | (*this << (bitLenght() - shift));
 }
 
 bool BigInt::operator !() const

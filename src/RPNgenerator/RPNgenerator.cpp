@@ -29,12 +29,12 @@ BigInt RPNgenerator::generatePrimeNumber(const uint32_t& numberOfBit)
 
 bool RPNgenerator::pseudoprimeTest(const BigInt& oddNumber, const BigInt& base)
 {
-    return (gcd(base, oddNumber) == BigInt(1) && congruencemod(powmod(base, oddNumber - BigInt(1), oddNumber), BigInt(1), oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(powmod(base, oddNumber - ConstBigInt::ONE, oddNumber), ConstBigInt::ONE, oddNumber));
 }
 
 bool RPNgenerator::pseudoprimeTestEulerJacobi(const BigInt& oddNumber, const BigInt& base)
 {
-    return (gcd(base, oddNumber) == BigInt(1) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - BigInt(1)) >> 1, oddNumber), oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - ConstBigInt::ONE) >> 1, oddNumber), oddNumber));
 }
 
 bool RPNgenerator::divisibilityRulePascal(const BigInt& bigNum)
@@ -103,7 +103,7 @@ bool RPNgenerator::primalityTestSolovayStrassen(const BigInt& bigNum)
 bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
 {
     PRBgenerators prbGenerator;
-    BigInt dividendBy2 = bigNum - BigInt(1);
+    BigInt dividendBy2 = bigNum - ConstBigInt::ONE;
     uint32_t powerOf2 = 0;
     while(dividendBy2.isEven())
     {
@@ -115,13 +115,13 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         prbGenerator.setNumberOfBit(2 + (rand() % (bigNum.bitLenght() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
-        if(gcd(x, bigNum) != BigInt(1))
+        if(!isCoprime(x, bigNum))
         {
             return false;
         }
         x = powmod(x, dividendBy2, bigNum);
         bool strongPseudoprime = false;
-        if(congruencemod(x, BigInt(1), bigNum) || congruencemod(x, bigNum - BigInt(1), bigNum))
+        if(congruencemod(x, ConstBigInt::ONE, bigNum) || congruencemod(x, bigNum - ConstBigInt::ONE, bigNum))
         {
             strongPseudoprime = true;
         }
@@ -129,13 +129,13 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         {
             for(uint32_t r = 1; r < powerOf2; ++r)
             {
-                x = powmod(x, BigInt(2), bigNum);
-                if(congruencemod(x, bigNum - BigInt(1), bigNum))
+                x = powmod(x, ConstBigInt::TWO, bigNum);
+                if(congruencemod(x, bigNum - ConstBigInt::ONE, bigNum))
                 {
                     strongPseudoprime = true;
                     break;
                 }
-                else if(congruencemod(x, BigInt(1), bigNum))
+                else if(congruencemod(x, ConstBigInt::ONE, bigNum))
                 {
                     return false;
                 }

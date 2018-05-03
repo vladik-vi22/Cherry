@@ -70,6 +70,8 @@ public:
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
+    friend uint32_t log2(const BigInt& antilogarithm); // logarithm to the base 2
+
     //    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
     friend BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // power by modulo
     friend BigInt inversemod(BigInt dividend, const BigInt& divisor); // inverse by modulo // gcd(dividend, divisor) = 1
@@ -90,6 +92,9 @@ public:
     BigInt& operator <<= (const uint32_t& shift); // bitwise left shift assignment
     BigInt operator >> (const uint32_t& shift) const; // bitwise right shift
     BigInt& operator >>= (const uint32_t& shift); // bitwise right shift assignment
+
+    BigInt leftCircularShift (const uint32_t& shift) const; // bitwise left circular shift
+    BigInt rightCircularShift (const uint32_t& shift) const; // bitwise right circular shift;
 
     bool operator !() const; // negation
     bool operator && (const BigInt& rightAND) const; // AND
@@ -135,6 +140,19 @@ private:
     BigInt shiftDigitsToLow(const uint32_t& shift) const;
     BigInt toBigIntDec() const;
 };
+
+namespace ConstBigInt
+{
+const BigInt ZERO(0);
+const BigInt ONE(1);
+const BigInt TWO(2);
+const BigInt THREE(3);
+const BigInt FOUR(4);
+const BigInt FIVE(5);
+const BigInt SIX(6);
+const BigInt SEVEN(7);
+const BigInt EIGHT(8);
+}
 
 std::string strDec2strBin(std::string strDec);
 

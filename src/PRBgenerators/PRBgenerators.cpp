@@ -427,7 +427,7 @@ void PRBgenerators::generateBlumMicaliByte()
     BigInt T(rand());
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
-        m_generatedPRBS.push_back((((T << 7) / q) - BigInt(1)).toUint32_t()); // T << 7 = T * 128
+        m_generatedPRBS.push_back((((T << 7) / q) - ConstBigInt::ONE).toUint32_t()); // T << 7 = T * 128
         T = powmod(a, T, p);
     }
     std::cout << "time to generate BlumMicaliByte on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
@@ -445,7 +445,7 @@ void PRBgenerators::generateBlumBlumShubBit()
     for(uint32_t indexBit = 0; indexBit < m_numberOfBit; ++indexBit)
     {
         stdVectorBool.push_back(r.isOdd());
-        r = powmod(r, BigInt(2), n);
+        r = powmod(r, ConstBigInt::TWO, n);
     }
     m_generatedPRBS = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
     std::cout << "time to generate BlumBlumShubBit on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
@@ -464,7 +464,7 @@ void PRBgenerators::generateBlumBlumShubByte()
     for(uint32_t indexByte = 0; indexByte < numberOfByte; ++indexByte)
     {
         m_generatedPRBS.push_back((r & BigInt(UINT8_MAX)).toUint32_t()); // r & 255 = r % 256
-        r = powmod(r, BigInt(2), n);
+        r = powmod(r, ConstBigInt::TWO, n);
     }
     std::cout << "time to generate BlumBlumShubByte on " << m_numberOfBit << " bit = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
 }

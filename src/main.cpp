@@ -23,7 +23,11 @@ int main(int argc, char *argv[])
     CompactLWE a;
     a.generatePrivateKey();
     a.generatePublicKey();
-    a.basicEncrypt(BigInt(0), a);
+    std::vector<BigInt> A = a.basicEncrypt(BigInt(123111), a);
+    for(std::vector<BigInt>::const_iterator cia = A.cbegin(); cia != A.cend(); ++cia)
+    {
+        qDebug() << *cia;
+    }
     return 0;
 
     QQmlApplicationEngine engine;
