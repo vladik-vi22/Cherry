@@ -18,7 +18,7 @@ BigInt::BigInt(const BigInt& bigNumber)
     positive = bigNumber.positive;
 }
 
-BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
+BigInt::BigInt(const std::string& bigNumberStdString, const int base)
 {
     const uint8_t sizeOfCell = base == baseHexadecimal ? (sizeof(uint32_t) * 2) : (sizeof(uint32_t) * 8);
     std::string bigNumberStdStringInput = bigNumberStdString;
@@ -47,7 +47,7 @@ BigInt::BigInt(const std::string& bigNumberStdString, const int& base)
     }
 }
 
-BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool& isPositive)
+BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool isPositive)
 {
     bigNumArr = bigNumberStdVectorUint32_t;
     std::reverse(bigNumArr.begin(), bigNumArr.end());
@@ -55,7 +55,7 @@ BigInt::BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bo
     positive = isPositive;
 }
 
-BigInt::BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool& isPositive)
+BigInt::BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool isPositive)
 {
     bigNumArr.reserve(bigNumberStdVectorUint16_t.size() & 1 ? (bigNumberStdVectorUint16_t.size() >> 1) + 1 : bigNumberStdVectorUint16_t.size() >> 1);
     std::vector<uint16_t>::const_reverse_iterator iteratorBigNumberStdVectorUint16_t = bigNumberStdVectorUint16_t.crbegin();
@@ -72,7 +72,7 @@ BigInt::BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bo
     positive = isPositive;
 }
 
-BigInt::BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool& isPositive)
+BigInt::BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool isPositive)
 {
     bigNumArr.reserve(bigNumberStdVectorUint8_t.size() & 3 ? (bigNumberStdVectorUint8_t.size() >> 2) + 1 : bigNumberStdVectorUint8_t.size() >> 2);
     std::vector<uint8_t>::const_reverse_iterator iteratorBigNumberStdVectorUint8_t = bigNumberStdVectorUint8_t.crbegin();
@@ -97,7 +97,7 @@ BigInt::BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool
     positive = isPositive;
 }
 
-BigInt::BigInt(const std::vector<bool> &bigNumberStdVectorBool, const bool &isPositive)
+BigInt::BigInt(const std::vector<bool>& bigNumberStdVectorBool, const bool isPositive)
 {
     bigNumArr.reserve(bigNumberStdVectorBool.size() & 31 ? (bigNumberStdVectorBool.size() >> 5) + 1 : bigNumberStdVectorBool.size() >> 5);
     uint32_t bigNumArr_temp;
@@ -126,26 +126,26 @@ BigInt::BigInt(const std::vector<bool> &bigNumberStdVectorBool, const bool &isPo
     positive = isPositive;
 }
 
-BigInt::BigInt(const uint32_t& numberUint32_t, const bool& isPositive)
+BigInt::BigInt(const uint32_t numberUint32_t, const bool isPositive)
 {
     bigNumArr.push_back(numberUint32_t);
     positive = isPositive;
 }
 
-BigInt::BigInt(const uint64_t& numberUint64_t, const bool& isPositive)
+BigInt::BigInt(const uint64_t numberUint64_t, const bool isPositive)
 {
     bigNumArr.push_back(numberUint64_t & UINT32_MAX);
     bigNumArr.push_back(numberUint64_t >> 32);
     positive = isPositive;
 }
 
-BigInt::BigInt(const int& numberInt)
+BigInt::BigInt(const int numberInt)
 {
     bigNumArr.push_back(std::abs(numberInt));
     positive = (numberInt >= 0);
 }
 
-BigInt::BigInt(const long long& numberLongLong)
+BigInt::BigInt(const long long numberLongLong)
 {
     bigNumArr.push_back(std::abs(numberLongLong) & UINT32_MAX);
     bigNumArr.push_back(std::abs(numberLongLong) >> 32);
@@ -330,7 +330,7 @@ BigInt BigInt::operator -- (int)
     return bigNum;
 }
 
-BigInt BigInt::operator * (const uint32_t& multiplier) const
+BigInt BigInt::operator * (const uint32_t multiplier) const
 {
     BigInt product;
     product.bigNumArr.reserve(bigNumArr.size() + 1);
@@ -350,7 +350,7 @@ BigInt BigInt::operator * (const uint32_t& multiplier) const
     return product;
 }
 
-BigInt& BigInt::operator *= (const uint32_t& multiplier)
+BigInt& BigInt::operator *= (const uint32_t multiplier)
 {
     *this = *this * multiplier;
     return *this;
@@ -704,7 +704,7 @@ BigInt& BigInt::operator ^= (const BigInt& rightBitwiseXOR)
     return *this;
 }
 
-BigInt BigInt::operator << (const uint32_t& shift) const
+BigInt BigInt::operator << (const uint32_t shift) const
 {
     if(!shift)
     {
@@ -742,13 +742,13 @@ BigInt BigInt::operator << (const uint32_t& shift) const
     }
 }
 
-BigInt& BigInt::operator <<= (const uint32_t& shift)
+BigInt& BigInt::operator <<= (const uint32_t shift)
 {
     *this = *this << shift;
     return *this;
 }
 
-BigInt BigInt::operator >> (const uint32_t& shift) const
+BigInt BigInt::operator >> (const uint32_t shift) const
 {
     if(!shift)
     {
@@ -784,18 +784,18 @@ BigInt BigInt::operator >> (const uint32_t& shift) const
     }
 }
 
-BigInt& BigInt::operator >>= (const uint32_t& shift)
+BigInt& BigInt::operator >>= (const uint32_t shift)
 {
     *this = *this >> shift;
     return *this;
 }
 
-BigInt BigInt::leftCircularShift(const uint32_t& shift) const
+BigInt BigInt::leftCircularShift(const uint32_t shift) const
 {
     return (*this << shift) | (*this >> (bitLenght() - shift));
 }
 
-BigInt BigInt::rightCircularShift(const uint32_t& shift) const
+BigInt BigInt::rightCircularShift(const uint32_t shift) const
 {
     return (*this >> shift) | (*this << (bitLenght() - shift));
 }
@@ -1003,7 +1003,7 @@ BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const Big
     return remainder;
 }
 
-std::string BigInt::toStdString(const int& base) const
+std::string BigInt::toStdString(const int base) const
 {
     std::stringstream bigNumberStringStream;
     std::string bigNumberString;
@@ -1153,7 +1153,7 @@ void BigInt::deleteZeroHighOrderDigit()
     }
 }
 
-BigInt BigInt::shiftDigitsToHigh(const uint32_t& shift) const
+BigInt BigInt::shiftDigitsToHigh(const uint32_t shift) const
 {
     BigInt shifted = *this;
     shifted.bigNumArr.insert(shifted.bigNumArr.begin(), shift, 0);
@@ -1161,7 +1161,7 @@ BigInt BigInt::shiftDigitsToHigh(const uint32_t& shift) const
     return shifted;
 }
 
-BigInt BigInt::shiftDigitsToLow(const uint32_t& shift) const
+BigInt BigInt::shiftDigitsToLow(const uint32_t shift) const
 {
     BigInt shifted = *this;
     if(shifted.bigNumArr.size() > shift)

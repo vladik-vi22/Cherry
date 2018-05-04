@@ -76,6 +76,7 @@ public:
     void generatePrivateKey();
     void generatePublicKey();
     std::vector<BigInt> basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
+    std::vector<BigInt> generalEncrypt(const BigInt& plaintext, const CompactLWE& to);
 
 private:
     std::vector<BigInt> generateL(const CompactLWE& to);
