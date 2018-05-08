@@ -1053,6 +1053,31 @@ std::vector<uint32_t> BigInt::toStdVectorUint32_t() const
     return bigNumberStdVectorUint32_t;
 }
 
+std::vector<uint8_t> BigInt::toStdVectorUint8_t() const
+{
+    std::vector<uint8_t> bigNumberStdVectorUint8_t;
+    uint8_t numberOfBytes = byteLenght();
+    bigNumberStdVectorUint8_t.reserve(numberOfBytes);
+    std::vector<uint32_t>::const_reverse_iterator iterator = bigNumArr.crbegin();
+    if(numberOfBytes % sizeof(uint32_t))
+    {
+        for(uint8_t indexFirstBytes = 0; indexFirstBytes < numberOfBytes % sizeof(uint32_t); ++indexFirstBytes)
+        {
+            bigNumberStdVectorUint8_t.push_back(*iterator >> ((numberOfBytes % sizeof(uint32_t) - indexFirstBytes - 1) * 8));
+        }
+        ++iterator;
+    }
+    while(iterator != bigNumArr.crend())
+    {
+        for(uint8_t indexByte = 0; indexByte < sizeof(uint32_t); ++indexByte)
+        {
+            bigNumberStdVectorUint8_t.push_back(*iterator >> ((sizeof(uint32_t) - indexByte - 1) * 8));
+        }
+        ++iterator;
+    }
+    return bigNumberStdVectorUint8_t;
+}
+
 uint64_t BigInt::toUint64_t() const
 {
     if(bigNumArr.size() == 2)
@@ -1089,7 +1114,7 @@ uint32_t BigInt::bitLenght() const
     }
     uint32_t bitLenght = (bigNumArr.size() - 1) * sizeof(uint32_t) * 8;
     uint32_t highOrderDigit = bigNumArr.back();
-    uint32_t bitLenghtHighOrderDigit = 0;
+    uint8_t bitLenghtHighOrderDigit = 0;
     while(highOrderDigit)
     {
         highOrderDigit >>= 1;
@@ -1097,6 +1122,24 @@ uint32_t BigInt::bitLenght() const
     }
     bitLenght += bitLenghtHighOrderDigit;
     return bitLenght;
+}
+
+uint32_t BigInt::byteLenght() const
+{
+    if(isZero())
+    {
+        return 1;
+    }
+    uint32_t byteLenght = (bigNumArr.size() - 1) * sizeof(uint32_t);
+    uint32_t highOrderDigit = bigNumArr.back();
+    uint8_t byteLenghtHighOrderDigit = 0;
+    while(highOrderDigit)
+    {
+        highOrderDigit >>= 8;
+        ++byteLenghtHighOrderDigit;
+    }
+    byteLenght += byteLenghtHighOrderDigit;
+    return byteLenght;
 }
 
 bool BigInt::isEven() const

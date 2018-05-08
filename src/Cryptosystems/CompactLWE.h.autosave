@@ -80,7 +80,7 @@ public:
 
 private:
     std::vector<BigInt> generateL(const CompactLWE& to);
-    BigInt encode(std::vector<uint8_t> m, const std::vector<uint8_t>& I, const CompactLWE& to);
+    BigInt encode(const std::vector<uint8_t>& m, const std::vector<uint8_t>& I, const CompactLWE& to);
 };
 
 #endif // CompactLWE_H

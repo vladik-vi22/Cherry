@@ -244,6 +244,22 @@ std::vector<BigInt> CompactLWE::basicEncrypt(const BigInt& plaintext, const Comp
     return ciphertext;
 }
 
+std::vector<BigInt> CompactLWE::generalEncrypt(const BigInt& plaintext, const CompactLWE& to)
+{
+    std::vector<uint8_t> ciphertext;
+    const std::vector<uint8_t> plaintextStdVectorUint8_t = plaintext.toStdVectorUint8_t();
+    while(plaintextStdVectorUint8_t.size() % ciphertext)
+    {
+        plaintextStdVectorUint8_t.push_back(0);
+    }
+    const uint32_t numberOfByteInBlock = log2(to.getPublicParamethers().t);
+    const uint32_t numberOfBlock = plaintextStdVectorUint8_t.size() / numberOfByteInBlock;
+    for(uint8_t indexBlock = 0; indexBlock < numberOfBlock; ++indexBlock)
+    {
+        std::vector<uint8_t> block(plaintextStdVectorUint8_t.cbegin() + (indexBlock * numberOfByteInBlock), plaintextStdVectorUint8_t.cbegin() + ((indexBlock + 1) * numberOfByteInBlock) - 1);
+    }
+}
+
 std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
 {
     const BigInt wPlusWPrime = to.getPublicParamethers().w + to.getPublicParamethers().wPrime;
@@ -286,4 +302,39 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
     while(innerProductLU <= ConstBigInt::ZERO);
     qDebug("l generated");
     return l;
+}
+
+BigInt CompactLWE::encode(std::vector<uint8_t> m, const std::vector<uint8_t>& I, const CompactLWE& to)
+{
+    std::vector<uint8_t> mPrime;
+    const uint32_t lenM = m.size();
+    const uint32_t pl = log2(to.getPublicParamethers().t) * (8 * (lenM + to.getPublicParamethers().l) / log2(to.getPublicParamethers().l)) / 8 - lenM;
+    mPrime.reserve(lenM + pl);
+    qDebug() << "pl" << pl;
+    for(uint8_t indexPaddingByte = 0; indexPaddingByte < pl; ++indexPaddingByte)
+    {
+        m.push_back(UINT8_MAX);
+    }
+    srand(time(NULL));
+    uint8_t r = std::rand() & UINT8_MAX; // & UINT8_MAX = & 255 = % 256
+    uint8_t rPrime = std::rand() & UINT8_MAX;
+    uint8_t x = I[r];
+    uint8_t r_ori = r;
+    for(uint32_t indexMPrime = 0; indexMPrime < lenM + pl - 2; ++indexMPrime)
+    {
+        mPrime.push_back(x ^ m[indexMPrimeByte]);
+        x ^= I[(mPrime.back() + r_ori) & UINT8_MAX];
+        r ^= (mPrime.back() * rPrime) & UINT8_MAX;
+    }
+    x = I[rPrime];
+    r_ori = rPrime;
+    for(uint32_t indexMPrime = lenM + pl - 3; indexMPrime >= 0; --indexMPrime)
+    {
+        mPrime[indexMPrime] ^= x;
+        x = I[(mPrime[indexMPrime] + r_ori) & UINT8_MAX];
+        rPrime ^= (mPrime[indexMPrime] * r) & UINT8_MAX;
+    }
+    /*mPrime[lenM + pl - 1] = r;
+    mPrime[lenM + pl] = rPrime;*/
+    return BigInt(mPrime);
 }

@@ -120,9 +120,11 @@ public:
 
     std::string toStdString(const int base = baseOutput) const;
     std::vector<uint32_t> toStdVectorUint32_t() const;
+    std::vector<uint8_t> toStdVectorUint8_t() const;
     uint64_t toUint64_t() const; // if bigNumArr.size <= 2
     uint32_t toUint32_t() const; // if bigNumArr.size == 1
     uint32_t bitLenght() const;
+    uint32_t byteLenght() const;
     bool isEven() const;
     bool isOdd() const;
     bool isZero() const;
