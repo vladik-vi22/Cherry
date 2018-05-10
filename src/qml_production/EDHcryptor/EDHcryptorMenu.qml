@@ -8,7 +8,7 @@ ApplicationWindow {
     height: parent.height
     title: qsTr("Menu EDHcryptor")
 
-    property int numberOfButton: 4
+    property int numberOfButtons: 4
 
     Loader {
         id: edhCryptorLoader
@@ -18,7 +18,7 @@ ApplicationWindow {
         id: buttonVizhener
         anchors.top: menuEDHcryptor.top
         width: menuEDHcryptor.width
-        height: menuEDHcryptor.height / numberOfButton
+        height: menuEDHcryptor.height / numberOfButtons
         text: "Vizhener Cipher"
 
         onClicked: {
@@ -32,7 +32,7 @@ ApplicationWindow {
         id: buttonAffine
         anchors.top: buttonVizhener.bottom
         width: menuEDHcryptor.width
-        height: menuEDHcryptor.height / numberOfButton
+        height: menuEDHcryptor.height / numberOfButtons
         text: "Affine Cipher"
 
         onClicked: {
@@ -46,7 +46,7 @@ ApplicationWindow {
         id: buttonMenu
         anchors.top: buttonAffine.bottom
         width: menuEDHcryptor.width
-        height: menuEDHcryptor.height / numberOfButton
+        height: menuEDHcryptor.height / numberOfButtons
         text: "Menu"
 
         onClicked: {
@@ -60,7 +60,7 @@ ApplicationWindow {
         id: buttonExit
         anchors.top: buttonMenu.bottom
         width: menuEDHcryptor.width
-        height: menuEDHcryptor.height / numberOfButton
+        height: menuEDHcryptor.height / numberOfButtons
         text: "Exit"
 
         onClicked: {

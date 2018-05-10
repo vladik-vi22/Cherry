@@ -26,7 +26,7 @@ public:
 signals:
 
 public:
-    void generateKeyPair(const uint32_t& numberOfBit);
+    void generateKeyPair(const uint32_t numberOfBits);
     BigInt getPublicModulus() const;
     BigInt getPublicExponent() const;
     void setPublicModulus(const BigInt& new_publicModulus);

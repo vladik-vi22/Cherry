@@ -23,7 +23,10 @@ int main(int argc, char *argv[])
     CompactLWE a;
     a.generatePrivateKey();
     a.generatePublicKey();
-    std::vector<BigInt> A = a.basicEncrypt(BigInt(123111), a);
+    CompactLWE b;
+    b.generatePrivateKey();
+    b.generatePublicKey();
+    std::vector<BigInt> A = a.generalEncrypt(BigInt("12311112326345341232131342302fabbbbbb8435897634895734293084904157843543546754634523423412123212534114123", 16), b);
     for(std::vector<BigInt>::const_iterator cia = A.cbegin(); cia != A.cend(); ++cia)
     {
         qDebug() << *cia;

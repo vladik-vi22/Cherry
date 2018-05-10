@@ -10,7 +10,7 @@ ApplicationWindow
     height: Screen.height / 2
     title: qsTr("Menu")
 
-    property int numberOfButton: 4
+    property int numberOfButtons: 4
 
     Loader
     {
@@ -22,7 +22,7 @@ ApplicationWindow
         id: bigIntCalculator
         anchors.top: menu.top
         width: menu.width
-        height: menu.height / numberOfButton
+        height: menu.height / numberOfButtons
         text: "BigIntegerCalculator"
 
         onClicked:
@@ -38,7 +38,7 @@ ApplicationWindow
         id: prbGeneratorsMenu
         anchors.top: bigIntCalculator.bottom
         width: menu.width
-        height: menu.height / numberOfButton
+        height: menu.height / numberOfButtons
         text: "PRBgenerators"
 
         onClicked:
@@ -54,7 +54,7 @@ ApplicationWindow
         id: edhCryptorMenu
         anchors.top: prbGeneratorsMenu.bottom
         width: menu.width
-        height: menu.height / numberOfButton
+        height: menu.height / numberOfButtons
         text: "EDHcryptor"
 
         onClicked:

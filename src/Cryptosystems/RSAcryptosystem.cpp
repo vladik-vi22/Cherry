@@ -10,11 +10,11 @@ RSAcryptosystem::~RSAcryptosystem()
 
 }
 
-void RSAcryptosystem::generateKeyPair(const uint32_t& numberOfBit)
+void RSAcryptosystem::generateKeyPair(const uint32_t numberOfBits)
 {
     RPNgenerator rpnGenerator;
-    const BigInt p(rpnGenerator.generatePrimeNumber(numberOfBit));
-    const BigInt q(rpnGenerator.generatePrimeNumber(numberOfBit));
+    const BigInt p(rpnGenerator.generatePrimeNumber(numberOfBits));
+    const BigInt q(rpnGenerator.generatePrimeNumber(numberOfBits));
     publicModulus =  p * q;
     publicExponent = BigInt(65537); // 2^16 + 1
     const BigInt phiPublicModulus((p - ConstBigInt::ONE) * (q - ConstBigInt::ONE));

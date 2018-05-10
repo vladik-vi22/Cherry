@@ -10,9 +10,9 @@
 class PRBgenerators: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString numberOfBit READ getNumberOfBit WRITE setNumberOfBit NOTIFY numberOfBitChanged)
+    Q_PROPERTY(QString numberOfBits READ getNumberOfBits WRITE setNumberOfBits NOTIFY numberOfBitsChanged)
     Q_PROPERTY(QString alpha READ getAlpha WRITE setAlpha NOTIFY alphaChanged)
-    Q_PROPERTY(QString numberOfSegment READ getNumberOfSegment WRITE setNumberOfSegment NOTIFY numberOfSegmentChanged)
+    Q_PROPERTY(QString numberOfSegments READ getNumberOfSegments WRITE setNumberOfSegments NOTIFY numberOfSegmentsChanged)
 
     static float Z_1minusAlpha;
 
@@ -20,23 +20,24 @@ public:
     explicit PRBgenerators(QObject *parent = 0);
     ~PRBgenerators();
 
-    QString getNumberOfBit() const;
+    QString getNumberOfBits() const;
     QString getAlpha() const;
-    QString getNumberOfSegment() const;
+    QString getNumberOfSegments() const;
     std::vector<uint8_t> getGeneratedPRBS() const;
     uint8_t getUint8_tGeneratedPRBS() const;
     uint16_t getUint16_tGeneratedPRBS() const;
     uint32_t getUint32_tGeneratedPRBS() const;
     uint64_t getUint64_tGeneratedPRBS() const;
-    void setNumberOfBit(const QString& new_numberOfBit);
-    void setNumberOfBit(const uint32_t& new_numberOfBit);
+    void setNumberOfBits(const QString& new_numberOfBits);
+    void setNumberOfBits(uint32_t new_numberOfBits);
+    void setNumberOfBytes(uint32_t new_numberOfBytes);
     void setAlpha(const QString& new_alpha);
-    void setNumberOfSegment(const QString& new_numberOfSegment);
+    void setNumberOfSegments(const QString& new_numberOfSegments);
 
 signals:
-    void numberOfBitChanged();
+    void numberOfBitsChanged();
     void alphaChanged();
-    void numberOfSegmentChanged();
+    void numberOfSegmentsChanged();
 
 public:
     Q_INVOKABLE void generateBuiltInCPPBit();
@@ -61,9 +62,9 @@ public:
 
 private:
     std::vector<uint8_t> m_generatedPRBS;
-    uint32_t m_numberOfBit;
+    uint32_t m_numberOfBits;
     float m_alpha;
-    uint32_t m_numberOfSegment;
+    uint32_t m_numberOfSegments;
 };
 
 std::vector<uint8_t> StdVectorBoolToStdVectorUint8_t(const std::vector<bool>& stdVectorBool);

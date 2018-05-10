@@ -17,7 +17,7 @@ public:
 signals:
 
 public:
-    BigInt generatePrimeNumber(const uint32_t& numberOfBit);
+    BigInt generatePrimeNumber(const uint32_t numberOfBits);
 
 private:
     bool pseudoprimeTest(const BigInt& oddNumber, const BigInt& base);

@@ -42,10 +42,10 @@ ApplicationWindow
 
     Text
     {
-        id: textNumberOfBit
+        id: textNumberOfBits
         text: qsTr("number of bit =")
         width: prbGenerators.width / 4
-        height: numberOfBit.height
+        height: numberOfBits.height
         anchors.top: prbGeneratorsSelector.bottom
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
@@ -53,95 +53,71 @@ ApplicationWindow
 
     TextField
     {
-        id: numberOfBit
+        id: numberOfBits
         width: prbGenerators.width / 4
         anchors.top: prbGeneratorsSelector.bottom
-        anchors.left: textNumberOfBit.right
+        anchors.left: textNumberOfBits.right
 
-        function setNumberOfBitToCPP()
+        function setNumberOfBitsToCPP()
         {
-            prbGeneratorsNtests.numberOfBit = numberOfBit.text
+            prbGeneratorsNtests.numberOfBits = numberOfBits.text
         }
     }
 
     Button
     {
         id: generate
-        enabled: numberOfBit.length != 0
+        enabled: numberOfBits.length != 0
         text: qsTr("generate")
         width:prbGenerators.width / 2
-        anchors.top: numberOfBit.bottom
+        anchors.top: numberOfBits.bottom
 
         onClicked:
         {
+            numberOfBits.setNumberOfBitsToCPP()
             switch(prbGeneratorsSelector.currentIndex)
             {
             case 0:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBuiltInCPPBit()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 1:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBuiltInCPPByte()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 2:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateLehmerLow()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 3:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateLehmerHigh()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 4:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateL20()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 5:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateL89()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 6:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateGeffe()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 7:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateWolfram()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 8:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateLibrarian()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 9:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBlumMicaliBit()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 10:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBlumMicaliByte()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 11:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBlumBlumShubBit()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             case 12:
-                numberOfBit.setNumberOfBitToCPP()
                 prbGeneratorsNtests.generateBlumBlumShubByte()
-                generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
                 break
             }
+            generatedPRBS.text = prbGeneratorsNtests.getQStringGeneratedPRBS()
         }
     }
 
@@ -198,10 +174,10 @@ ApplicationWindow
 
     Text
     {
-        id: textNumberOfSegment
+        id: textNumberOfSegments
         text: qsTr("number of segment =")
         width: prbGenerators.width / 4
-        height: numberOfSegment.height
+        height: numberOfSegments.height
         anchors.top: resultTestOfGoodnessOfFit.bottom
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
@@ -209,29 +185,29 @@ ApplicationWindow
 
     TextField
     {
-        id: numberOfSegment
+        id: numberOfSegments
         width: prbGenerators.width / 4
         anchors.top: resultTestOfGoodnessOfFit.bottom
-        anchors.left: textNumberOfSegment.right
+        anchors.left: textNumberOfSegments.right
 
-        function setNumberOfSegmentToCPP()
+        function setNumberOfSegmentsToCPP()
         {
-            prbGeneratorsNtests.numberOfSegment = numberOfSegment.text
+            prbGeneratorsNtests.numberOfSegments = numberOfSegments.text
         }
     }
 
     Button
     {
         id: testOfHomogeneity
-        enabled: alpha.length != 0 && generatedPRBS.length != 0 && numberOfSegment.length != 0
+        enabled: alpha.length != 0 && generatedPRBS.length != 0 && numberOfSegments.length != 0
         text: qsTr("test of Homogeneity")
         width:prbGenerators.width / 2
-        anchors.top: numberOfSegment.bottom
+        anchors.top: numberOfSegments.bottom
 
         onClicked:
         {
             alpha.setAlphaToCPP()
-            numberOfSegment.setNumberOfSegmentToCPP()
+            numberOfSegments.setNumberOfSegmentsToCPP()
             resultTestOfHomogeneity.text = prbGeneratorsNtests.testOfHomogeneity() ? "test passed" : "test failed"
             resultTestOfHomogeneity.textColor = prbGeneratorsNtests.testOfHomogeneity() ? "green" : "red"
         }
@@ -283,7 +259,7 @@ ApplicationWindow
         onClicked:
         {
             generatedPRBS.text = ""
-            numberOfBit.text = ""
+            numberOfBits.text = ""
             alpha.text = ""
             resultTestOfGoodnessOfFit.text = ""
             resultTestOfHomogeneity.text = ""
