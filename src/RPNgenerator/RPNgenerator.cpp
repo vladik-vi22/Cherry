@@ -1,4 +1,5 @@
 #include "RPNgenerator.h"
+#define TRACK_TIME false
 
 RPNgenerator::RPNgenerator(QObject* parent): QObject(parent)
 {
@@ -11,11 +12,14 @@ RPNgenerator::~RPNgenerator()
 
 BigInt RPNgenerator::generatePrimeNumber(const uint32_t numberOfBits)
 {
+#if TRACK_TIME
+    std::clock_t begin_time = std::clock();
+#endif
     PRBgenerators generator;
     generator.setNumberOfBits(numberOfBits);
     while(true)
     {
-        generator.generateL89();
+        generator.generateL20();
         BigInt primeNumber(generator.getGeneratedPRBS());
         if(divisibilityRulePascal(primeNumber))
         {
@@ -25,6 +29,9 @@ BigInt RPNgenerator::generatePrimeNumber(const uint32_t numberOfBits)
             }
         }
     }
+#if TRACK_TIME
+    std::cout << "time to generate prime number on " << m_numberOfBits << " bits = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;
+#endif
 }
 
 bool RPNgenerator::pseudoprimeTest(const BigInt& oddNumber, const BigInt& base)

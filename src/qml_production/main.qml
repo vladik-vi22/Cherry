@@ -70,7 +70,7 @@ ApplicationWindow
         id: buttonExit
         anchors.top: edhCryptorMenu.bottom
         width: menu.width
-        height: menu.height / numberOfButton
+        height: menu.height / numberOfButtons
         text: "Exit"
 
         onClicked:

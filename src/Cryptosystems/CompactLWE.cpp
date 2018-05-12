@@ -40,6 +40,7 @@ void CompactLWE::generatePrivateKey()
     const uint8_t sk_maxBitLenght = privateParamethers.sk_max.bitLenght();
     const BigInt p_min = (publicParamethers.w + publicParamethers.wPrime) * publicParamethers.bPrime;
     const BigInt p_max = p_min + privateParamethers.p_size;
+    const uint32_t p_sizeBitLenght = privateParamethers.p_size.bitLenght();
     const BigInt sk_maxMULbPrime = privateParamethers.sk_max * publicParamethers.bPrime;
     const BigInt qDIVwADDwPrime = publicParamethers.q / (publicParamethers.w + publicParamethers.wPrime);
     PRBgenerators prbGenerator;
@@ -73,13 +74,11 @@ void CompactLWE::generatePrivateKey()
         privateKey.kPrime = BigInt(prbGenerator.getGeneratedPRBS());
     }
     while(!(isCoprime(publicParamethers.q, privateKey.kPrime) && privateKey.ckPrime < publicParamethers.q));
-    privateKey.p = p_min;
     do
     {
-        /*prbGenerator.setNumberOfBits(p_maxBitLenght);
+        prbGenerator.setNumberOfBits(p_sizeBitLenght);
         prbGenerator.generateL20();
-        privateKey.p = BigInt(prbGenerator.getGeneratedPRBS());*/
-        ++privateKey.p;
+        privateKey.p = p_min + (BigInt(prbGenerator.getGeneratedPRBS()) % privateParamethers.p_size);
     }
     while(!((privateKey.p >= p_min) && (privateKey.p <= p_max) && isCoprime(publicParamethers.q, privateKey.p) && (sk_maxMULbPrime + privateKey.p + privateParamethers.e_max * privateKey.p < qDIVwADDwPrime)));
     const uint8_t pBitLenght = privateKey.p.bitLenght();
@@ -187,7 +186,10 @@ std::vector<BigInt> CompactLWE::basicEncrypt(const BigInt& plaintext, const Comp
 {
     qDebug() << plaintext;
     std::vector<BigInt> ciphertext;
+    std::cout<< "l" << '\n';
     const std::vector<BigInt> l = generateL(to);
+    for(auto i:l)
+        std::cout << i << " ";
     std::vector<BigInt>::const_iterator iteratorL = l.cbegin();
     std::vector<Keys::PublicKeySample>::const_iterator iteratorToPublicKey = to.publicKey.cbegin();
     std::vector<BigInt> productLA;
@@ -280,13 +282,17 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
     BigInt sumL(0);
     BigInt innerProductLU;
     PRBgenerators prbGenerator;
-    prbGenerator.setNumberOfBits(lAverageBitLenght + (lAverageBitLenght >> 1));
     l.reserve(to.getPublicParamethers().m);
+    prbGenerator.setNumberOfBits(lAverageBitLenght + (lAverageBitLenght >> 1));
     while(sumL <= wPlusWPrime && l.size() <= to.getPublicParamethers().m)
     {
         prbGenerator.generateL20();
         l.push_back(BigInt(prbGenerator.getGeneratedPRBS()));
         sumL += l.back();
+        if(l.back().isZero())
+        {
+            l.pop_back();
+        }
     }
     l.pop_back();
     sumL = ConstBigInt::ZERO;
@@ -295,6 +301,10 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
         prbGenerator.generateL20();
         l.push_back(-BigInt(prbGenerator.getGeneratedPRBS()));
         sumL += l.back();
+        if(l.back().isZero())
+        {
+            l.pop_back();
+        }
     }
     l.pop_back();
     l.resize(to.getPublicParamethers().m, ConstBigInt::ZERO);
