@@ -26,11 +26,10 @@ int main(int argc, char *argv[])
     CompactLWE b;
     b.generatePrivateKey();
     b.generatePublicKey();
-    std::vector<BigInt> A = a.generalEncrypt(BigInt("12311112326345341232131342302fabbbbbb8435897634895734293084904157843543546754634523423412123212534114123", 16), b);
-    for(std::vector<BigInt>::const_iterator cia = A.cbegin(); cia != A.cend(); ++cia)
-    {
-        qDebug() << *cia;
-    }
+    std::vector<BigInt> A = a.generalEncrypt(BigInt("280694396512121314212321321412387779"), b);
+    BigInt B = b.generalDecrypt(A);
+    std::cout << std::endl << "B: " << std::endl;
+    std::cout << B << std::endl;
     return 0;
 
     QQmlApplicationEngine engine;

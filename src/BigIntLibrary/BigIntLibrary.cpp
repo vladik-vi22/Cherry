@@ -395,6 +395,13 @@ std::pair<BigInt, BigInt> BigInt::DivMod(const BigInt& divisor) const
     }
     fraction.positive = positive == divisor.positive;
     remainder.positive = positive;
+    if(divisor.positive)
+    {
+        while(!remainder.positive)
+        {
+            remainder += divisor;
+        }
+    }
 
     return std::make_pair(fraction, remainder);
 }

@@ -77,10 +77,13 @@ public:
     void generatePublicKey();
     std::vector<BigInt> basicEncrypt(const BigInt& plaintext, const CompactLWE& to);
     std::vector<BigInt> generalEncrypt(const BigInt& plaintext, const CompactLWE& to);
+    BigInt basicDecrypt(const std::vector<BigInt>& ciphertext);
+    BigInt generalDecrypt(const std::vector<BigInt>& ciphertext);
 
 private:
     std::vector<BigInt> generateL(const CompactLWE& to);
     std::vector<uint8_t> encode(const std::vector<uint8_t>& m, const std::vector<uint8_t>& I, const CompactLWE& to);
+    std::vector<uint8_t> decode(const std::vector<uint8_t>& mPrime, const std::vector<uint8_t>& I);
 };
 
 #endif // CompactLWE_H
