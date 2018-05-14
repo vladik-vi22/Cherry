@@ -21,13 +21,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
     CompactLWE a;
-    a.generatePrivateKey();
-    a.generatePublicKey();
+    a.generateKeys();
     CompactLWE b;
-    b.generatePrivateKey();
-    b.generatePublicKey();
-    std::vector<BigInt> A = a.generalEncrypt(BigInt("280694396512121314212321321412387779"), b);
-    BigInt B = b.generalDecrypt(A);
+    b.generateKeys();
+    std::vector<BigInt> A = a.basicEncrypt(BigInt("12345678"), b);
+    BigInt B = b.basicDecrypt(A);
     std::cout << std::endl << "B: " << std::endl;
     std::cout << B << std::endl;
     return 0;
