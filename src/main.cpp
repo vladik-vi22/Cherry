@@ -20,16 +20,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<Vizhener>("VizhenerTextKey", 1, 0, "VTextKey");
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
-    CompactLWE a;
-    a.generateKeys();
-    CompactLWE b;
-    b.generateKeys();
-    std::vector<BigInt> A = a.basicEncrypt(BigInt("12345678"), b);
-    BigInt B = b.basicDecrypt(A);
-    std::cout << std::endl << "B: " << std::endl;
-    std::cout << B << std::endl;
-    return 0;
-
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/src/qml_production/main.qml")));
     return app.exec();

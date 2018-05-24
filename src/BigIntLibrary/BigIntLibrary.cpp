@@ -799,12 +799,14 @@ BigInt& BigInt::operator >>= (const uint32_t shift)
 
 BigInt BigInt::leftCircularShift(const uint32_t shift) const
 {
-    return (*this << shift) | (*this >> (bitLenght() - shift));
+    const BigInt mask(--(ConstBigInt::ONE << bitLenght()));
+    return (((*this << shift) | (*this >> (bitLenght() - shift))) & mask);
 }
 
 BigInt BigInt::rightCircularShift(const uint32_t shift) const
 {
-    return (*this >> shift) | (*this << (bitLenght() - shift));
+    const BigInt mask(--(ConstBigInt::ONE << bitLenght()));
+    return (((*this >> shift) | (*this << (bitLenght() - shift))) & mask);
 }
 
 bool BigInt::operator !() const

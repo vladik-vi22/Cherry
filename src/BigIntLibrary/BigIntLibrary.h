@@ -93,8 +93,8 @@ public:
     BigInt operator >> (const uint32_t shift) const; // bitwise right shift
     BigInt& operator >>= (const uint32_t shift); // bitwise right shift assignment
 
-    BigInt leftCircularShift (const uint32_t shift) const; // bitwise left circular shift
-    BigInt rightCircularShift (const uint32_t shift) const; // bitwise right circular shift;
+    BigInt leftCircularShift(const uint32_t shift) const; // bitwise left circular shift
+    BigInt rightCircularShift(const uint32_t shift) const; // bitwise right circular shift;
 
     bool operator !() const; // negation
     bool operator && (const BigInt& rightAND) const; // AND
