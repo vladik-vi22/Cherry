@@ -165,11 +165,11 @@ void BigIntCalculator::calculate(const QString& operation)
         }
         else if(operation == "<<")
         {
-            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) << BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) << static_cast<size_t>(BigInt(m_bigNumber2.toStdString(), m_baseInput))).toStdString(m_baseOutput)));
         }
         else if(operation == ">>")
         {
-            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) >> BigInt(m_bigNumber2.toStdString(), m_baseInput).toUint32_t()).toStdString(m_baseOutput)));
+            setCalculationsResult(QString::fromStdString((BigInt(m_bigNumber1.toStdString(), m_baseInput) >> static_cast<size_t>(BigInt(m_bigNumber2.toStdString(), m_baseInput))).toStdString(m_baseOutput)));
         }
         else if(operation == "gcd")
         {

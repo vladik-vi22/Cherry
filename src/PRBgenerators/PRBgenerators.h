@@ -14,7 +14,7 @@ class PRBgenerators: public QObject
     Q_PROPERTY(QString alpha READ getAlpha WRITE setAlpha NOTIFY alphaChanged)
     Q_PROPERTY(QString numberOfSegments READ getNumberOfSegments WRITE setNumberOfSegments NOTIFY numberOfSegmentsChanged)
 
-    static float Z_1minusAlpha;
+    static double Z_1minusAlpha;
 
 public:
     explicit PRBgenerators(QObject *parent = 0);
@@ -29,8 +29,8 @@ public:
     uint32_t getUint32_tGeneratedPRBS() const;
     uint64_t getUint64_tGeneratedPRBS() const;
     void setNumberOfBits(const QString& new_numberOfBits);
-    void setNumberOfBits(uint32_t new_numberOfBits);
-    void setNumberOfBytes(uint32_t new_numberOfBytes);
+    void setNumberOfBits(const size_t new_numberOfBits);
+    void setNumberOfBytes(const size_t new_numberOfBytes);
     void setAlpha(const QString& new_alpha);
     void setNumberOfSegments(const QString& new_numberOfSegments);
 
@@ -62,9 +62,9 @@ public:
 
 private:
     std::vector<uint8_t> m_generatedPRBS;
-    uint32_t m_numberOfBits;
-    float m_alpha;
-    uint32_t m_numberOfSegments;
+    size_t m_numberOfBits;
+    double m_alpha;
+    size_t m_numberOfSegments;
 };
 
 std::vector<uint8_t> StdVectorBoolToStdVectorUint8_t(const std::vector<bool>& stdVectorBool);

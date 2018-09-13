@@ -23,26 +23,26 @@ class BigInt
 
 private:
     bool positive;
-    std::vector<uint32_t> bigNumArr;
+    std::vector<uint32_t> vectorUint32_t;
 
 public:
     BigInt();
-    BigInt(const BigInt& bigNumber);
-    explicit BigInt(const std::string& bigNumberStdString, const int base = baseInput);
-    explicit BigInt(const std::vector<uint32_t>& bigNumberStdVectorUint32_t, const bool isPositive = true);
-    explicit BigInt(const std::vector<uint16_t>& bigNumberStdVectorUint16_t, const bool isPositive = true);
-    explicit BigInt(const std::vector<uint8_t>& bigNumberStdVectorUint8_t, const bool isPositive = true);
-    explicit BigInt(const std::vector<bool>& bigNumberStdVectorBool, const bool isPositive = true);
-    explicit BigInt(const uint32_t numberUint32_t, const bool isPositive = true);
-    explicit BigInt(const uint64_t numberUint64_t, const bool isPositive = true);
-    explicit BigInt(const int numberInt);
-    explicit BigInt(const long long numberLongLong);
+    BigInt(const BigInt& bigInt);
+    explicit BigInt(std::string bigIntString, const uint8_t base = baseInput);
     template<size_t size>
-    explicit BigInt(const std::array<uint32_t, size>& bigNumberStdArrayUint32_t, const bool isPositive = true)
+    explicit BigInt(const std::array<uint32_t, size>& bigIntArrayUint32_t, const bool isPositive = true)
     {
-        bigNumArr = std::vector<uint32_t>(bigNumberStdArrayUint32_t.crbegin(), bigNumberStdArrayUint32_t.crend());
+        vectorUint32_t = std::vector<uint32_t>(bigIntArrayUint32_t.crbegin(), bigIntArrayUint32_t.crend());
         positive = isPositive;
     }
+    explicit BigInt(const std::vector<uint32_t>& bigIntVectorUint32_t, const bool isPositive = true);
+    explicit BigInt(const std::vector<uint16_t>& bigIntVectorUint16_t, const bool isPositive = true);
+    explicit BigInt(const std::vector<uint8_t>& bigIntVectorUint8_t, const bool isPositive = true);
+    explicit BigInt(const std::vector<bool>& bigIntVectorBool, const bool isPositive = true);
+    explicit BigInt(const uint64_t bigIntUint64_t, const bool isPositive = true);
+    explicit BigInt(const uint32_t bigIntUint64_t, const bool isPositive = true);
+    explicit BigInt(const int64_t bigIntInt64_t);
+    explicit BigInt(const int32_t bigIntInt32_t);
     ~BigInt();
 
     BigInt& operator = (const BigInt& equal); // simple assignment
@@ -70,7 +70,7 @@ public:
 
     friend BigInt pow(const BigInt& base, const BigInt& exponent); // power
 
-    friend uint32_t log2(const BigInt& antilogarithm); // logarithm to the base 2
+    friend size_t log2(const BigInt& antilogarithm); // logarithm to the base 2
 
     //    friend BigInt powmod(BigInt base, const BigInt& exponent, const BigInt& divisor); // power by modulo
     friend BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // power by modulo
@@ -88,13 +88,13 @@ public:
     BigInt operator ^ (const BigInt& rightBitwiseXOR) const; // bitwise XOR
     BigInt& operator ^= (const BigInt& rightBitwiseXOR); // bitwise XOR assignment
 
-    BigInt operator << (const uint32_t shift) const; // bitwise left shift
-    BigInt& operator <<= (const uint32_t shift); // bitwise left shift assignment
-    BigInt operator >> (const uint32_t shift) const; // bitwise right shift
-    BigInt& operator >>= (const uint32_t shift); // bitwise right shift assignment
+    BigInt operator << (const size_t shift) const; // bitwise left shift
+    BigInt& operator <<= (const size_t shift); // bitwise left shift assignment
+    BigInt operator >> (const size_t shift) const; // bitwise right shift
+    BigInt& operator >>= (const size_t shift); // bitwise right shift assignment
 
-    BigInt leftCircularShift(const uint32_t shift) const; // bitwise left circular shift
-    BigInt rightCircularShift(const uint32_t shift) const; // bitwise right circular shift;
+    BigInt leftCircularShift(const size_t shift) const; // bitwise left circular shift
+    BigInt rightCircularShift(const size_t shift) const; // bitwise right circular shift;
 
     bool operator !() const; // negation
     bool operator && (const BigInt& rightAND) const; // AND
@@ -121,13 +121,15 @@ public:
     std::string toStdString(const int base = baseOutput) const;
     std::vector<uint32_t> toStdVectorUint32_t() const;
     std::vector<uint8_t> toStdVectorUint8_t() const;
-    uint64_t toUint64_t() const; // if bigNumArr.size <= 2
-    uint32_t toUint32_t() const; // if bigNumArr.size == 1
-    uint32_t bitLenght() const;
-    uint32_t byteLenght() const;
+    operator uint64_t() const; // if bigIntVector.size() <= 2
+    operator uint32_t() const; // if
+    operator uint16_t() const;
+    operator uint8_t() const;
+    operator bool() const;
+    size_t bitLenght() const;
+    size_t byteLenght() const;
     bool isEven() const;
     bool isOdd() const;
-    bool isZero() const;
     bool isPositive() const;
     bool isNegative() const;
 
@@ -138,8 +140,8 @@ private:
     friend BigInt BarrettReduction(const BigInt& dividend, const BigInt& divisor, const BigInt& mu);
     void alignTo(BigInt& aligned);
     void deleteZeroHighOrderDigit();
-    BigInt shiftDigitsToHigh(const uint32_t shift) const;
-    BigInt shiftDigitsToLow(const uint32_t shift) const;
+    BigInt shiftDigitsToHigh(const size_t shift) const;
+    BigInt shiftDigitsToLow(const size_t shift) const;
     BigInt toBigIntDec() const;
 };
 

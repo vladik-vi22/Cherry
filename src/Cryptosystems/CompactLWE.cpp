@@ -56,7 +56,7 @@ void CompactLWE::generatePrivateKey()
         const BigInt sElement(prbGenerator.getGeneratedPRBS());
         if(sElement < publicParamethers.q)
         {
-            privateKey.s.push_back(sElement);
+            privateKey.s.emplace_back(sElement);
         }
     }
     privateKey.sPrime.clear();
@@ -66,7 +66,7 @@ void CompactLWE::generatePrivateKey()
         prbGenerator.generateL20();
         if(BigInt(prbGenerator.getGeneratedPRBS()) < publicParamethers.q)
         {
-            privateKey.sPrime.push_back(BigInt(prbGenerator.getGeneratedPRBS()));
+            privateKey.sPrime.emplace_back(BigInt(prbGenerator.getGeneratedPRBS()));
         }
     }
     do
@@ -114,10 +114,10 @@ void CompactLWE::generatePrivateKey()
 
 void CompactLWE::generatePublicKey()
 {
-    const uint32_t qBitLenght = publicParamethers.q.bitLenght();
-    const uint32_t bBitLenght = publicParamethers.b.bitLenght();
-    const uint32_t bPrimeBitLenght = publicParamethers.bPrime.bitLenght();
-    const uint32_t e_maxBitLenght = privateParamethers.e_max.bitLenght();
+    const size_t qBitLenght = publicParamethers.q.bitLenght();
+    const size_t bBitLenght = publicParamethers.b.bitLenght();
+    const size_t bPrimeBitLenght = publicParamethers.bPrime.bitLenght();
+    const size_t e_maxBitLenght = privateParamethers.e_max.bitLenght();
     BigInt e;
     BigInt r;
     BigInt kq;
@@ -140,7 +140,7 @@ void CompactLWE::generatePublicKey()
             prbGenerator.generateL20();
             if(BigInt(prbGenerator.getGeneratedPRBS()) < publicParamethers.b)
             {
-                publicKeySample.a.push_back(BigInt(prbGenerator.getGeneratedPRBS()));
+                publicKeySample.a.emplace_back(BigInt(prbGenerator.getGeneratedPRBS()));
             }
         }
         prbGenerator.setNumberOfBits(bPrimeBitLenght);
@@ -184,7 +184,7 @@ void CompactLWE::generatePublicKey()
                               + kqInverse * (privateKey.sk * publicKeySample.u + r + e * privateKey.p)) % publicParamethers.q;
         publicKeySample.pkPrime = (std::inner_product(publicKeySample.a.cbegin(), publicKeySample.a.cend(), privateKey.sPrime.cbegin(), ConstBigInt::ZERO)
                                    + kqPrimeInverse * (privateKey.skPrime * publicKeySample.u + rPrime + ePrime * privateKey.p)) % publicParamethers.q;
-        publicKey.push_back(publicKeySample);
+        publicKey.emplace_back(publicKeySample);
     }
 }
 
@@ -220,9 +220,9 @@ std::vector<BigInt> CompactLWE::basicEncrypt(const BigInt& plaintext, const Comp
     {
         ++uPrime;
     }
-    ciphertext.push_back((plaintext ^ u.leftCircularShift(log2(to.getPublicParamethers().t) >> 1)) * uPrime % to.getPublicParamethers().t);
-    ciphertext.push_back(innerProductLPk % to.getPublicParamethers().q);
-    ciphertext.push_back(innerProductLPkPrime % to.getPublicParamethers().q);
+    ciphertext.emplace_back((plaintext ^ u.leftCircularShift(log2(to.getPublicParamethers().t) >> 1)) * uPrime % to.getPublicParamethers().t);
+    ciphertext.emplace_back(innerProductLPk % to.getPublicParamethers().q);
+    ciphertext.emplace_back(innerProductLPkPrime % to.getPublicParamethers().q);
     return ciphertext;
 }
 
@@ -233,16 +233,16 @@ std::vector<BigInt> CompactLWE::generalEncrypt(const BigInt& plaintext, const Co
     prbGenerator.setNumberOfBytes(256);
     prbGenerator.generateL20();
     std::vector<uint8_t> encodedPlaintext = encode(plaintext.toStdVectorUint8_t(), prbGenerator.getGeneratedPRBS(), to);
-    uint32_t blockSize = log2(to.getPublicParamethers().t);
+    size_t blockSize = log2(to.getPublicParamethers().t);
     while(encodedPlaintext.size() % blockSize)
     {
-        encodedPlaintext.push_back(0);
+        encodedPlaintext.emplace_back(0);
     }
-    uint32_t numberOfBlocks = encodedPlaintext.size() / blockSize;
+    size_t numberOfBlocks = encodedPlaintext.size() / blockSize;
     ciphertext.reserve((to.getPublicParamethers().n + 3) * numberOfBlocks);
-    for(uint8_t indexBlock = 0; indexBlock < numberOfBlocks; ++indexBlock)
+    for(size_t indexBlock = 0; indexBlock < numberOfBlocks; ++indexBlock)
     {
-        std::vector<uint8_t> block(encodedPlaintext.cbegin() + indexBlock * blockSize, encodedPlaintext.cbegin() + (indexBlock + 1) * blockSize - 1);
+        std::vector<uint8_t> block(encodedPlaintext.cbegin() + static_cast<long>(indexBlock * blockSize), encodedPlaintext.cbegin() + static_cast<long>((indexBlock + 1) * blockSize - 1));
         while(block.back() == 0)
         {
             block.pop_back();
@@ -274,7 +274,7 @@ BigInt CompactLWE::generalDecrypt(const std::vector<BigInt>& ciphertext)
     decryptedCiphertext.reserve(ciphertext.size() / (publicParamethers.n + 3));
     for(std::vector<BigInt>::const_iterator iteratorCiphettext = ciphertext.cbegin(); iteratorCiphettext != ciphertext.cend(); iteratorCiphettext += publicParamethers.n + 3)
     {
-        decryptedCiphertext.push_back(basicDecrypt(std::vector<BigInt>(iteratorCiphettext, iteratorCiphettext + publicParamethers.n + 2)));
+        decryptedCiphertext.emplace_back(basicDecrypt(std::vector<BigInt>(iteratorCiphettext, iteratorCiphettext + publicParamethers.n + 2)));
     }
     std::vector<uint8_t> decodedDecryptedCiphertext;
     decodedDecryptedCiphertext.reserve(decryptedCiphertext.size() * (publicParamethers.l - 2));
@@ -292,11 +292,11 @@ BigInt CompactLWE::generalDecrypt(const std::vector<BigInt>& ciphertext)
 std::vector<uint8_t> CompactLWE::encode(const std::vector<uint8_t>& m, const std::vector<uint8_t>& I, const CompactLWE& to)
 {
     std::vector<uint8_t> mPrime = m;
-    const uint32_t lenM = m.size();
-    const uint32_t pl = log2(to.getPublicParamethers().t) * (1 + ((8 * (lenM + to.getPublicParamethers().l) - 1) / log2(to.getPublicParamethers().t))) / 8 - lenM;
+    const size_t lenM = m.size();
+    const size_t pl = log2(to.getPublicParamethers().t) * (1 + ((8 * (lenM + to.getPublicParamethers().l) - 1) / log2(to.getPublicParamethers().t))) / 8 - lenM;
     mPrime.reserve(lenM + pl);
     mPrime.resize(lenM + pl - 2, UINT8_MAX);
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
     uint8_t r = std::rand() & UINT8_MAX; // & UINT8_MAX = & 255 = % 256
     uint8_t rPrime = std::rand() & UINT8_MAX;
     uint8_t x = I[r];
@@ -319,15 +319,15 @@ std::vector<uint8_t> CompactLWE::encode(const std::vector<uint8_t>& m, const std
         rPrime ^= (*iteratorMPrime * r) & UINT8_MAX;
     }
     while(iteratorMPrime != mPrime.begin());
-    mPrime.push_back(r);
-    mPrime.push_back(rPrime);
+    mPrime.emplace_back(r);
+    mPrime.emplace_back(rPrime);
     return mPrime;
 }
 
 std::vector<uint8_t> CompactLWE::decode(const std::vector<uint8_t>& mPrime, const std::vector<uint8_t>& I)
 {
     std::vector<uint8_t> m;
-    const uint32_t l = mPrime.size();
+    const size_t l = mPrime.size();
     m.reserve(l - 2);
     uint8_t rPrime = mPrime.back();
     uint8_t r = *std::prev(mPrime.cend(), 2);
@@ -338,7 +338,7 @@ std::vector<uint8_t> CompactLWE::decode(const std::vector<uint8_t>& mPrime, cons
     uint8_t x = I[rPrime];
     for(std::vector<uint8_t>::const_reverse_iterator iteratorMPrime = std::next(mPrime.crbegin(), 2); iteratorMPrime != mPrime.crend(); ++iteratorMPrime)
     {
-        m.push_back(x ^ *iteratorMPrime);
+        m.emplace_back(x ^ *iteratorMPrime);
         x = I[(*iteratorMPrime + rPrime) & UINT8_MAX];
     }
     for(std::vector<uint8_t>::const_iterator iteratorM = m.cbegin(); iteratorM != m.cend(); ++iteratorM)
@@ -358,7 +358,7 @@ std::vector<uint8_t> CompactLWE::decode(const std::vector<uint8_t>& mPrime, cons
 std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
 {
     const BigInt wPlusWPrime = to.getPublicParamethers().w + to.getPublicParamethers().wPrime;
-    const uint8_t lAverageBitLenght = ((wPlusWPrime + to.getPublicParamethers().wPrime) / BigInt(to.getPublicParamethers().m)).bitLenght();
+    const size_t lAverageBitLenght = ((wPlusWPrime + to.getPublicParamethers().wPrime) / BigInt(to.getPublicParamethers().m)).bitLenght();
     std::vector<BigInt> l;
     BigInt sumL(0);
     BigInt innerProductLU;
@@ -368,7 +368,7 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
     while(sumL <= wPlusWPrime && l.size() <= to.getPublicParamethers().m)
     {
         prbGenerator.generateL20();
-        l.push_back(++BigInt(prbGenerator.getGeneratedPRBS()));
+        l.emplace_back(++BigInt(prbGenerator.getGeneratedPRBS()));
         sumL += l.back();
     }
     l.pop_back();
@@ -376,7 +376,7 @@ std::vector<BigInt> CompactLWE::generateL(const CompactLWE& to)
     while(sumL >= -to.getPublicParamethers().wPrime && l.size() <= to.getPublicParamethers().m)
     {
         prbGenerator.generateL20();
-        l.push_back(-(++BigInt(prbGenerator.getGeneratedPRBS())));
+        l.emplace_back(-(++BigInt(prbGenerator.getGeneratedPRBS())));
         sumL += l.back();
     }
     l.pop_back();
