@@ -76,9 +76,9 @@ public:
     friend BigInt powmod(const BigInt& base, const BigInt& exponent, const BigInt& divisor); // power by modulo
     friend BigInt inversemod(BigInt dividend, const BigInt& divisor); // inverse by modulo // gcd(dividend, divisor) = 1
     friend bool congruencemod(const BigInt& dividend1, const BigInt& dividend2, const BigInt divisor); // congruence by modulo
-    friend bool isCoprime(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend bool isCoprime(const BigInt& bigInt1, const BigInt& bigInt2);
 
-    friend int8_t symbolJacobi(BigInt bigNum1, BigInt bigNum2);
+    friend int8_t symbolJacobi(BigInt bigInt1, BigInt bigInt2);
 
     BigInt operator ~() const; // bitwise NOT
     BigInt operator & (const BigInt& rightBitwiseAND) const; // bitwise AND
@@ -107,16 +107,16 @@ public:
     bool operator <= (const BigInt& rightComparable) const; // less than or equal to
     bool operator >= (const BigInt& rightComparable) const; // greater than or equal to
 
-    friend BigInt abs(const BigInt& bigNum); // absolute value
-    friend BigInt gcd(BigInt bigNum1, BigInt bigNum2); // greatest common divisor
-    friend BigInt lcm(BigInt bigNum1, BigInt bigNum2); // least common multiple
+    friend BigInt abs(const BigInt& bigInt); // absolute value
+    friend BigInt gcd(BigInt bigInt1, BigInt bigInt2); // greatest common divisor
+    friend BigInt lcm(const BigInt& bigInt1, const BigInt& bigInt2); // least common multiple
 
-    friend const BigInt& max(const BigInt& bigNum1, const BigInt& bigNum2);
-    friend const BigInt& min(const BigInt& bigNum1, const BigInt& bigNum2);
+    friend const BigInt& max(const BigInt& bigInt1, const BigInt& bigInt2);
+    friend const BigInt& min(const BigInt& bigInt1, const BigInt& bigInt2);
 
-    friend std::ostream& operator << (std::ostream& out, const BigInt& bigNum);
-    friend QDebug operator << (QDebug out, const BigInt& bigNum);
-    friend std::istream& operator >> (std::istream& in, BigInt& bigNum);
+    friend std::ostream& operator << (std::ostream& out, const BigInt& bigInt);
+    friend QDebug operator << (QDebug out, const BigInt& bigInt);
+    friend std::istream& operator >> (std::istream& in, BigInt& bigInt);
 
     std::string toStdString(const int base = baseOutput) const;
     std::vector<uint32_t> toStdVectorUint32_t() const;

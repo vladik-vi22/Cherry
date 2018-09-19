@@ -20,10 +20,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<Vizhener>("VizhenerTextKey", 1, 0, "VTextKey");
     qmlRegisterType<Affine>("AffineTextKeys", 1, 0, "ATextKeys");
 
-    BigInt a("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", 2);
-    /*BigInt b("2222222222222222222222222222222222222222222222222222", 10);
-    BigInt c(a + b);*/
-    std::cout << (a << static_cast<size_t>(100)).toStdString(2) << std::endl;
+    BigInt a("11111111111111111111111111111111111111111111111", 10);
+    BigInt b("22222222222222222222222222222222222222222222222", 10);
+    BigInt c(a + b);
+    std::cout << c.toStdString(10) << std::endl;
     return 0;
 
     QQmlApplicationEngine engine;

@@ -48,7 +48,7 @@ uint16_t PRBgenerators::getUint16_tGeneratedPRBS() const
 {
     if(m_generatedPRBS.size() == 2)
     {
-        return static_cast<uint16_t>(((m_generatedPRBS.front()) << 8) | (m_generatedPRBS.back()));
+        return static_cast<uint16_t>((static_cast<uint16_t>(m_generatedPRBS.front()) << 8)) | static_cast<uint16_t>(m_generatedPRBS.back());
     }
     else if(m_generatedPRBS.size() == 1)
     {
@@ -126,7 +126,7 @@ void PRBgenerators::setAlpha(const QString& new_alpha)
     if(QString::number(m_alpha) != new_alpha)
     {
         m_alpha = new_alpha.toDouble();
-        switch(static_cast<int>((m_alpha * 100.1)))
+        switch(static_cast<int>(m_alpha * 100.1))
         {
         case 1:
             Z_1minusAlpha = 2.326;
@@ -602,7 +602,7 @@ bool PRBgenerators::testOfIndependence() const
     {
         ++byteFirstFrequency[*iteratorStdVectorUint8_t];
         ++byteSecondFrequency[*(iteratorStdVectorUint8_t + 1)];
-        ++bytePairFrequency[static_cast<uint16_t>((*iteratorStdVectorUint8_t << 8) | *(iteratorStdVectorUint8_t + 1))];
+        ++bytePairFrequency[static_cast<size_t>((static_cast<uint16_t>(*iteratorStdVectorUint8_t) << 8) | static_cast<uint16_t>(*(iteratorStdVectorUint8_t + 1)))];
     }
     double ChiSquare = 0;
     uint16_t bytePair = 0;
