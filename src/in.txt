@@ -5,7 +5,7 @@ Cryptography
 From Wikipedia, the free encyclopedia
 "Secret code" redirects here. For the Aya Kamiki album, see Secret Code.
 "Cryptology" redirects here. For the David S. Ware album, see Cryptology (album).
-Lorenz cipher machine twelve rotors with mechanism
+123Lorenz cipher machine twelve rotors with mechanism
 German Lorenz cipher machine, used in World War II to encrypt very-high-level general staff messages
 Cryptography or cryptology (from Greek κρυπτός kryptós, "hidden, secret"; and γράφειν graphein, "writing", or -λογία -logia, "study", respectively[1]) is the practice and study of techniques for secure communication in the presence of third parties called adversaries.[2] More generally, cryptography is about constructing and analyzing protocols that prevent third parties or the public from reading private messages;[3] various aspects in information security such as data confidentiality, data integrity, authentication, and non-repudiation[4] are central to modern cryptography. Modern cryptography exists at the intersection of the disciplines of mathematics, computer science, electrical engineering, and communication science. Applications of cryptography include electronic commerce, chip-based payment cards, digital currencies, computer passwords, and military communications.
 
