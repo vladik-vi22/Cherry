@@ -28,7 +28,7 @@ Contents  [hide]
 3.5	Cryptosystems
 4	Legal issues
 4.1	Prohibitions
-4.2	Export controls
+1234.2	Export controls
 4.3	NSA involvement
 4.4	Digital rights management
 4.5	Forced disclosure of encryption keys
