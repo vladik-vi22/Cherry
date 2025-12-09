@@ -47,6 +47,24 @@ qt_standard_project_setup()
 qt_policy(SET QTP0001 NEW)
 
 # ============================================================================
+# External Libraries (via FetchContent)
+# ============================================================================
+
+include(FetchContent)
+
+# bigint-cpp - Arbitrary precision integer library
+# For local development, use the sibling directory
+# For production, use GIT_REPOSITORY with your repo URL
+FetchContent_Declare(
+    bigint-cpp
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bigint-cpp
+    # GIT_REPOSITORY https://github.com/vladik-vi22/bigint-cpp.git
+    # GIT_TAG main
+)
+
+FetchContent_MakeAvailable(bigint-cpp)
+
+# ============================================================================
 # Compiler Warnings
 # ============================================================================
 

@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <bigint/BigIntCalculator.h>
-#include <bigint/BigIntLibrary.h>
 #include <generators/PRBgenerators.h>
 #include <rpn/RPNgenerator.h>
 #include <crypto/RSAcryptosystem.h>

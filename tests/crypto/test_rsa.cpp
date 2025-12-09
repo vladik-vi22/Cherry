@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <crypto/RSAcryptosystem.h>
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
+
+using namespace bigint;
 
 class RSACryptoTest : public ::testing::Test {
 protected:
@@ -12,8 +14,8 @@ TEST_F(RSACryptoTest, KeyGenerationProducesNonZeroValues) {
     RSAcryptosystem rsa;
     rsa.generateKeyPair(32);
 
-    EXPECT_TRUE(rsa.getPublicModulus() > ConstBigInt::ZERO);
-    EXPECT_TRUE(rsa.getPublicExponent() > ConstBigInt::ZERO);
+    EXPECT_TRUE(rsa.getPublicModulus() > constants::ZERO);
+    EXPECT_TRUE(rsa.getPublicExponent() > constants::ZERO);
 }
 
 // Test public exponent is 65537 (standard value)

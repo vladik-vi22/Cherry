@@ -3,7 +3,11 @@
 
 #include <QObject>
 #include <QQuickItem>
-#include <bigint/BigIntLibrary.h>
+#include <QDebug>
+#include <bigint/BigInt.hpp>
+
+// Qt-specific extension: QDebug output operator for BigInt
+QDebug operator << (QDebug out, const bigint::BigInt& bigInt);
 
 class BigIntCalculator : public QObject
 {

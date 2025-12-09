@@ -3,8 +3,10 @@
 
 #include <QObject>
 #include <QQuickItem>
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
 #include <rpn/RPNgenerator.h>
+
+using namespace bigint;
 
 class RSAcryptosystem: public QObject
 {

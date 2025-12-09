@@ -1,8 +1,10 @@
 #ifndef CompactLWE_H
 #define CompactLWE_H
 
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
 #include <generators/PRBgenerators.h>
+
+using namespace bigint;
 
 namespace Paramethers
 {

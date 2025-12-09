@@ -1,3 +1,6 @@
+# Cherry Benchmarks
+# Note: BigInt benchmarks are in the external bigint-cpp library
+
 # ============================================================================
 # Google Benchmark
 # ============================================================================
@@ -16,20 +19,6 @@ set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
 set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(benchmark)
-
-# ============================================================================
-# BigInt Benchmarks
-# ============================================================================
-
-add_executable(bench_bigint
-    bigint/bench_bigint.cpp
-)
-
-target_link_libraries(bench_bigint PRIVATE
-    cherry_bigint
-    benchmark::benchmark
-    benchmark::benchmark_main
-)
 
 # ============================================================================
 # Cipher Benchmarks

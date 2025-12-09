@@ -1,4 +1,15 @@
 #include <bigint/BigIntCalculator.h>
+#include <QString>
+
+using namespace bigint;
+
+// Qt-specific extension: QDebug output operator for BigInt
+QDebug operator << (QDebug out, const bigint::BigInt& bigInt)
+{
+    std::string bigNumberString = bigInt.toStdString(10);
+    out << QString::fromStdString(bigNumberString);
+    return out;
+}
 
 const QString BigIntCalculator::usedCharsBinary = "01";
 const QString BigIntCalculator::usedCharsDecimal = "0123456789";

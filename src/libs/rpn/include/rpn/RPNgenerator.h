@@ -3,8 +3,10 @@
 
 #include <QObject>
 #include <QQuickItem>
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
 #include <generators/PRBgenerators.h>
+
+using namespace bigint;
 
 class RPNgenerator: public QObject
 {

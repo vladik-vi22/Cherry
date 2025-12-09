@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <crypto/CompactLWE.h>
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
+
+using namespace bigint;
 
 class CompactLWETest : public ::testing::Test {
 protected:
@@ -19,8 +21,8 @@ TEST_F(CompactLWETest, KeyGenerationWorks) {
     lwe.generateKeys();
 
     auto params = lwe.getPublicParamethers();
-    EXPECT_TRUE(params.q > ConstBigInt::ZERO);
-    EXPECT_TRUE(params.t > ConstBigInt::ZERO);
+    EXPECT_TRUE(params.q > constants::ZERO);
+    EXPECT_TRUE(params.t > constants::ZERO);
 }
 
 // Test public parameters are set

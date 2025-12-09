@@ -36,12 +36,12 @@ BigInt RPNgenerator::generatePrimeNumber(const uint32_t numberOfBits)
 
 bool RPNgenerator::pseudoprimeTest(const BigInt& oddNumber, const BigInt& base)
 {
-    return (isCoprime(base, oddNumber) && congruencemod(powmod(base, oddNumber - ConstBigInt::ONE, oddNumber), ConstBigInt::ONE, oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(powmod(base, oddNumber - constants::ONE, oddNumber), constants::ONE, oddNumber));
 }
 
 bool RPNgenerator::pseudoprimeTestEulerJacobi(const BigInt& oddNumber, const BigInt& base)
 {
-    return (isCoprime(base, oddNumber) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - ConstBigInt::ONE) >> size_t(1), oddNumber), oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - constants::ONE) >> size_t(1), oddNumber), oddNumber));
 }
 
 bool RPNgenerator::divisibilityRulePascal(const BigInt& bigNum)
@@ -110,7 +110,7 @@ bool RPNgenerator::primalityTestSolovayStrassen(const BigInt& bigNum)
 bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
 {
     PRBgenerators prbGenerator;
-    BigInt dividendBy2 = bigNum - ConstBigInt::ONE;
+    BigInt dividendBy2 = bigNum - constants::ONE;
     uint32_t powerOf2 = 0;
     while(dividendBy2.isEven())
     {
@@ -128,7 +128,7 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         }
         x = powmod(x, dividendBy2, bigNum);
         bool strongPseudoprime = false;
-        if(congruencemod(x, ConstBigInt::ONE, bigNum) || congruencemod(x, bigNum - ConstBigInt::ONE, bigNum))
+        if(congruencemod(x, constants::ONE, bigNum) || congruencemod(x, bigNum - constants::ONE, bigNum))
         {
             strongPseudoprime = true;
         }
@@ -136,13 +136,13 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         {
             for(uint32_t r = 1; r < powerOf2; ++r)
             {
-                x = powmod(x, ConstBigInt::TWO, bigNum);
-                if(congruencemod(x, bigNum - ConstBigInt::ONE, bigNum))
+                x = powmod(x, constants::TWO, bigNum);
+                if(congruencemod(x, bigNum - constants::ONE, bigNum))
                 {
                     strongPseudoprime = true;
                     break;
                 }
-                else if(congruencemod(x, ConstBigInt::ONE, bigNum))
+                else if(congruencemod(x, constants::ONE, bigNum))
                 {
                     return false;
                 }

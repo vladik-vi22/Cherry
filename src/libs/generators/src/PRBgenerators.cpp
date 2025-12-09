@@ -479,7 +479,7 @@ void PRBgenerators::generateBlumMicaliByte()
     BigInt T(rand());
     for(size_t indexByte = 0; indexByte < numberOfBytes; ++indexByte)
     {
-        m_generatedPRBS.emplace_back(static_cast<uint8_t>(((T << size_t(7)) / q) - ConstBigInt::ONE)); // T << 7 = T * 128
+        m_generatedPRBS.emplace_back(static_cast<uint8_t>(((T << size_t(7)) / q) - constants::ONE)); // T << 7 = T * 128
         T = powmod(a, T, p);
     }
 #if TRACK_TIME
@@ -501,7 +501,7 @@ void PRBgenerators::generateBlumBlumShubBit()
     for(uint32_t indexBit = 0; indexBit < m_numberOfBits; ++indexBit)
     {
         stdVectorBool.emplace_back(r.isOdd());
-        r = powmod(r, ConstBigInt::TWO, n);
+        r = powmod(r, constants::TWO, n);
     }
     m_generatedPRBS = StdVectorBoolToStdVectorUint8_t(stdVectorBool);
 #if TRACK_TIME
@@ -524,7 +524,7 @@ void PRBgenerators::generateBlumBlumShubByte()
     for(size_t indexByte = 0; indexByte < numberOfBytes; ++indexByte)
     {
         m_generatedPRBS.emplace_back(static_cast<uint8_t>(r & BigInt(UINT8_MAX))); // r & 255 = r % 256
-        r = powmod(r, ConstBigInt::TWO, n);
+        r = powmod(r, constants::TWO, n);
     }
 #if TRACK_TIME
     std::cout << "time to generate BlumBlumShubByte on " << m_numberOfBits << " bits = " << float(std::clock() - begin_time) / CLOCKS_PER_SEC << std::endl;

@@ -5,7 +5,9 @@
 #include <QQuickItem>
 #include <time.h>
 #include <QDir>
-#include <bigint/BigIntLibrary.h>
+#include <bigint/BigInt.hpp>
+
+using namespace bigint;
 
 class PRBgenerators: public QObject
 {

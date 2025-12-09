@@ -1,4 +1,5 @@
 # Cherry Tests
+# Note: BigInt tests are in the external bigint-cpp library
 
 include(FetchContent)
 
@@ -14,25 +15,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
-
-# ============================================================================
-# BigInt Tests
-# ============================================================================
-
-add_executable(test_bigint
-    bigint/test_bigint_basic.cpp
-    bigint/test_bigint_arithmetic.cpp
-    bigint/test_bigint_bitwise.cpp
-)
-
-target_link_libraries(test_bigint
-    PRIVATE
-        GTest::gtest_main
-        GTest::gmock
-        Cherry::BigInt
-)
-
-gtest_discover_tests(test_bigint)
 
 # ============================================================================
 # Generators Tests

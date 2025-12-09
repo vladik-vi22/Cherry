@@ -1,9 +1,9 @@
-# BigInt Library - Arbitrary precision integer arithmetic
+# BigInt Library - Qt/QML bridge for bigint-cpp
+# Core BigInt functionality is provided by external bigint-cpp library
 
+# Cherry::BigInt provides Qt/QML integration (BigIntCalculator)
 add_library(cherry_bigint STATIC
-    src/BigIntLibrary.cpp
     src/BigIntCalculator.cpp
-    include/bigint/BigIntLibrary.h
     include/bigint/BigIntCalculator.h
 )
 
@@ -23,6 +23,7 @@ target_link_libraries(cherry_bigint
     PUBLIC
         Qt6::Core
         Qt6::Quick
+        bigint::bigint  # External bigint-cpp library
     PRIVATE
         cherry_warnings
 )
