@@ -14,8 +14,8 @@ TEST_F(RSACryptoTest, KeyGenerationProducesNonZeroValues) {
     RSAcryptosystem rsa;
     rsa.generateKeyPair(32);
 
-    EXPECT_TRUE(rsa.getPublicModulus() > constants::ZERO);
-    EXPECT_TRUE(rsa.getPublicExponent() > constants::ZERO);
+    EXPECT_TRUE(rsa.getPublicModulus() > constants::Zero);
+    EXPECT_TRUE(rsa.getPublicExponent() > constants::Zero);
 }
 
 // Test public exponent is 65537 (standard value)

@@ -21,8 +21,8 @@ TEST_F(CompactLWETest, KeyGenerationWorks) {
     lwe.generateKeys();
 
     auto params = lwe.getPublicParamethers();
-    EXPECT_TRUE(params.q > constants::ZERO);
-    EXPECT_TRUE(params.t > constants::ZERO);
+    EXPECT_TRUE(params.q > constants::Zero);
+    EXPECT_TRUE(params.t > constants::Zero);
 }
 
 // Test public parameters are set

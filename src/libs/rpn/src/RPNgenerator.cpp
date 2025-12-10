@@ -36,12 +36,12 @@ BigInt RPNgenerator::generatePrimeNumber(const uint32_t numberOfBits)
 
 bool RPNgenerator::pseudoprimeTest(const BigInt& oddNumber, const BigInt& base)
 {
-    return (isCoprime(base, oddNumber) && congruencemod(powmod(base, oddNumber - constants::ONE, oddNumber), constants::ONE, oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(powmod(base, oddNumber - constants::One, oddNumber), constants::One, oddNumber));
 }
 
 bool RPNgenerator::pseudoprimeTestEulerJacobi(const BigInt& oddNumber, const BigInt& base)
 {
-    return (isCoprime(base, oddNumber) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - constants::ONE) >> size_t(1), oddNumber), oddNumber));
+    return (isCoprime(base, oddNumber) && congruencemod(BigInt(symbolJacobi(base, oddNumber)), powmod(base, (oddNumber - constants::One) >> size_t(1), oddNumber), oddNumber));
 }
 
 bool RPNgenerator::divisibilityRulePascal(const BigInt& bigNum)
@@ -80,7 +80,7 @@ bool RPNgenerator::primalityTestPherma(const BigInt& bigNum)
     PRBgenerators prbGenerator;
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLenght() - 2)));
+        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLength() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(!pseudoprimeTest(bigNum, x))
@@ -96,7 +96,7 @@ bool RPNgenerator::primalityTestSolovayStrassen(const BigInt& bigNum)
     PRBgenerators prbGenerator;
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLenght() - 2)));
+        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLength() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(!pseudoprimeTestEulerJacobi(bigNum, x))
@@ -110,7 +110,7 @@ bool RPNgenerator::primalityTestSolovayStrassen(const BigInt& bigNum)
 bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
 {
     PRBgenerators prbGenerator;
-    BigInt dividendBy2 = bigNum - constants::ONE;
+    BigInt dividendBy2 = bigNum - constants::One;
     uint32_t powerOf2 = 0;
     while(dividendBy2.isEven())
     {
@@ -119,7 +119,7 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
     }
     for(uint8_t k = 0; k < 16; ++k)
     {
-        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLenght() - 2)));
+        prbGenerator.setNumberOfBits(2 + (static_cast<size_t>(rand()) % (bigNum.bitLength() - 2)));
         prbGenerator.generateBlumBlumShubByte();
         BigInt x(prbGenerator.getGeneratedPRBS());
         if(!isCoprime(x, bigNum))
@@ -128,7 +128,7 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         }
         x = powmod(x, dividendBy2, bigNum);
         bool strongPseudoprime = false;
-        if(congruencemod(x, constants::ONE, bigNum) || congruencemod(x, bigNum - constants::ONE, bigNum))
+        if(congruencemod(x, constants::One, bigNum) || congruencemod(x, bigNum - constants::One, bigNum))
         {
             strongPseudoprime = true;
         }
@@ -136,13 +136,13 @@ bool RPNgenerator::primalityTestMillerRabin(const BigInt& bigNum)
         {
             for(uint32_t r = 1; r < powerOf2; ++r)
             {
-                x = powmod(x, constants::TWO, bigNum);
-                if(congruencemod(x, bigNum - constants::ONE, bigNum))
+                x = powmod(x, constants::Two, bigNum);
+                if(congruencemod(x, bigNum - constants::One, bigNum))
                 {
                     strongPseudoprime = true;
                     break;
                 }
-                else if(congruencemod(x, constants::ONE, bigNum))
+                else if(congruencemod(x, constants::One, bigNum))
                 {
                     return false;
                 }
